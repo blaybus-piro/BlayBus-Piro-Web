@@ -1,50 +1,25 @@
-# React + TypeScript + Vite
+### 커밋 컨벤션
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+| Type       | Description                                      |
+|------------|--------------------------------------------------|
+| **feat**   | 새로운 기능 추가                                  |
+| **fix**    | 버그 수정                                        |
+| **refactor** | 코드 리팩토링 (기능 변경 없이 구조 개선)           |
+| **test**   | 테스트 코드 작성                                  |
+| **chore**  | 기타 자잘한 작업 (빌드 설정, 패키지 관리 등)        |
+| **docs**   | 문서 추가 또는 수정                               |
+| **delete** | 불필요한 코드나 파일 삭제                         |
+| **build**  | 빌드 관련 파일 및 설정 변경                        |
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### 커밋 메시지 형식
+- **형식**: `타입(#이슈번호) :: 변경 사항 요약`
+- **제목**은 50자 이내, **본문**은 선택적이지만 72자 이내로 요약 설명 권장.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+### 예시
 ```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+feat(#123) :: 로그인 기능 추가
 ```
