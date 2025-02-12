@@ -1,0 +1,24 @@
+:root {
+  /* Primary Colors */
+  --main-900: #0e0b0a;
+  --main-800: #1c1613;
+  --main-700: #29211d;
+  --main-600: #372c26;
+  --main-500: #453730; /* Main Primary */
+  --main-400: #6a5f59;
+  --main-300: #8f8783;
+  --main-200: #b5afac;
+  --main-100: #dad7d6;
+  --main-50: #ecebea;
+  --white: #ffffff;
+
+  /* System Colors */
+  --red-300: #ff4d6c;
+  --red-200: #ffcad3;
+  --red-100: #fff5f6;
+}
+
+body {
+  background-color: var(--white);
+  color: var(--main-900);
+}

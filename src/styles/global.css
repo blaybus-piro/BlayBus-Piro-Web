@@ -1,3 +1,5 @@
+@import "./colors.css";
+
 @font-face {
   font-family: "Paperlogy";
   src: url("/fonts/Paperlogy-1Thin.ttf") format("truetype");
