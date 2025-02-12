@@ -1,0 +1,110 @@
+/* 공통 버튼 스타일 */
+.button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 2px;
+  font-weight: bold;
+  transition: background 0.2s ease, transform 0.1s ease;
+  cursor: pointer;
+  gap: 10px; /* 기본 간격 */
+}
+
+/* 크기별 스타일 */
+.button.large {
+  padding: 15px 24px;
+  height: 52px;
+}
+
+.button.medium {
+  padding: 12px 16px;
+  height: 46px;
+}
+
+.button.small {
+  padding: 8px 14px;
+  height: 36px;
+}
+
+.button.xsmall {
+  padding: 6px 10px;
+  height: 32px;
+}
+
+/* Primary 버튼 스타일 */
+.button.primary {
+  background: var(--main-500-primary, #453730);
+  color: white;
+}
+
+.button.primary.pressed {
+  background: var(--Main-600, #372c26);
+  transform: scale(0.97);
+}
+
+.button.primary.disabled {
+  background: var(--Main-100, #dad7d6);
+  cursor: not-allowed;
+}
+
+/* Secondary 버튼 스타일 */
+.button.secondary {
+  background: white;
+  border: 1px solid var(--main-500-primary, #453730);
+  color: black;
+}
+
+.button.secondary.pressed {
+  background: var(--main-50-bg, #ecebea);
+}
+
+.button.secondary.disabled {
+  background: var(--Main-100, #dad7d6);
+  cursor: not-allowed;
+}
+
+/* Negative 버튼 스타일 */
+.button.negative {
+  background: white;
+  border: 1.2px solid var(--Red-300, #ff4d6c);
+  color: red;
+}
+
+.button.negative.pressed {
+  background: var(--Red-100, #fff5f6);
+}
+
+.button.negative.disabled {
+  background: var(--Main-100, #dad7d6);
+  cursor: not-allowed;
+}
+
+/* 아이콘 위치 스타일 */
+.button.icon-left {
+  padding-left: 18px;
+}
+
+.button.icon-right {
+  padding-right: 18px;
+}
+
+/* 크기별 아이콘과 간격 조정 */
+.button.large.icon-left,
+.button.large.icon-right {
+  gap: 8px;
+}
+
+.button.medium.icon-left,
+.button.medium.icon-right {
+  gap: 6px;
+}
+
+.button.small.icon-left,
+.button.small.icon-right {
+  gap: 6px;
+}
+
+.button.xsmall.icon-left,
+.button.xsmall.icon-right {
+  gap: 4px;
+}
