@@ -1,0 +1,91 @@
+.reservation-complete-container {
+    font-family: "Paperlogy", sans-serif;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--main-50);
+  }
+  
+  .complete-message {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--main-800);
+  }
+  
+  .sub-message {
+    font-size: 14px;
+    color: var(--main-400);
+    margin-bottom: 21px;
+    margin-top: 11px;
+  }
+
+  .reservation-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 140px;
+  }
+  
+  .complete-selected-datetime {
+    margin: 0 auto;
+    padding: 8px 20px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: Paperlogy;
+    font-size: 12px;
+    font-weight: 400;
+    background-color: var(--main-300);
+    color: white;
+    border-radius: 8px;
+    width: max-content;
+  }
+  
+  .calendar-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .reservation-logo {
+        min-width: 120px;
+    height: auto;
+    margin-top: auto;
+    margin-bottom: 124px;
+}
+  
+  .reservation-complete-footer {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 20px;
+    box-sizing: border-box;
+  }
+
+.button {
+    flex: 1;
+    height: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.button.secondary {
+    background: white;
+    border: 1px solid var(--main-500);
+    color: var(--main-500);
+}
+
+.button.primary {
+    background: var(--main-500);
+    color: white;
+}
