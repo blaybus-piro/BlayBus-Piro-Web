@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import WeeklyCalendar from '../components/WeeklyCalendar/WeeklyCalendar';
 import TimeSelector from '../components/TimeSelector/TimeSelector';
@@ -11,6 +12,7 @@ interface ReservationPageProps {
 export default function ReservationPage({ consultMethod }: ReservationPageProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const pageTitle = consultMethod === 'offline' 
     ? '대면 컨설팅 예약하기' 
@@ -29,6 +31,12 @@ export default function ReservationPage({ consultMethod }: ReservationPageProps)
     const day = days[selectedDate.getDay()];
     
     return `${selectedDate.getFullYear()}년 ${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일 (${day}) ${selectedTime}`;
+  };
+
+  const handlePayment = () => {
+    if (selectedDate && selectedTime) {
+      navigate('/reservationcomplete', { state: { selectedDate, selectedTime, consultMethod } });
+    }
   };
 
   return (
@@ -62,6 +70,7 @@ export default function ReservationPage({ consultMethod }: ReservationPageProps)
         <button 
           className={`payment-button ${!(selectedDate && selectedTime) ? 'disabled' : ''}`}
           disabled={!(selectedDate && selectedTime)}
+          onClick={handlePayment}
         >
           {consultMethod === 'offline' ? '40,000원' : '20,000원'} 결제하기
         </button>
