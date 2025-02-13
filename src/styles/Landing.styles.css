@@ -1,17 +1,15 @@
-/* 기본 스타일 */
 html,
 body {
   display: flex;
   margin: 0;
   padding: 0;
-  background-color: #453730;
   height: 100%;
   width: 100%;
   overflow: hidden;
   justify-content: center;
 }
 
-.container {
+.landing-container {
   font-family: "Paperlogy", sans-serif;
   color: #ffffff;
   height: 100vh;
@@ -20,6 +18,7 @@ body {
   flex-direction: column;
   align-items: center;
   position: relative;
+  background-color: #453730;
 }
 
 /* 헤더 스타일 */

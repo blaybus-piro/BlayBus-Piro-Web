@@ -2,7 +2,7 @@ import "../styles/landing.styles.css";
 
 export default function LandingPage() {
   return (
-    <div className="container">
+    <div className="landing-container">
       <header className="header">
         <img src="/icons/logo.svg" alt="logo" />
       </header>
