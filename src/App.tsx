@@ -3,6 +3,7 @@ import "./App.css";
 import "./styles/global.css";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
+import Reservation from "./pages/Reservation";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
         {/* 기본 랜딩 페이지 (/) */}
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/reservation" element={<Reservation />} />
       </Routes>
     </Router>
   );

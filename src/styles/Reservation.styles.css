@@ -1,0 +1,57 @@
+.reservation-container {
+    font-family: "Paperlogy", sans-serif;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--main-50);
+  }
+  
+  .selected-datetime {
+    margin: 0 auto;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: Paperlogy;
+    font-size: 14px;
+    color: #666;
+    background-color: #9E9490;
+    color: #fff;
+    border-radius: 4px;
+    position: fixed;
+    bottom: 92px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .calendar-icon {
+    display: flex;
+    align-items: center;
+  }
+  
+  .reservation-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    background-color: #453730;
+    box-sizing: border-box;
+  }
+  
+  .payment-button {
+    width: 100%;
+    height: 52px;
+    background: none;
+    border: none;
+    color: #fff;
+    font-family: Paperlogy;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

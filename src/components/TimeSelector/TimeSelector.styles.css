@@ -1,0 +1,49 @@
+.time-selector {
+    padding: 0 20px;
+  }
+  
+  .time-section {
+    margin-bottom: 24px;
+  }
+  
+  .time-section-title {
+    font-family: Paperlogy;
+    font-size: 16px;
+    font-weight: 600;
+    color: #000;
+    margin: 0 0 16px 0;
+  }
+  
+  .time-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  
+  .time-button {
+    height: 40px;
+    border-radius: 20px;
+    border: 1px solid #E0E0E0;
+    background: #fff;
+    color: #000;
+    font-family: Paperlogy;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  
+  .time-button.disabled {
+    background: #F5F5F5;
+    color: #999;
+    border-color: #F5F5F5;
+    cursor: not-allowed;
+  }
+  
+  .time-button.selected {
+    background: #000;
+    color: #fff;
+    border-color: #000;
+  }
