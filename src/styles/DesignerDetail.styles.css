@@ -7,6 +7,11 @@
     background: var(--main-50);
 }
 
+/* 헤더 */
+.page-header {
+    box-sizing: border-box;
+}
+
 /* 포트폴리오 */
 .portfolio {
     height: 214px;
