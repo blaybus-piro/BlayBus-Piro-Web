@@ -68,7 +68,11 @@ export default function WeeklyCalendar({ selectedDate, onDateSelect }: WeeklyCal
   const isDateDisabled = (date: Date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return date < today;
+    
+    const threeMonthsLater = new Date(today);
+    threeMonthsLater.setMonth(today.getMonth() + 3);
+    
+    return date < today || date > threeMonthsLater;
   };
 
   const isDayNameDisabled = (date: Date) => {

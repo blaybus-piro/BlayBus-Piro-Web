@@ -31,8 +31,9 @@ export default function TimeSelector({
     timeDate.setHours(hours, minutes, 0, 0);
     
     const now = new Date();
+    const isWithinValidTimeRange = hours >= 10 && hours < 20;
     
-    return timeDate < now || bookedTimes.includes(time);
+    return timeDate < now || !isWithinValidTimeRange || bookedTimes.includes(time);
   };
 
   const getTimeButtonClass = (time: string) => {
