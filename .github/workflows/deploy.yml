@@ -38,8 +38,10 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           script: |
             # 이미 돌아가는 컨테이너가 있다면 중단/제거
-            docker stop ${{ secrets.DOCKERHUB_REPO_NAME }} || true
-            docker rm ${{ secrets.DOCKERHUB_REPO_NAME }} || true
+            docker-compose down
+
+            # 이상한 이미지들 제거
+            docker image prune -a 
 
             # 최신 이미지 pull
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ secrets.DOCKERHUB_REPO_NAME }}:latest
