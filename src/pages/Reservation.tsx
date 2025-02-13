@@ -6,7 +6,7 @@ import TimeSelector from '../components/TimeSelector/TimeSelector';
 import '../styles/Reservation.styles.css';
 
 interface ReservationPageProps {
-  consultMethod: 'offline' | 'online';
+  consultMethod?: 'offline' | 'online';
 }
 
 export default function ReservationPage({ consultMethod }: ReservationPageProps) {
