@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import ImageModal from '../ImageModal/ImageModal';
+import image from '../../assets/image.svg';
 import './Portfolio.styles.css';
 
 interface PortfolioProps {
@@ -38,10 +39,9 @@ const Portfolio: React.FC<PortfolioProps> = ({ images }) => {
                     <img className="main-image" src={images[0]} alt="Main" onClick={() => openModal(0)} />
                     <div className="side-images">
                         <img className="side-image" src={images[1]} alt="Side 1" onClick={() => openModal(1)} />
-                        <img className="side-image" src={images[2]} alt="Side 2" onClick={() => openModal(2)} />
-                        <div className="more-images">
-                            <img className="side-image" src={images[3]} alt="Side 3" />
-                            {images.length > 4 && <div className="more-overlay">+{images.length - 4}</div>}
+                        <div className="overlay-container" onClick={() => openModal(2)}>
+                            <img className="side-image" src={images[2]} alt="Side 2" />
+                            {images.length >= 4 && <div className="more-overlay"><img src={image} alt="image"></img></div>}
                         </div>
                     </div>
                 </div>
