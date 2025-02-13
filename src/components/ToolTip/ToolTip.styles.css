@@ -1,0 +1,43 @@
+/* ✅ 말풍선이 감싸는 요소 */
+.tooltip-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip {
+    position: absolute;
+    top: 120%;
+    left: 490%;
+    transform: translateX(-50%);
+    background: var(--main-800);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 2px;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+    white-space: nowrap;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease-in-out;
+    margin-top: 3px;
+}
+
+/* 말풍선 위쪽 화살표 */
+.tooltip::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 21%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: transparent transparent var(--main-800) transparent;
+}
+
+/* 마우스를 올렸을 때 말풍선 표시 */
+.tooltip-wrapper:hover .tooltip {
+    opacity: 1;
+    visibility: visible;
+}
