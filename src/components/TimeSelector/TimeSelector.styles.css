@@ -1,5 +1,7 @@
 .time-selector {
-    padding: 0 20px;
+    padding: 16px 20px;
+    background-color: white;
+    padding-bottom: 0;
   }
   
   .time-section {
@@ -10,24 +12,25 @@
     font-family: Paperlogy;
     font-size: 16px;
     font-weight: 600;
-    color: #000;
-    margin: 0 0 16px 0;
+    color: var(--main-800);
+    margin: 0 0 6px 0;
   }
   
   .time-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    gap: 6px;
   }
   
   .time-button {
-    height: 40px;
-    border-radius: 20px;
-    border: 1px solid #E0E0E0;
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid var(--main-500);
     background: #fff;
-    color: #000;
+    color: var(--main-500);
     font-family: Paperlogy;
     font-size: 14px;
+    font-weight: 300;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -36,14 +39,14 @@
   }
   
   .time-button.disabled {
-    background: #F5F5F5;
-    color: #999;
-    border-color: #F5F5F5;
+    color: var(--main-200);
+    background-color: var(--main-100);
+    border: 1px solid var(--main-100);
     cursor: not-allowed;
   }
   
   .time-button.selected {
-    background: #000;
+    background: var(--main-500);
     color: #fff;
-    border-color: #000;
+    border-color: var(--main-500);
   }

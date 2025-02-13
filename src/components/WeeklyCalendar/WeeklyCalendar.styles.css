@@ -2,6 +2,7 @@
     padding: 12px 20px;
     background-color: white;
     margin-top: 16px;
+    margin-bottom: 12px;
   }
   
   .calendar-header {
@@ -43,12 +44,12 @@
     font-family: Paperlogy;
     font-size: 16px;
     font-weight: 300;
-    color: #666;
+    color: var(--main-800);
     padding: 5px 0;
   }
   
   .day-name.sunday {
-    color: #FF0000;
+    color: var(--red-300);
   }
 
   .day-name.sunday.disabled {
@@ -56,7 +57,7 @@
   }
 
   .day-name.disabled {
-    color: #ccc;
+    color: var(--main-100);
   }
   
   .calendar-date {
@@ -81,15 +82,16 @@
   }
   
   .calendar-date.disabled {
-    color: #ccc;
+    color: var(--main-100);
     cursor: not-allowed;
   }
   
   .calendar-date.selected {
-    background-color: #000;
+    background-color: var(--main-800);
     color: #fff;
   }
   
   .calendar-date:not(.disabled):hover {
     background-color: #f5f5f5;
+    color: var(--main-800);
   }
