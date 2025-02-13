@@ -1,0 +1,23 @@
+/* 헤더 전체 */
+.home-header {
+    display: flex;
+    padding: 12px 20px;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--main-50);
+    border-bottom: 1px solid var(--main-200);
+}
+
+.reservation {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.reservation span {
+    color: var(--main-800);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 140%;
+}
