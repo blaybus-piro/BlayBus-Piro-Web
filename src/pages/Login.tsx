@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Input from "../components/Input/Input";
 import Header from "../components/Header/Header";
-import "../styles/login.styles.css";
+import "../styles/Login.styles.css";
 
 export default function LoginPage() {
   const [name, setName] = useState("");
@@ -13,7 +13,7 @@ export default function LoginPage() {
 
       <main className="login-content">
         <h2 className="login-title">정보를 입력해 주세요</h2>
-        
+
         <div className="login-form">
           <Input
             value={name}
@@ -22,7 +22,7 @@ export default function LoginPage() {
           >
             이름
           </Input>
-          
+
           <Input
             value={email}
             onChange={(e) => setEmail(e.target.value)}
@@ -34,7 +34,7 @@ export default function LoginPage() {
       </main>
 
       <footer className="login-footer">
-        <button 
+        <button
           className="continue-btn"
           disabled={!name || !email}
         >
