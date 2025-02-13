@@ -63,7 +63,7 @@ export default function ReservationPage({ consultMethod }: ReservationPageProps)
           className={`payment-button ${!(selectedDate && selectedTime) ? 'disabled' : ''}`}
           disabled={!(selectedDate && selectedTime)}
         >
-          20,000원 결제하기
+          {consultMethod === 'offline' ? '40,000원' : '20,000원'} 결제하기
         </button>
       </footer>
     </div>
