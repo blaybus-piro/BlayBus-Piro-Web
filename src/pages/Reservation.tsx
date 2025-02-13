@@ -38,7 +38,7 @@ export default function ReservationPage() {
 
       {selectedDate && selectedTime && (
         <div className="selected-datetime">
-          <span className="calendar-icon">📅</span>
+          <img src="/icons/calendar.svg" alt="calendar" />
           {formatSelectedDateTime()}
         </div>
       )}
