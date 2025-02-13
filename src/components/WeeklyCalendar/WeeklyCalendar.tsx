@@ -1,17 +1,38 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import './WeeklyCalendar.styles.css';
 
 interface WeeklyCalendarProps {
   selectedDate: Date | null;
   onDateSelect: (date: Date) => void;
+  bookedTimesByDate?: Record<string, string[]>;
 }
 
-export default function WeeklyCalendar({ selectedDate, onDateSelect }: WeeklyCalendarProps) {
+export default function WeeklyCalendar({ 
+  selectedDate, 
+  onDateSelect, 
+  bookedTimesByDate = {} 
+}: WeeklyCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     return today;
   });
+
+  const generateDates = useMemo(() => {
+    return () => {
+      const dates = [];
+      const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+      const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+      
+      const currentDate = new Date(firstDay);
+
+      while (currentDate <= lastDay) {
+        dates.push(new Date(currentDate));
+        currentDate.setDate(currentDate.getDate() + 1);
+      }
+      return dates;
+    };
+  }, [currentMonth]);
 
   const findTodayIndex = (dates: Date[]) => {
     const today = new Date();
@@ -31,7 +52,7 @@ export default function WeeklyCalendar({ selectedDate, onDateSelect }: WeeklyCal
       
       scrollContainer.scrollLeft = Math.max(0, scrollTo);
     }
-  }, []);
+  }, [generateDates]);
 
   const handlePrevMonth = () => {
     const newDate = new Date(currentMonth);
@@ -49,26 +70,32 @@ export default function WeeklyCalendar({ selectedDate, onDateSelect }: WeeklyCal
     return `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
   };
 
-  const generateDates = () => {
-    const dates = [];
-    const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
-    const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
-    
-    // Start from the first day of the month
-    let currentDate = new Date(firstDay);
-
-    // Generate all dates for the current month
-    while (currentDate <= lastDay) {
-      dates.push(new Date(currentDate));
-      currentDate.setDate(currentDate.getDate() + 1);
-    }
-    return dates;
-  };
-
   const isDateDisabled = (date: Date) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return date < today;
+    
+    const threeMonthsLater = new Date(today);
+    threeMonthsLater.setMonth(today.getMonth() + 3);
+    
+    // 날짜 기본 제한 조건
+    if (date < today || date > threeMonthsLater) {
+      return true;
+    }
+
+    // 해당 날짜의 모든 시간이 예약되었는지 확인
+    const dateKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    const bookedTimesForDate = bookedTimesByDate[dateKey] || [];
+    
+    // 모든 시간대(10:00~20:00)가 예약되었다면 날짜 비활성화
+    const allAvailableTimes = [
+      "10:00", "10:30", "11:00", "11:30", 
+      "12:00", "12:30", "13:00", "13:30", 
+      "14:00", "14:30", "15:00", "15:30", 
+      "16:00", "16:30", "17:00", "17:30", 
+      "18:00", "18:30", "19:00", "19:30", "20:00",
+    ];
+
+    return allAvailableTimes.every(time => bookedTimesForDate.includes(time));
   };
 
   const isDayNameDisabled = (date: Date) => {
@@ -93,7 +120,7 @@ export default function WeeklyCalendar({ selectedDate, onDateSelect }: WeeklyCal
   };
 
   const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
-  const dates = generateDates();
+  const dates = useMemo(() => generateDates(), [generateDates]);
 
   return (
     <div className="calendar-container">

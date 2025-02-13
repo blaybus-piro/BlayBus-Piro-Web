@@ -4,12 +4,23 @@ import WeeklyCalendar from '../components/WeeklyCalendar/WeeklyCalendar';
 import TimeSelector from '../components/TimeSelector/TimeSelector';
 import '../styles/Reservation.styles.css';
 
-export default function ReservationPage() {
+interface ReservationPageProps {
+  consultMethod: 'offline' | 'online';
+}
+
+export default function ReservationPage({ consultMethod }: ReservationPageProps) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
 
-  // 예시 예약된 시간들
-  const bookedTimes = ["13:00", "15:30", "16:00"];
+  const pageTitle = consultMethod === 'offline' 
+    ? '대면 컨설팅 예약하기' 
+    : '비대면 컨설팅 예약하기';
+
+  // 예약된 시간들 (날짜별로 구성)
+  const bookedTimesByDate: Record<string, string[]> = {
+    '2025-02-15': ['13:00', '15:30', '16:00'],
+    '2025-02-16': ['10:00', '11:00', '13:00', '14:00']
+  };
 
   const formatSelectedDateTime = () => {
     if (!selectedDate || !selectedTime) return '';
@@ -22,18 +33,22 @@ export default function ReservationPage() {
 
   return (
     <div className="reservation-container">
-      <Header title="비대면 컨설팅 예약하기" />
+      <Header title={pageTitle} />
       
       <WeeklyCalendar 
         selectedDate={selectedDate}
         onDateSelect={setSelectedDate}
+        bookedTimesByDate={bookedTimesByDate}
       />
       
       <TimeSelector
         selectedDate={selectedDate}
         selectedTime={selectedTime}
         onTimeSelect={setSelectedTime}
-        bookedTimes={bookedTimes}
+        bookedTimes={selectedDate 
+          ? bookedTimesByDate[`${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`] || [] 
+          : []
+        }
       />
 
       {selectedDate && selectedTime && (
@@ -44,7 +59,10 @@ export default function ReservationPage() {
       )}
 
       <footer className="reservation-footer">
-        <button className="payment-button">
+        <button 
+          className={`payment-button ${!(selectedDate && selectedTime) ? 'disabled' : ''}`}
+          disabled={!(selectedDate && selectedTime)}
+        >
           20,000원 결제하기
         </button>
       </footer>
