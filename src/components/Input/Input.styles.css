@@ -1,0 +1,61 @@
+/* input 컨테이너 */
+.input-container {
+    display: flex;
+    width: 335px;
+    flex-direction: column;
+    gap: 6px;
+}
+
+/* label */
+.input-label {
+    color: white;
+    font-family: Paperlogy;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+}
+
+/* 기본 input */
+.custom-input {
+    height: 52px;
+    padding: 20px 16px;
+    border-radius: 2px;
+    border: 1.2px solid var(--main-200);
+    outline: none;
+    background: white;
+    color: var(--main-200);
+    font-family: Paperlogy;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+    box-sizing: border-box;
+}
+
+/* 입력이 있을 때 label */
+.input-container.filled .custom-input {
+    color: black;
+}
+
+/* 비활성화 label */
+.input-container.disabled .custom-input {
+    background: var(--main-50);
+    cursor: not-allowed;
+}
+
+/* 에러 상태 label */
+.input-container.error .custom-input {
+    border-color: var(--red-300);
+}
+
+/* 에러 메시지 */
+.error-message {
+    margin: 0;
+    color: var(--red-300);
+    font-family: Paperlogy;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+}

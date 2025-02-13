@@ -1,0 +1,73 @@
+/* 모달 배경 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+/* 모달이 열릴 때 */
+.modal-overlay.visible {
+    opacity: 1;
+}
+
+/* 모달이 닫힐 때 */
+.modal-overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* 모달 콘텐츠 */
+.modal-content {
+    background: white;
+    width: 326px;
+    height: 154px;
+    padding-top: 28px;
+    border-radius: 2px;
+}
+
+/* 모달이 열릴 때 */
+.modal-content.open {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 모달이 닫힐 때 */
+.modal-content.close {
+    opacity: 0;
+    transform: translateY(-20px);
+}
+
+/* 모달 내부 텍스트 */
+.modal-text {
+    padding: 28px 10px;
+    color: #575F70;
+    text-align: center;
+    font-family: Paperlogy;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 140%;
+}
+
+/* 버튼 영역 */
+.modal-buttons {
+    display: flex;
+    padding: 10px 16px 16px 16px;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+}
+
+Button {
+    width: 143px;
+    font-size: 16px;
+    line-height: 140%;
+}
