@@ -16,8 +16,11 @@ export default function ReservationPage({ consultMethod }: ReservationPageProps)
     ? '대면 컨설팅 예약하기' 
     : '비대면 컨설팅 예약하기';
 
-  // 예시 예약된 시간들
-  const bookedTimes = ["13:00", "15:30", "16:00"];
+  // 예약된 시간들 (날짜별로 구성)
+  const bookedTimesByDate: Record<string, string[]> = {
+    '2025-02-15': ['13:00', '15:30', '16:00'],
+    '2025-02-16': ['10:00', '11:00', '13:00', '14:00']
+  };
 
   const formatSelectedDateTime = () => {
     if (!selectedDate || !selectedTime) return '';
@@ -35,13 +38,17 @@ export default function ReservationPage({ consultMethod }: ReservationPageProps)
       <WeeklyCalendar 
         selectedDate={selectedDate}
         onDateSelect={setSelectedDate}
+        bookedTimesByDate={bookedTimesByDate}
       />
       
       <TimeSelector
         selectedDate={selectedDate}
         selectedTime={selectedTime}
         onTimeSelect={setSelectedTime}
-        bookedTimes={bookedTimes}
+        bookedTimes={selectedDate 
+          ? bookedTimesByDate[`${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`] || [] 
+          : []
+        }
       />
 
       {selectedDate && selectedTime && (
