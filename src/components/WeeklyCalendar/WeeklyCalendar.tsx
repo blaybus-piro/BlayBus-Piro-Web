@@ -7,44 +7,62 @@ interface WeeklyCalendarProps {
 }
 
 export default function WeeklyCalendar({ selectedDate, onDateSelect }: WeeklyCalendarProps) {
-    const [currentWeekStart, setCurrentWeekStart] = useState(() => {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        return today;
-      });
-  const [weekDates, setWeekDates] = useState<Date[]>([]);
-
-  useEffect(() => {
-    const dates = [];
-    const start = new Date(currentWeekStart);
-    start.setDate(start.getDate() - start.getDay() + 1); // Start from Monday
-
-    for (let i = 0; i < 7; i++) {
-      dates.push(new Date(start));
-      start.setDate(start.getDate() + 1);
-    }
-    setWeekDates(dates);
-  }, [currentWeekStart]);
-
-  const isPrevWeekDisabled = () => {
-    const firstDateOfWeek = weekDates[0];
+  const [currentMonth, setCurrentMonth] = useState(() => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return firstDateOfWeek <= today;
-  };
+    return today;
+  });
 
-  const handlePrevWeek = () => {
-    if (!isPrevWeekDisabled()) {
-      const newDate = new Date(currentWeekStart);
-      newDate.setDate(newDate.getDate() - 7);
-      setCurrentWeekStart(newDate);
+  const findTodayIndex = (dates: Date[]) => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return dates.findIndex(date => date.toDateString() === today.toDateString());
+  };
+  
+  useEffect(() => {
+    const scrollContainer = document.querySelector('.calendar-scroll-container');
+    const dates = generateDates();
+    const todayIndex = findTodayIndex(dates);
+    
+    if (scrollContainer && todayIndex !== -1) {
+      const columnWidth = 50; // calendar-column의 width + gap
+      const containerWidth = scrollContainer.clientWidth;
+      const scrollTo = (todayIndex * columnWidth) - (containerWidth / 2) + (columnWidth / 2);
+      
+      scrollContainer.scrollLeft = Math.max(0, scrollTo);
     }
+  }, []);
+
+  const handlePrevMonth = () => {
+    const newDate = new Date(currentMonth);
+    newDate.setMonth(newDate.getMonth() - 1);
+    setCurrentMonth(newDate);
   };
 
-  const handleNextWeek = () => {
-    const newDate = new Date(currentWeekStart);
-    newDate.setDate(newDate.getDate() + 7);
-    setCurrentWeekStart(newDate);
+  const handleNextMonth = () => {
+    const newDate = new Date(currentMonth);
+    newDate.setMonth(newDate.getMonth() + 1);
+    setCurrentMonth(newDate);
+  };
+
+  const formatMonth = (date: Date) => {
+    return `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
+  };
+
+  const generateDates = () => {
+    const dates = [];
+    const firstDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), 1);
+    const lastDay = new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 0);
+    
+    // Start from the first day of the month
+    let currentDate = new Date(firstDay);
+
+    // Generate all dates for the current month
+    while (currentDate <= lastDay) {
+      dates.push(new Date(currentDate));
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return dates;
   };
 
   const isDateDisabled = (date: Date) => {
@@ -53,87 +71,73 @@ export default function WeeklyCalendar({ selectedDate, onDateSelect }: WeeklyCal
     return date < today;
   };
 
-  const isDayNameDisabled = (index: number) => {
-    if (!weekDates[index]) return false;
-    return isDateDisabled(weekDates[index]);
+  const isDayNameDisabled = (date: Date) => {
+    return isDateDisabled(date);
   };
 
-  const dayNameClassName = (index: number) => {
+  const dayNameClassName = (date: Date) => {
     const classes = ['day-name'];
-    if (index === 6) classes.push('sunday');
-    if (isDayNameDisabled(index)) classes.push('disabled');
+    if (date.getDay() === 0) classes.push('sunday');
+    if (isDayNameDisabled(date)) classes.push('disabled');
     return classes.join(' ');
   };
 
   const dateClassName = (date: Date) => {
     const classes = ['calendar-date'];
-    
-    if (date.getDay() === 0) {
-      classes.push('sunday');
-    }
-    
-    if (isDateDisabled(date)) {
-      classes.push('disabled');
-    }
-    
+    if (date.getDay() === 0) classes.push('sunday');
+    if (isDateDisabled(date)) classes.push('disabled');
     if (selectedDate && date.toDateString() === selectedDate.toDateString()) {
       classes.push('selected');
     }
-    
     return classes.join(' ');
   };
 
-  const formatMonth = (date: Date) => {
-    return `${date.getFullYear()}년 ${date.getMonth() + 1}월`;
-  };
-
   const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
+  const dates = generateDates();
 
   return (
     <div className="calendar-container">
       <div className="calendar-header">
         <button 
-          onClick={handlePrevWeek} 
+          onClick={handlePrevMonth} 
           className="arrow-button"
-          disabled={isPrevWeekDisabled()}
         >
           <img 
-            src={`/icons/${isPrevWeekDisabled() ? 'backarrow-disabled' : 'backarrow-reserve'}.svg`} 
-            alt="이전 주" 
+            src="/icons/backarrow-reserve.svg"
+            alt="이전 달" 
           />
         </button>
-        <span className="month-display">{formatMonth(currentWeekStart)}</span>
+        <span className="month-display">{formatMonth(currentMonth)}</span>
         <button 
-          onClick={handleNextWeek} 
+          onClick={handleNextMonth} 
           className="arrow-button"
         >
           <img 
             src="/icons/frontarrow.svg" 
-            alt="다음 주" 
+            alt="다음 달" 
           />
         </button>
       </div>
       
-      <div className="calendar-days">
-        {dayNames.map((day, index) => (
-          <div 
-            key={day} 
-            className={dayNameClassName(index)}
-          >
-            {day}
+      <div className="calendar-scroll-container">
+        <div className="calendar-content">
+          <div className="calendar-days">
+            {dates.map((date) => (
+              <div key={date.toISOString()} className="calendar-column">
+                <div className={dayNameClassName(date)}>
+                  {dayNames[date.getDay()]}
+                </div>
+                <button
+                  className={dateClassName(date)}
+                  onClick={() => !isDateDisabled(date) && onDateSelect(date)}
+                  disabled={isDateDisabled(date)}
+                >
+                  {date.getDate()}
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
-        
-        {weekDates.map((date, index) => (
-          <button
-            key={date.toISOString()}
-            className={dateClassName(date)}
-            onClick={() => !isDateDisabled(date) && onDateSelect(date)}
-            disabled={isDateDisabled(date)}
-          >
-            {date.getDate()}
-          </button>
-        ))}
+        </div>
       </div>
     </div>
   );
