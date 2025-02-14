@@ -18,6 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/reservation" element={<Reservation />} />
         <Route path="/reservationcomplete" element={<ReservationComplete />} />
+        <Route path="/Reservation" element={<Reservation />} />
         <Route path="/DesignerDetail" element={<DesignerDetail />} />
       </Routes>
     </Router>

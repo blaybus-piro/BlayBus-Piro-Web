@@ -17,7 +17,7 @@ const DesignerDetail: React.FC = () => {
 
     const designerData = {
         name: "이초 디자이너",
-        address: "서울 강남구 압구정 79길 서울 강남구 압구정 79길서울 강남구 압구정 79길서울 강남구 압구정 79길",
+        address: "서울 강남구 압구정 79길",
         specialty: "펌 전문",
         profileImage: "/src/assets/image1.png",
         portfolioImages: [
