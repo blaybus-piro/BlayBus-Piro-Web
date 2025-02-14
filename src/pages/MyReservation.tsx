@@ -28,7 +28,7 @@ const MyReservation: React.FC = () => {
             profileImage: "/src/assets/image3.png",
             time: "2025년 2월 8일 (일) 20:30",
             type: "대면" as const,
-            status: "cancelled" as const,
+            status: "canceled" as const,
         },
         {
             id: 4,

@@ -36,12 +36,12 @@
     gap: 8px;
 }
 
-.reservation-info.cancelled h3,
-.reservation-info.cancelled p {
+.reservation-info.canceled h3,
+.reservation-info.canceled p {
     color: white;
 }
 
-.reservation-info.cancelled .my-reservation-date img {
+.reservation-info.canceled .my-reservation-date img {
     filter: brightness(0) invert(1);
 }
 
@@ -82,7 +82,7 @@
     color: white;
 }
 
-.tag.cancelled {
+.tag.canceled {
     background: white;
     color: var(--red-300);
 }
@@ -93,7 +93,7 @@
 }
 
 /* 더보기 */
-.more.cancelled {
+.more.canceled {
     filter: invert(1);
 }
 

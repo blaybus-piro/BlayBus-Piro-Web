@@ -13,7 +13,7 @@ interface ReservationCardProps {
     name: string;
     time: string;
     type: "대면" | "비대면";
-    status: "active" | "cancelled" | "completed";
+    status: "active" | "canceled" | "completed";
     meetLink?: string;
 }
 
@@ -28,7 +28,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
 }) => {
     const displayText =
         status === "active" ? `${type} 컨설팅`
-            : status === "cancelled" ? "취소된 예약"
+            : status === "canceled" ? "취소된 예약"
                 : "완료된 예약";
 
     const navigate = useNavigate();
