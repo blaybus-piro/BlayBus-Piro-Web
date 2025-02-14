@@ -4,7 +4,7 @@ export default function LandingPage() {
   const isDockerEnv = window.location.hostname === "backend"; // Docker 내부인지 확인
   const BACKEND_URL = isDockerEnv
     ? "http://backend:8080"  // Docker 컨테이너 내부에서 실행할 때
-    : import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"; // 로컬 환경
+    : import.meta.env.VITE_BACKEND_URL || "http://backend:8080"; // 로컬 환경
 
   const handleGoogleLogin = async () => {
     try {
