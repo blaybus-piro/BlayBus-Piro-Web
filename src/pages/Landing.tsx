@@ -1,6 +1,18 @@
 import "../styles/Landing.styles.css";
 
 export default function LandingPage() {
+  const handleGoogleLogin = async () => {
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/oauth2/login`);
+      if (!res.ok) throw new Error("로그인 URL 요청 실패");
+
+      const loginUrl = await res.text(); // 응답이 단순 URL일 경우
+      window.location.href = loginUrl; // 응답받은 URL로 이동
+    } catch (err) {
+      console.error("Google Login Error:", err);
+    }
+  };
+
   return (
     <div className="landing-container">
       <header className="header">
@@ -18,7 +30,7 @@ export default function LandingPage() {
       </div>
 
       <div className="button-container">
-        <button className="google-login-btn">
+        <button className="google-login-btn" onClick={handleGoogleLogin}>
           <img src="/icons/google-icon.svg" alt="Google" />
           구글로 시작하기
         </button>

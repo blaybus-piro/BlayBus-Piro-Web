@@ -1,10 +1,12 @@
 .designerDetail-container {
     min-width: 375px;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
     display: flex;
     flex-direction: column;
     background: var(--main-50);
+    padding-bottom: 80px;
 }
 
 /* 헤더 */
@@ -110,11 +112,15 @@
 
 /* 컨설팅 버튼 */
 .consulting-buttons {
-    padding: 0 20px;
-    margin-top: auto;
-    margin-bottom: 54px;
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
     display: flex;
-    gap: 11px;
+    justify-content: center;
+    gap: 12px;
+    padding: 0 20px;
+    box-sizing: border-box;
 }
 
 /* 비활성화된 버튼은 왼쪽으로 */
@@ -159,4 +165,10 @@
 
 .button.primary.pressed {
     transform: none;
+}
+
+@media (max-height:735px) {
+    body {
+        overflow: auto;
+    }
 }

@@ -1,22 +1,21 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSearchParams } from "react-router-dom";
 import Header from '../components/Header/Header';
 import WeeklyCalendar from '../components/WeeklyCalendar/WeeklyCalendar';
 import TimeSelector from '../components/TimeSelector/TimeSelector';
 import '../styles/Reservation.styles.css';
 
-interface ReservationPageProps {
-  consultMethod?: 'offline' | 'online';
-}
-
-export default function ReservationPage({ consultMethod }: ReservationPageProps) {
+export default function ReservationPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const consultMethod = searchParams.get("method") === "offline" ? "offline" : "online";
 
-  const pageTitle = consultMethod === 'offline' 
-    ? '대면 컨설팅 예약하기' 
-    : '비대면 컨설팅 예약하기';
+  const pageTitle = consultMethod === "offline" 
+    ? "대면 컨설팅 예약하기" 
+    : "비대면 컨설팅 예약하기";
 
   // 예약된 시간들 (날짜별로 구성)
   const bookedTimesByDate: Record<string, string[]> = {

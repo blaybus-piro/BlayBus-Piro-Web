@@ -6,8 +6,8 @@
 
 .tooltip {
     position: absolute;
-    top: 120%;
-    left: 490%;
+    top: 150%;
+    left: 540%;
     transform: translateX(-50%);
     background: var(--main-800);
     color: white;
