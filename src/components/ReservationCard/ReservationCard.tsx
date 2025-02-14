@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from "react-router-dom";
 import component from "../../assets/component.svg";
 import calendar from "../../assets/calendar.svg";
 import Button from "../Button/Button";
@@ -29,6 +30,16 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
             : status === "cancelled" ? "취소된 예약"
                 : "완료된 예약";
 
+    /* 구글 미트 링크 이동 */
+    const navigate = useNavigate();
+    const handleNavigate = () => {
+        if (meetLink) {
+            navigate(meetLink);
+        } else {
+            console.error("유효한 링크가 없습니다.");
+        }
+    };
+
     return (
         <div className={`reservation-card ${status}`} key={id}>
             <div className="card-header">
@@ -54,6 +65,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
                         <Button
                             variant="primary"
                             children="구글 미트 링크 바로가기"
+                            onClick={handleNavigate}
                         />
                     </div>
                 )
