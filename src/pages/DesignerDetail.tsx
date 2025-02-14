@@ -6,8 +6,15 @@ import question from "../assets/question.svg";
 import Button from "../components/Button/Button";
 import ToolTip from "../components/ToolTip/ToolTip";
 import "../styles/DesignerDetail.styles.css";
+import { useNavigate } from "react-router-dom";
 
 const DesignerDetail: React.FC = () => {
+    const navigate = useNavigate();
+
+    const handleConsultingClick = (method: "online" | "offline") => {
+        navigate(`/reservation?method=${method}`);
+    };
+
     const designerData = {
         name: "이초 디자이너",
         address: "서울 강남구 압구정 79길 서울 강남구 압구정 79길서울 강남구 압구정 79길서울 강남구 압구정 79길",
@@ -68,12 +75,14 @@ const DesignerDetail: React.FC = () => {
                     size="large"
                     children="비대면 컨설팅"
                     disabled={isRemoteDisabled}
+                    onClick={() => handleConsultingClick("online")}
                 />
                 <Button
                     variant="primary"
                     size="large"
                     children="대면 컨설팅"
                     disabled={isInpersonDisabled}
+                    onClick={() => handleConsultingClick("offline")}
                 />
             </footer>
         </div >
