@@ -31,7 +31,6 @@ export default function OAuthCallback() {
       credentials: "include",
     })
 
-
       .then((res) => {
         if (!res.ok) throw new Error("서버 응답 오류");
 
