@@ -1,10 +1,12 @@
 .designerDetail-container {
     min-width: 375px;
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
+    height: auto;
     display: flex;
     flex-direction: column;
     background: var(--main-50);
+    padding-bottom: 80px;
 }
 
 /* 헤더 */
@@ -163,4 +165,10 @@
 
 .button.primary.pressed {
     transform: none;
+}
+
+@media (max-height:735px) {
+    body {
+        overflow: auto;
+    }
 }
