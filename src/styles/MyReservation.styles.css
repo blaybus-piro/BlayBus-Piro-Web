@@ -19,3 +19,7 @@
 .my-reservation-list::-webkit-scrollbar {
     display: none;
 }
+
+.my-reservation-list .reservation-card-bottom2 {
+    display: none;
+}

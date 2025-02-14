@@ -35,7 +35,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
 
     return (
         <div className={`reservation-card ${status}`} key={id}>
-            <div className="card-header">
+            <div className="reservation-card-header">
                 <img className="profile-image" src={profileImage} alt={name} />
                 <div className={`reservation-info ${status}`}>
                     <h3>{name}</h3>
@@ -45,12 +45,32 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
                     </div>
                     <span className={`tag ${status}`}>{displayText}</span>
                 </div>
-                <img className={`more ${status}`} src={component} alt="component" />
+                <img
+                    className={`more ${status}`}
+                    src={component}
+                    alt="component"
+                    onClick={() => {
+                        if (status !== "canceled") {
+                            navigate(`/myreservation/${id}`, {
+                                state: {
+                                    id,
+                                    name,
+                                    profileImage,
+                                    time,
+                                    type,
+                                    status,
+                                    meetLink,
+                                },
+                            });
+                        }
+                    }}
+                    style={{ cursor: status === "canceled" ? "not-allowed" : "pointer" }}
+                />
             </div>
 
             {
                 status === "active" && type === "비대면" && (
-                    <div className="reservation-card-bottom">
+                    <div className="reservation-card-bottom1">
                         <LinkButton
                             link={meetLink ?? ""}
                             status={status}
@@ -65,7 +85,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
 
             {
                 status === "completed" && type === "비대면" && (
-                    <div className="reservation-card-bottom">
+                    <div className="reservation-card-bottom1">
                         <LinkButton
                             link={meetLink ?? ""}
                             status={status}
@@ -76,6 +96,13 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
                     </div>
                 )
             }
+
+            <div className="reservation-card-bottom2">
+                <Button
+                    variant="secondary"
+                    children="디자이너 정보 더보기"
+                />
+            </div>
         </div >
     );
 };
