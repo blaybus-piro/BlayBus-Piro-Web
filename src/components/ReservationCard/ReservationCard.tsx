@@ -4,6 +4,7 @@ import component from "../../assets/component.svg";
 import calendar from "../../assets/calendar.svg";
 import Button from "../Button/Button";
 import LinkButton from "../LinkButton/LinkButton";
+import MeetLinkButton from "../MeetLinkButton";
 import "./ReservationCard.styles.css";
 
 interface ReservationCardProps {
@@ -30,15 +31,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
             : status === "cancelled" ? "취소된 예약"
                 : "완료된 예약";
 
-    /* 구글 미트 링크 이동 */
     const navigate = useNavigate();
-    const handleNavigate = () => {
-        if (meetLink) {
-            navigate(meetLink);
-        } else {
-            console.error("유효한 링크가 없습니다.");
-        }
-    };
 
     return (
         <div className={`reservation-card ${status}`} key={id}>
@@ -62,10 +55,9 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
                             link={meetLink ?? ""}
                             status={status}
                         />
-                        <Button
-                            variant="primary"
+                        <MeetLinkButton
                             children="구글 미트 링크 바로가기"
-                            onClick={handleNavigate}
+                            meetLink={meetLink ?? ""}
                         />
                     </div>
                 )
@@ -78,10 +70,8 @@ const ReservationCard: React.FC<ReservationCardProps> = ({
                             link={meetLink ?? ""}
                             status={status}
                         />
-                        <Button
-                            variant="primary"
+                        <MeetLinkButton
                             children="구글 미트 링크 바로가기"
-                            disabled={true}
                         />
                     </div>
                 )
