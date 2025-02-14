@@ -9,7 +9,7 @@ import "../styles/DesignerDetail.styles.css";
 
 const DesignerDetail: React.FC = () => {
     const designerData = {
-        name: "이초 디자이너이초 디자이너이초 디자이너",
+        name: "이초 디자이너",
         address: "서울 강남구 압구정 79길 서울 강남구 압구정 79길서울 강남구 압구정 79길서울 강남구 압구정 79길",
         specialty: "펌 전문",
         profileImage: "/src/assets/image1.png",
@@ -61,7 +61,8 @@ const DesignerDetail: React.FC = () => {
                     </p>
                 </div>
             </div>
-            <div className={`consulting-buttons ${isInpersonDisabled ? "reverse" : ""}`}>
+
+            <footer className={`consulting-buttons ${isInpersonDisabled ? "reverse" : ""}`}>
                 <Button
                     variant="secondary"
                     size="large"
@@ -74,7 +75,7 @@ const DesignerDetail: React.FC = () => {
                     children="대면 컨설팅"
                     disabled={isInpersonDisabled}
                 />
-            </div>
+            </footer>
         </div >
     );
 };
