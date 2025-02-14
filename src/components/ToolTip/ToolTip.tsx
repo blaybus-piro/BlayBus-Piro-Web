@@ -16,7 +16,9 @@ const ToolTip: React.FC<ToolTipProps> = ({ text, children }) => {
             onMouseLeave={() => setVisible(false)}
         >
             {children}
-            <div className="tooltip" dangerouslySetInnerHTML={{ __html: text }} />
+            {visible && ( // visible 상태에 따라 툴팁을 표시
+                <div className="tooltip" dangerouslySetInnerHTML={{ __html: text }} />
+            )}
         </div>
     );
 };
