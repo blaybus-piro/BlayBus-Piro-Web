@@ -5,6 +5,7 @@ import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Reservation from "./pages/Reservation";
 import ReservationComplete from "./pages/ReservationComplete";
+import DesignerDetail from "./pages/DesignerDetail";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/reservation" element={<Reservation />} />
         <Route path="/reservationcomplete" element={<ReservationComplete />} />
+        <Route path="/DesignerDetail" element={<DesignerDetail />} />
       </Routes>
     </Router>
   );

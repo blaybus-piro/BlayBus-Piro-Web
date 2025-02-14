@@ -1,0 +1,162 @@
+.designerDetail-container {
+    min-width: 375px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: var(--main-50);
+}
+
+/* 헤더 */
+.page-header {
+    box-sizing: border-box;
+}
+
+/* 포트폴리오 */
+.portfolio {
+    height: 214px;
+    padding: 0 20px;
+    margin-top: 9px;
+}
+
+/* DesignerInfo */
+.designer-info {
+    padding: 0 20px;
+    margin-top: 20px;
+}
+
+/* 소개글 */
+.description {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 0 20px;
+    margin-top: 32px;
+}
+
+.description h4,
+.price-top h4 {
+    color: var(--main-800);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    margin: 0;
+}
+
+.description p {
+    padding: 20px 16px;
+    border-radius: 2px;
+    border: 1.2px solid var(--main-100);
+    background: white;
+    color: var(--main-800);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    margin: 0;
+}
+
+/* 컨설팅 가격 */
+.consulting-price {
+    padding: 0 20px;
+    margin-top: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.price-top {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+}
+
+.tooltip-wrapper {
+    display: flex;
+}
+
+.price-bottom {
+    padding: 20px 16px;
+    border-radius: 2px;
+    border: 1.2px solid var(--main-100);
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.price {
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.price span {
+    color: var(--main-400);
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+}
+
+.price div {
+    flex-grow: 1;
+    margin: 0 8px;
+    border-bottom: 1px dotted var(--main-100);
+}
+
+.price.disabled span {
+    color: var(--main-100);
+}
+
+/* 컨설팅 버튼 */
+.consulting-buttons {
+    padding: 0 20px;
+    margin-top: auto;
+    margin-bottom: 54px;
+    display: flex;
+    gap: 11px;
+}
+
+/* 비활성화된 버튼은 왼쪽으로 */
+.consulting-buttons.reverse {
+    flex-direction: row-reverse;
+}
+
+/* 활성화된 버튼은 primary 형식 */
+.consulting-buttons.reverse .button.secondary {
+    background: var(--main-500);
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+}
+
+.button.secondary {
+    border: 1px solid var(--main-500);
+    width: 50%;
+    color: var(--main-500);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+}
+
+.button.primary {
+    width: 50%;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+}
+
+/* 버튼 비활성화 */
+.button.disabled {
+    background: var(--main-100);
+    color: var(--main-200);
+    border: none;
+}
+
+.button.primary.pressed {
+    transform: none;
+}
