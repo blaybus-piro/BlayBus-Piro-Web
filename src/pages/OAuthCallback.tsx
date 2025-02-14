@@ -20,7 +20,7 @@ export default function OAuthCallback() {
     const isDockerEnv = window.location.hostname === "backend";
     const BACKEND_URL = isDockerEnv
       ? "http://backend:8080"
-      : import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+      : import.meta.env.VITE_BACKEND_URL || "https://blarybus.seunghooo.p-e.kr";
 
     fetch(`${BACKEND_URL}/api/oauth2/callback`, {
       method: "POST",
@@ -30,12 +30,12 @@ export default function OAuthCallback() {
       body: formData,
       credentials: "include",
     })
-
       .then((res) => {
         if (!res.ok) throw new Error("서버 응답 오류");
 
-        const accessToken = res.headers.get("Authorization"); // 응답 헤더에서 AccessToken 추출
+        let accessToken = res.headers.get("Authorization"); // 응답 헤더에서 AccessToken 추출
         if (accessToken) {
+          accessToken = accessToken.replace("Bearer ", ""); // "Bearer " 접두사 제거
           localStorage.setItem("accessToken", accessToken);
           navigate("/designerlist"); // 로그인 성공 후 디자이너 리스트 페이지로 이동
         } else {
