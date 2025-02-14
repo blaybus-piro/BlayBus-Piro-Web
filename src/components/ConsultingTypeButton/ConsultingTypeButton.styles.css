@@ -1,0 +1,25 @@
+.consulting-type-button {
+  display: flex;
+  padding: 6px 16px 6px 16px;
+  justify-content: center;
+  align-items: center;
+  gap: 5.4px;
+  border-radius: 2px;
+  border: 1px solid var(--main-100, #DAD7D6);
+  background: var(--white, #FFF);
+  font-size: 12px;
+  font-weight: 400;
+  font-family: "Paperlogy", sans-serif;
+  color: var(--main-200);
+  cursor: pointer;
+}
+
+.consulting-type-button.selected {
+  background: var(--main-500);
+  border: 1px solid var(--main-500);
+  color: var(--white, #FFF);
+}
+
+.consulting-type-button.selected img {
+  filter: brightness(0) invert(1);
+}

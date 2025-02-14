@@ -17,14 +17,21 @@ export default function OAuthCallback() {
     const formData = new URLSearchParams();
     formData.append("code", code);
 
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/api/oauth2/callback`, {
+    const isDockerEnv = window.location.hostname === "backend";
+    const BACKEND_URL = isDockerEnv
+      ? "http://backend:8080"
+      : import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
+    fetch(`${BACKEND_URL}/api/oauth2/callback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
       body: formData,
-      credentials: "include", // 쿠키 포함 (RefreshToken 저장)
+      credentials: "include",
     })
+
+
       .then((res) => {
         if (!res.ok) throw new Error("서버 응답 오류");
 

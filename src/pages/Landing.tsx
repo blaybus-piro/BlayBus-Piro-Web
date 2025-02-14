@@ -1,17 +1,23 @@
 import "../styles/Landing.styles.css";
 
 export default function LandingPage() {
+  const isDockerEnv = window.location.hostname === "backend"; // Docker 내부인지 확인
+  const BACKEND_URL = isDockerEnv
+    ? "http://backend:8080"  // Docker 컨테이너 내부에서 실행할 때
+    : import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"; // 로컬 환경
+
   const handleGoogleLogin = async () => {
     try {
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/oauth2/login`);
+      const res = await fetch(`${BACKEND_URL}/api/oauth2/login`);
       if (!res.ok) throw new Error("로그인 URL 요청 실패");
 
       const loginUrl = await res.text(); // 응답이 단순 URL일 경우
-      window.location.href = loginUrl; // 응답받은 URL로 이동
+      window.location.href = loginUrl;
     } catch (err) {
       console.error("Google Login Error:", err);
     }
   };
+
 
   return (
     <div className="landing-container">

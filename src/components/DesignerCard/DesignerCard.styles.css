@@ -1,0 +1,69 @@
+.designer-card {
+  width: 100%;
+  background: none;
+  border-radius: 2px;
+}
+
+.designer-card-image {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+  border-radius: 2px;
+}
+
+.designer-card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+.designer-card-image:hover {
+  transform: translateY(-2px);
+}
+
+.specialty-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  background: var(--main-300);
+  border-radius: 2px;
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 300;
+  font-family: "Paperlogy", sans-serif;
+}
+
+.designer-card-info {
+  padding: 8px 0;
+}
+
+.designer-card-profile {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 4px;
+}
+
+.profile-card-image {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 0.5px solid white;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.designer-card-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--main-800);
+}
+
+.price {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--main-400);
+}

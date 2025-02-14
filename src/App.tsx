@@ -7,6 +7,7 @@ import Reservation from "./pages/Reservation";
 import ReservationComplete from "./pages/ReservationComplete";
 import DesignerDetail from "./pages/DesignerDetail";
 import OAuthCallback from "./pages/OAuthCallback";
+import DesignerList from "./pages/DesignerList";
 
 function App() {
   return (
@@ -15,10 +16,11 @@ function App() {
         {/* 기본 랜딩 페이지 (/) */}
         <Route path="/" element={<Landing />} />
         <Route path="/oauth/callback" element={<OAuthCallback />} />
+        <Route path="/designerlist" element={<DesignerList />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reservation" element={<Reservation />} />
         <Route path="/reservationcomplete" element={<ReservationComplete />} />
-        <Route path="/DesignerDetail" element={<DesignerDetail />} />
+        <Route path="/designerdetail" element={<DesignerDetail />} />
       </Routes>
     </Router>
   );

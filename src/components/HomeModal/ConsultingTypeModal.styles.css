@@ -1,0 +1,35 @@
+.consulting-modal-overlay {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    z-index: 1000;
+    height: 100%;
+  }
+  
+  .consulting-modal-content {
+    display: flex;
+    background-color: white;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 72px;
+  }
+  
+  .consulting-modal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 24px;
+    padding-inline: 24px;
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+  }
+  
+  .consulting-modal-item:hover {
+    background-color: var(--main-50);
+  }

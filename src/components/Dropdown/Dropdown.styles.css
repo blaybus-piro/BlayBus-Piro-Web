@@ -1,0 +1,65 @@
+.dropdown {
+    position: relative;
+    font-family: "Paperlogy", sans-serif;
+  }
+  
+  .dropdown-button {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-radius: 2px;
+    border: none;
+    background: none;
+    min-width: 120px;
+    cursor: pointer;
+    justify-content: flex-end;
+  }
+  
+  .dropdown-label {
+    font-size: 14px;
+    font-family: "Paperlogy", sans-serif;
+    font-weight: 400;
+    color: var(--main-800);
+  }
+  
+  .dropdown-arrow.open {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown-menu {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 0;
+    width: 100%;
+    background: var(--white, #FFF);
+    border: 1px solid var(--main-100, #DAD7D6);
+    border-radius: 2px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .dropdown-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px;
+    font-size: 14px;
+    cursor: pointer;
+    color: var(--main-900);
+  }
+  
+  .dropdown-item:not(:last-child) {
+    border-bottom: 1px solid var(--main-50);
+  }
+  
+  .dropdown-item:hover {
+    background-color: var(--main-50);
+  }
+  
+  .dropdown-item.selected {
+    font-weight: 500;
+  }
+  
+  .check-icon {
+    width: 16px;
+    height: 16px;
+  }
