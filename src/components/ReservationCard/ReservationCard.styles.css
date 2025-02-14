@@ -1,0 +1,112 @@
+.reservation-card {
+    background: white;
+    padding: 20px;
+    margin-bottom: 18px;
+}
+
+.reservation-card.cancelled {
+    background: var(--main-100);
+}
+
+/* 카드 헤더 */
+.card-header {
+    display: flex;
+    align-items: flex-start;
+}
+
+/* 프로필 이미지 */
+.profile-image {
+    width: 83px;
+    height: 83px;
+    border-radius: 50px;
+    border: 1px solid white;
+    box-shadow: 0px 0px 2.099px 0px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    object-fit: cover;
+}
+
+/* 정보 */
+.reservation-info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 0;
+    margin-left: 12px;
+    margin-right: auto;
+    gap: 8px;
+}
+
+.reservation-info.cancelled h3,
+.reservation-info.cancelled p {
+    color: white;
+}
+
+.reservation-info.cancelled .my-reservation-date img {
+    filter: brightness(0) invert(1);
+}
+
+.reservation-info h3 {
+    color: var(--main-800);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    margin: 0;
+}
+
+.my-reservation-date {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.my-reservation-date p {
+    margin: 0;
+    color: var(--main-400);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    letter-spacing: -0.14px;
+}
+
+.tag {
+    padding: 4px 10px;
+    text-align: center;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 300;
+    border-radius: 2px;
+}
+
+.tag.active {
+    background: var(--main-500);
+    color: white;
+}
+
+.tag.cancelled {
+    background: white;
+    color: var(--red-300);
+}
+
+.tag.completed {
+    background: var(--main-300);
+    color: white;
+}
+
+/* 더보기 */
+.more.cancelled {
+    filter: invert(1);
+}
+
+.reservation-card-bottom {
+    display: flex;
+    margin-top: 24px;
+    gap: 11px;
+}
+
+/* 구글 미트 링크 바로가기 */
+.card-bottom .button.primary {
+    min-width: 278px;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+}

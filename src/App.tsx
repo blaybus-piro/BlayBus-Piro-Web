@@ -8,6 +8,7 @@ import ReservationComplete from "./pages/ReservationComplete";
 import DesignerDetail from "./pages/DesignerDetail";
 import OAuthCallback from "./pages/OAuthCallback";
 import DesignerList from "./pages/DesignerList";
+import MyReservation from "./pages/MyReservation";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/reservation" element={<Reservation />} />
         <Route path="/reservationcomplete" element={<ReservationComplete />} />
         <Route path="/designerdetail" element={<DesignerDetail />} />
+        <Route path="/myreservation" element={<MyReservation />} />
       </Routes>
     </Router>
   );
