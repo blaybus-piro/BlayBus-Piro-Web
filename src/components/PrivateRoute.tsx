@@ -7,10 +7,11 @@ export default function PrivateRoute() {
   useEffect(() => {
     const handleStorageChange = () => {
       const token = localStorage.getItem("accessToken");
-      setIsAuthenticated(!!token);
+      setIsAuthenticated(!!token); // 🔹 상태 업데이트
 
       if (!token) {
-        window.location.href = "/";
+        console.warn("🚨 토큰 없음 → 자동 로그아웃 실행");
+        window.location.href = "/"; // 🔹 로그인 페이지로 이동
       }
     };
 
