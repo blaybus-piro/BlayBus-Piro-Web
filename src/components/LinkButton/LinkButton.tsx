@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import linkIcon from "../../assets/link.svg";
 import "./LinkButton.styles.css";
-import Toast from "../Toast/Toast"; // 새로 만든 Toast 컴포넌트 import
+import Toast from "../Toast/Toast";
 
 interface LinkButtonProps {
     link: string;
