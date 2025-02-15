@@ -22,13 +22,13 @@ export default function OAuthCallback() {
       ? "http://backend:8080"
       : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
 
-    // 🔹 fetch 요청으로 변경
-    fetch(`${BACKEND_URL}/oauth2`, {
+    // 🔹 `fetch`를 사용하여 `/oauth2/callback`으로 POST 요청 보내기
+    fetch(`${BACKEND_URL}/oauth2/callback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: new URLSearchParams({ code }).toString(),
+      body: new URLSearchParams({ code }).toString(), // `code`를 body에 추가
       credentials: "include",
     })
       .then((res) => {
@@ -37,7 +37,7 @@ export default function OAuthCallback() {
       })
       .then((data) => {
         console.log("OAuth2 토큰 응답:", data);
-        navigate("/designerlist"); // 성공 시 이동
+        navigate("/designerlist"); // 로그인 성공 시 이동
       })
       .catch((err) => {
         console.error("OAuth Callback Error:", err);
