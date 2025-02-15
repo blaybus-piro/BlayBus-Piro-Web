@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { DesignerCard } from '../components/DesignerCard/DesignerCard';
 import { ConsultingTypeButton } from '../components/ConsultingTypeButton/ConsultingTypeButton';
 import { SortingButton } from '../components/SortingButton/SortingButton';
@@ -41,6 +42,7 @@ export default function DesignerList() {
     const [consultingType, setConsultingType] = useState('');
     const [sortBy, setSortBy] = useState('distance');
     const [designers, setDesigners] = useState(dummyDesigners);
+    const navigate = useNavigate();
   
     useEffect(() => {
         let filtered = [...dummyDesigners];
@@ -78,7 +80,7 @@ export default function DesignerList() {
         <header className="designer-list-header">
           <div className="header-content">
             <img src="/icons/header-logo.svg" alt="header-logo" />
-            <button className="calendar-button">
+            <button className="calendar-button" onClick={() => navigate('/myreservation')}>
               <img src="/icons/home-calendar.svg" alt="home-calendar" />
               <span className="sr-only">내 예약</span>
             </button>

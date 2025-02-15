@@ -38,6 +38,15 @@ const MyReservation: React.FC = () => {
             type: "비대면" as const,
             status: "completed" as const,
             meetLink: "/",
+        },
+        {
+            id: 5,
+            name: "이초 디자이너",
+            profileImage: "/src/assets/image2.png",
+            time: "2025년 2월 3일 (토) 10:30",
+            type: "비대면" as const,
+            status: "completed" as const,
+            meetLink: "/",
         }
     ];
 
