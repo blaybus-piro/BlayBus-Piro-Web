@@ -1,0 +1,21 @@
+.toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(50px);
+    background-color: var(--main-500);
+    color: white;
+    padding: 12px 18px;
+    border-radius: 8px;
+    font-family: Paperlogy;
+    font-size: 14px;
+    font-weight: 400;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+    z-index: 1000;
+}
+
+.toast.visible {
+    opacity: 5;
+    transform: translateX(-50%) translateY(0);
+}
