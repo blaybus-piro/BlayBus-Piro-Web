@@ -7,9 +7,10 @@ export default function OAuthCallback() {
 
   useEffect(() => {
     if (location.pathname !== "/oauth2/callback") return; // '/oauth2'에서만 실행
-
+    console.log(location.pathname);
     const urlParams = new URLSearchParams(location.search);
     const code = urlParams.get("code");
+    console.log(code);
 
     if (!code) {
       console.error("Authorization code가 없습니다.");
