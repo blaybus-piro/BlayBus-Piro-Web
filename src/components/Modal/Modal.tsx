@@ -16,7 +16,7 @@ const Modal: React.FC<ModalProps> = ({
     onClose,
     onConfirm,
     children,
-    confirmText = "확인",
+    confirmText = "예약 취소",
     confirmVariant = "primary",
 }) => {
     if (!isOpen) return null;
@@ -37,7 +37,7 @@ const Modal: React.FC<ModalProps> = ({
                 </div>
                 <div className="modal-buttons">
                     <Button variant="secondary" size="large" onClick={onClose}>
-                        취소
+                        아니요
                     </Button>
                     <Button variant={confirmVariant} size="large" onClick={onConfirm}>
                         {confirmText}

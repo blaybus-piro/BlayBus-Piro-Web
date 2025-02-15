@@ -1,0 +1,22 @@
+/* 링크 복사 */
+.link {
+    width: 46px;
+    height: 46px;
+    padding: 12px 16px;
+    border-radius: 2px;
+    border: 1px solid var(--main-500);
+    background: white;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.link.completed {
+    border: none;
+    background: var(--main-100);
+}
+
+.link.completed img {
+    filter: brightness(0) saturate(100%) invert(75%) sepia(5%) saturate(50%) hue-rotate(5deg);
+}

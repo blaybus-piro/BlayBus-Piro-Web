@@ -1,0 +1,25 @@
+.my-reservation-container {
+    background: var(--main-50);
+    min-width: 375px;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.my-reservation-container .page-header {
+    margin-bottom: 16px;
+}
+
+.my-reservation-list {
+    overflow: scroll;
+    padding-bottom: 34px;
+}
+
+.my-reservation-list::-webkit-scrollbar {
+    display: none;
+}
+
+.my-reservation-list .reservation-card-bottom2 {
+    display: none;
+}
