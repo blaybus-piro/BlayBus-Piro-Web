@@ -17,7 +17,7 @@ const LinkButton: React.FC<LinkButtonProps> = ({ link, status }) => {
         navigator.clipboard.writeText(link)
             .then(() => {
                 setIsToastVisible(true);
-                setTimeout(() => setIsToastVisible(false), 2000); // 2초 후 사라짐
+                setTimeout(() => setIsToastVisible(false), 2000);
             })
             .catch((err) => console.error("복사 실패:", err));
     };
