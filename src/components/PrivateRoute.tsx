@@ -6,7 +6,12 @@ export default function PrivateRoute() {
 
   useEffect(() => {
     const handleStorageChange = () => {
-      setIsAuthenticated(!!localStorage.getItem("accessToken"));
+      const token = localStorage.getItem("accessToken");
+      setIsAuthenticated(!!token);
+
+      if (!token) {
+        window.location.href = "/";
+      }
     };
 
     window.addEventListener("storage", handleStorageChange);

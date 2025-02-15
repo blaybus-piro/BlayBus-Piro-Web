@@ -12,7 +12,9 @@ export const apiRequest = async (endpoint: string, options = {}) => {
     });
   
     if (response.status === 401) {
+      console.warn("토큰 만료: 자동 로그아웃 실행");
       localStorage.removeItem("accessToken");
+      window.dispatchEvent(new Event("storage"));
       window.location.href = "/";
     }
   
