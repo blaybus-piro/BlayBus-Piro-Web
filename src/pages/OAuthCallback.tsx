@@ -22,7 +22,7 @@ export default function OAuthCallback() {
       : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
 
     // 🔹 `fetch`를 사용하여 `/oauth2/callback`으로 POST 요청 보내기
-    fetch(`${BACKEND_URL}/oauth2/callback`, {
+    fetch(`${BACKEND_URL}/api/oauth2/callback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
