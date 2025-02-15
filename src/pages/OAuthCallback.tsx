@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 export default function OAuthCallback() {
   const navigate = useNavigate();
-  const location = useLocation(); // 현재 URL 정보 가져오기
+  const location = useLocation();
 
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);

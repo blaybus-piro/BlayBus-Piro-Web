@@ -10,6 +10,7 @@ import OAuthCallback from "./pages/OAuthCallback";
 import DesignerList from "./pages/DesignerList";
 import MyReservation from "./pages/MyReservation";
 import MyReservationDetail from "./pages/MyReservationDetail";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
   return (
@@ -25,6 +26,14 @@ function App() {
         <Route path="/designerdetail" element={<DesignerDetail />} />
         <Route path="/myreservation" element={<MyReservation />} />
         <Route path="/myreservation/:myreservationId" element={<MyReservationDetail />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/designerlist" element={<DesignerList />} />
+          <Route path="/reservation" element={<Reservation />} />
+          <Route path="/reservationcomplete" element={<ReservationComplete />} />
+          <Route path="/designerdetail" element={<DesignerDetail />} />
+          <Route path="/myreservation" element={<MyReservation />} />
+          <Route path="/myreservation/:myreservationId" element={<MyReservationDetail />} />
+        </Route>
       </Routes>
     </Router>
   );
