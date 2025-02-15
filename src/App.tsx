@@ -17,7 +17,7 @@ function App() {
       <Routes>
         {/* 기본 랜딩 페이지 (/) */}
         <Route path="/" element={<Landing />} />
-        <Route path="/oauth/callback" element={<OAuthCallback />} />
+        <Route path="/oauth2" element={<OAuthCallback />} />
         <Route path="/designerlist" element={<DesignerList />} />
         <Route path="/login" element={<Login />} />
         <Route path="/reservation" element={<Reservation />} />

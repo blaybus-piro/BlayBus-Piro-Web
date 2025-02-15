@@ -6,8 +6,6 @@ export default function OAuthCallback() {
   const location = useLocation(); // 현재 URL 정보 가져오기
 
   useEffect(() => {
-    if (location.pathname !== "/oauth2/callback") return; // '/oauth2'에서만 실행
-    console.log(location.pathname);
     const urlParams = new URLSearchParams(location.search);
     const code = urlParams.get("code");
     console.log(code);
