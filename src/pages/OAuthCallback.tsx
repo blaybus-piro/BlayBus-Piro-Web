@@ -12,7 +12,7 @@ export default function OAuthCallback() {
 
     if (!code) {
       console.error("Authorization code가 없습니다.");
-      navigate("/"); // 로그인 실패 시 홈으로 리디렉트
+      navigate("/");
       return;
     }
 
@@ -21,34 +21,31 @@ export default function OAuthCallback() {
       ? "http://backend:8080"
       : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
 
-    // 🔹 `fetch`를 사용하여 `/oauth2/callback`으로 POST 요청 보내기
     fetch(`${BACKEND_URL}/api/oauth2/callback`, {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
       },
-      body: new URLSearchParams({ code }).toString(), // `code`를 body에 추가
+      body: new URLSearchParams({ code }).toString(),
       credentials: "include",
     })
     .then((res) => {
       if (!res.ok) throw new Error("OAuth2 토큰 요청 실패");
+      console.log(res.headers);
 
-      // 🔹 응답 헤더에서 Authorization 헤더 값 추출
       let accessToken = res.headers.get("Authorization");
       if (!accessToken) throw new Error("Authorization 헤더 없음");
 
-      // 🔹 Bearer 접두사 제거
       accessToken = accessToken.replace("Bearer ", "");
 
-      // 🔹 localStorage에 저장
       localStorage.setItem("accessToken", accessToken);
 
       console.log("OAuth2 AccessToken 저장 완료:", accessToken);
-      navigate("/designerlist"); // 로그인 성공 시 이동
+      navigate("/designerlist");
     })
     .catch((err) => {
       console.error("OAuth Callback Error:", err);
-      navigate("/"); // 실패 시 홈으로 이동
+      navigate("/");
     });
   }, [location, navigate]);
 
