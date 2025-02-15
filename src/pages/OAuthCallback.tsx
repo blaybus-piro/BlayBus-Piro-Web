@@ -14,38 +14,14 @@ export default function OAuthCallback() {
       return;
     }
 
-    const formData = new URLSearchParams();
-    formData.append("code", code);
-
     const isDockerEnv = window.location.hostname === "backend";
     const BACKEND_URL = isDockerEnv
       ? "http://backend:8080"
-      : import.meta.env.VITE_BACKEND_URL || "https://blarybus.seunghooo.p-e.kr";
+      : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
 
-    fetch(`${BACKEND_URL}/api/oauth2/callback`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/x-www-form-urlencoded",
-      },
-      body: formData,
-      credentials: "include",
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("서버 응답 오류");
-
-        let accessToken = res.headers.get("Authorization"); // 응답 헤더에서 AccessToken 추출
-        if (accessToken) {
-          accessToken = accessToken.replace("Bearer ", ""); // "Bearer " 접두사 제거
-          localStorage.setItem("accessToken", accessToken);
-          navigate("/designerlist"); // 로그인 성공 후 디자이너 리스트 페이지로 이동
-        } else {
-          throw new Error("AccessToken이 없습니다.");
-        }
-      })
-      .catch((err) => {
-        console.error("OAuth Callback Error:", err);
-        navigate("/"); // 로그인 실패 시 홈으로 이동
-      });
+    // 백엔드에서 요청한 대로 '/oauth2'로 리디렉션 처리
+    const redirectUrl = `${BACKEND_URL}/oauth2`;
+    window.location.href = `${redirectUrl}?code=${code}`;
   }, [navigate]);
 
   return <div>로그인 처리 중...</div>;
