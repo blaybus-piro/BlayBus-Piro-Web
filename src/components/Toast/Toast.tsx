@@ -15,9 +15,9 @@ const Toast: React.FC<ToastProps> = ({ message, isVisible, onClose }) => {
       setVisible(true);
       const timer = setTimeout(() => {
         setVisible(false);
-      }, 1500); // 1.5초 후 사라짐
+      }, 2000);
 
-      const cleanupTimer = setTimeout(onClose, 2000); // 2초 후 완전히 언마운트
+      const cleanupTimer = setTimeout(onClose, 2000);
 
       return () => {
         clearTimeout(timer);
