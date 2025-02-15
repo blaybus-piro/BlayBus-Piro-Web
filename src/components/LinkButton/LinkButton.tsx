@@ -32,7 +32,6 @@ const LinkButton: React.FC<LinkButtonProps> = ({ link, status }) => {
                 <img src={linkIcon} alt="link" />
             </div>
 
-            {/* 토스트 메시지 */}
             <Toast message="링크가 복사되었습니다!" isVisible={isToastVisible} onClose={() => setIsToastVisible(false)} />
         </>
     );
