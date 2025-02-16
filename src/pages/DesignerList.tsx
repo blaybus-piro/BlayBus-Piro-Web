@@ -7,6 +7,8 @@ import '../styles/DesignerList.styles.css';
 import ToolTip from "../components/ToolTip/ToolTip";
 import question from "../assets/question.svg";
 import { getUserIdFromToken } from '../utils/auth';
+import { apiRequest } from '../utils/api';
+import { ReservationState } from '../types/Reservation';
 
 interface Designer {
   id: number;
@@ -85,8 +87,35 @@ export default function DesignerList() {
   const [sortBy, setSortBy] = useState('distance');
   const [designers, setDesigners] = useState<Designer[]>(dummyDesigners);
   const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [hasUpComingReservation, setHasUpComingReservation] = useState(false);
   const navigate = useNavigate();
   const userId = getUserIdFromToken();
+
+  useEffect(() => {
+    if (!userId) return;
+
+    apiRequest(`api/consulting/user/${userId}`)
+      .then((reservations) => {
+        const now = new Date();
+        const hasUpComing = reservations.some((reservation: ReservationState) => {
+          const reservationTime = new Date(reservation.time);
+          const diffHours = (reservationTime.getTime() - now.getTime()) / (1000 * 60 * 60);
+          return diffHours > 0 && diffHours <= 24;
+        });
+
+        setHasUpComingReservation(hasUpComing);
+        if (hasUpComing) {
+          setShowTooltip(true);
+          const timeout = setTimeout(() => setShowTooltip(false), 3000);
+
+          return () => clearTimeout(timeout);
+        }
+      })
+      .catch((error) => {
+        console.error("예약 정보를 불러오는데 실패했습니다.", error);
+      });
+  }, [userId]);
 
   useEffect(() => {
     /* 디자이너 주소까지의 거리 구하기 */
@@ -151,9 +180,16 @@ export default function DesignerList() {
         <div className="header-content">
           <img src="/icons/header-logo.svg" alt="header-logo" />
           <button className="calendar-button" onClick={() => navigate(`/myreservation/${userId}`)}>
+            {hasUpComingReservation && <div className="red-dot" />}
             <img src="/icons/home-calendar.svg" alt="home-calendar" />
+            {showTooltip && hasUpComingReservation && (
+              <div className="upComing-tooltip">
+                임박한 예약이 없어요!
+              </div>
+            )}
             <span className="sr-only">내 예약</span>
           </button>
+
         </div>
       </header>
 

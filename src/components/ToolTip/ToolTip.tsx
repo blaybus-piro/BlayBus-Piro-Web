@@ -3,7 +3,7 @@ import "./ToolTip.styles.css";
 
 interface ToolTipProps {
     text: string;
-    children: React.ReactNode;
+    children?: React.ReactNode;
 }
 
 const ToolTip: React.FC<ToolTipProps> = ({ text, children }) => {
