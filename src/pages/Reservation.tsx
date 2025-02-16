@@ -32,11 +32,17 @@ export default function ReservationPage() {
     return `${selectedDate.getFullYear()}년 ${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일 (${day}) ${selectedTime}`;
   };
 
-  const handlePayment = () => {
+  const handleNext = () => {
     if (selectedDate && selectedTime) {
-      navigate('/reservationcomplete', { state: { selectedDate, selectedTime, consultMethod } });
+      navigate('/payment', { state: { selectedDate, selectedTime, consultMethod } });
     }
   };
+
+  // const handlePayment = () => {
+  //   if (selectedDate && selectedTime) {
+  //     navigate('/reservationcomplete', { state: { selectedDate, selectedTime, consultMethod } });
+  //   }
+  // };
 
   return (
     <div className="reservation-container">
@@ -65,13 +71,23 @@ export default function ReservationPage() {
         </div>
       )}
 
-      <footer className="reservation-footer">
+      {/* <footer className="reservation-footer">
         <button 
           className={`payment-button ${!(selectedDate && selectedTime) ? 'disabled' : ''}`}
           disabled={!(selectedDate && selectedTime)}
           onClick={handlePayment}
         >
           {consultMethod === 'offline' ? '40,000원' : '20,000원'} 결제하기
+        </button>
+      </footer> */}
+
+      <footer className="reservation-footer">
+        <button 
+          className={`next-button ${!(selectedDate && selectedTime) ? 'disabled' : ''}`}
+          disabled={!(selectedDate && selectedTime)}
+          onClick={handleNext}
+        >
+          다음
         </button>
       </footer>
     </div>

@@ -48,3 +48,50 @@
 .my-reservation-list .reservation-card-bottom2 {
     display: none;
 }
+
+/* Empty state styles */
+.myreservation-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 80vh;
+    text-align: center;
+    margin-top: 70px;
+}
+
+.empty-state-title {
+    font-size: 20px;
+    font-weight: 500;
+    font-family: "Paperlogy", sans-serif;
+    color: var(--main-800);
+    margin-bottom: 0px;
+}
+
+.empty-state-subtitle {
+    font-size: 14px;
+    font-weight: 300;
+    color: var(--main-400);
+    margin-bottom: 24px;
+}
+
+.retry-button {
+    padding: 6px 10px;
+    border: 1px solid var(--main-500);
+    background: white;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: "Paperlogy", sans-serif;
+}
+
+.retry-button:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.myreservation-logo {
+    width: 100%;
+    margin-top: 195px;
+    margin-bottom: 124px;
+}

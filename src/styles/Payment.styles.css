@@ -1,0 +1,107 @@
+.payment-container {
+    font-family: "Paperlogy", sans-serif;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    flex-direction: column;
+    background: var(--background-color);
+  }
+  
+  .payment-content {
+    padding: 24px 20px;
+    flex: 1;
+  }
+  
+  .section-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+  
+  .info-box {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 32px;
+  }
+  
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  
+  .info-row:last-child {
+    margin-bottom: 0;
+  }
+  
+  .info-label {
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+  
+  .info-value {
+    font-size: 14px;
+  }
+  
+  .payment-method-section {
+    margin-top: 32px;
+  }
+  
+  .payment-buttons {
+    display: flex;
+    gap: 12px;
+  }
+  
+  .payment-method-button {
+    flex: 1;
+    height: 52px;
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .payment-method-button.selected {
+    border-color: var(--main-500);
+    background-color: var(--main-50);
+  }
+  
+  .kakao-icon {
+    margin-right: 6px;
+    height: 20px;
+  }
+  
+  .payment-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .payment-button {
+    width: 100%;
+    height: 72px;
+    background: var(--main-500);
+    border: none;
+    color: white;
+    font-family: Paperlogy;
+    font-size: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .payment-button.disabled {
+    background-color: var(--main-100);
+    color: var(--main-200);
+    cursor: not-allowed;
+  }
