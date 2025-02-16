@@ -243,3 +243,63 @@
     font-weight: 500;
     color: #2a2e37;
   }
+
+  .deposit-info {
+    background: white;
+    border-radius: 2px;
+    padding: 20px;
+  }
+  
+  .deposit-title {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--main-800);
+    margin-bottom: 16px;
+  }
+  
+  .deposit-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .deposit-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .deposit-item .deposit-label {
+    color: var(--main-400);
+    font-size: 14px;
+    font-weight: 400;
+  }
+  
+  .deposit-item .deposit-value {
+    color: var(--main-400);
+    font-size: 14px;
+    font-weight: 400;
+  }
+  
+  .account-number {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .deposit-copy-button {
+    background: none;
+    border: 1px solid var(--main-500);
+    color: var(--main-500);
+    padding: 8px 12px;
+    border-radius: 2px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .deposit-copy-button:hover {
+    background: var(--main-50);
+    border-color: var(--main-300);
+  }
