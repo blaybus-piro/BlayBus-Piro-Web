@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { fetchReservations } from "../api/reservation";
 import { fetchDesigner } from "../api/designer";
 import { ReservationState } from "../types/Reservation";
 import Header from "../components/Header/Header";
 import ReservationCard from '../components/ReservationCard/ReservationCard';
 import "../styles/MyReservation.styles.css";
+import { getUserIdFromToken } from '../utils/auth';
 
 const MyReservation: React.FC = () => {
-    const { userId } = useParams<{ userId: string }>();
+    const userId = getUserIdFromToken();
 
     const [myReservations, setMyReservations] = useState<ReservationState[]>([]);
     const [scheduledTab, setScheduledTab] = useState<"scheduled" | "completed">("scheduled");
@@ -22,7 +23,7 @@ const MyReservation: React.FC = () => {
         fetchReservations(userId)
             .then(async (data) => {
                 const formattedData = await Promise.all(
-                    data.map(async (myReservation: any) => {
+                    data.map(async (myReservation: ReservationState) => {
                         const designerInfo = await fetchDesigner(myReservation.designerId);
 
                         return {
