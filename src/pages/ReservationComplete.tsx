@@ -1,10 +1,12 @@
 import Header from '../components/Header/Header';
 import Button from '../components/Button/Button';
+// import { useNavigate, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import '../styles/ReservationComplete.styles.css';
 
 export default function ReservationComplete() {
   const navigate = useNavigate();
+  // const location = useLocation();
 
   // localStorage에서 데이터 불러오기
   const selectedDate = localStorage.getItem("selectedDate");
@@ -13,13 +15,14 @@ export default function ReservationComplete() {
   const amount = localStorage.getItem("amount");
   const approved_at = localStorage.getItem("approved_at");
   const item_name = localStorage.getItem("item_name");
+  const paymentType = localStorage.getItem("paymentType");
 
   // 필수 데이터 확인
   if (!selectedDate || !selectedTime || !consultMethod) {
     return (
       <div className="error-container">
         <div className="error-message">예약 정보를 찾을 수 없습니다.</div>
-        <Button variant="primary" size="large" onClick={() => navigate('/')}>
+        <Button variant="primary" size="large" onClick={() => navigate('/designerlist')}>
           홈으로 가기
         </Button>
       </div>
@@ -34,13 +37,35 @@ export default function ReservationComplete() {
   // 결제 승인 시간 변환
   const formattedApprovedDate = approved_at ? new Date(approved_at).toLocaleString() : '';
 
+  // 메시지 결정
+  const getMessage = () => {
+    if (paymentType === 'direct') {
+      return {
+        main: '예약이 완료되었어요',
+        sub: '이체 확인이 될 때까지 기다려주세요!'
+      };
+    } else if (amount && approved_at) {
+      return {
+        main: '예약이 완료되었어요',
+        sub: '예약 정보를 한 번 더 확인해 주세요!'
+      };
+    } else {
+      return {
+        main: '예약이 완료되었어요',
+        sub: '예약 정보를 한 번 더 확인해 주세요!'
+      };
+    }
+  };
+
+  const messages = getMessage();
+
   return (
     <div className="reservation-complete-container">
       <Header title={consultMethod === 'offline' ? '대면 컨설팅 예약하기' : '비대면 컨설팅 예약하기'} />
       
       <div className="reservation-complete-info">
-        <div className="complete-message">예약이 완료되었어요</div>
-        <p className="sub-message">예약 정보를 한 번 더 확인해 주세요</p>
+        <div className="complete-message">{messages.main}</div>
+        <p className="sub-message">{messages.sub}</p>
         
         <div className="complete-selected-datetime">
           <img src="/icons/calendar.svg" alt="calendar" className="calendar-icon" />
@@ -72,12 +97,13 @@ export default function ReservationComplete() {
             localStorage.removeItem("amount");
             localStorage.removeItem("approved_at");
             localStorage.removeItem("item_name");
+            localStorage.removeItem("paymentType");
             navigate('/designerlist');
           }}
         >
           홈으로 가기
         </Button>
-        <Button variant="primary" size="large" onClick={() => navigate('/my-reservations')}>
+        <Button variant="primary" size="large" onClick={() => navigate('/myreservation')}>
           나의 예약
         </Button>
       </footer>
