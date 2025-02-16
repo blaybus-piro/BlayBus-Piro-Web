@@ -69,14 +69,14 @@ export default function PaymentPage() {
 
   const handleAccountTransfer = () => {
     setPaymentMethod('account');
-    setIsAppTransferVisible(true); // ✅ 계좌이체 선택 시 자동으로 UI 열기
+    setIsAppTransferVisible(true);
     setTransferMethod(null);
     setSelectedBank(null);
   };
 
   const handleKakaoPay = () => {
     setPaymentMethod('kakao');
-    setIsAppTransferVisible(false); // ✅ 카카오페이 선택 시 계좌이체 UI 숨기기
+    setIsAppTransferVisible(false);
     setTransferMethod(null);
     setSelectedBank(null);
   };
@@ -94,7 +94,7 @@ export default function PaymentPage() {
 
   const handleBankPayment = () => {
     let deeplink = "";
-    const clipboardText = "138910305992207"; // ✅ 기본 복사할 계좌번호
+    const clipboardText = "138910305992207";
   
     switch (selectedBank) {
       case "toss":
@@ -113,13 +113,11 @@ export default function PaymentPage() {
         alert("은행을 선택해 주세요.");
         return;
     }
-  
-    // ✅ 클립보드에 계좌번호 복사
+
     navigator.clipboard.writeText(clipboardText).then(() => {
       alert("계좌번호가 복사되었습니다.");
     });
   
-    // ✅ 딥링크 실행
     window.location.href = deeplink;
   };
   
