@@ -7,6 +7,7 @@ interface DesignerCardProps {
   image: string;
   specialty: string;
   distance?: number;
+  onClick?: () => void;
 }
 
 export const DesignerCard: React.FC<DesignerCardProps> = ({
@@ -14,7 +15,8 @@ export const DesignerCard: React.FC<DesignerCardProps> = ({
   price,
   image,
   specialty,
-  distance
+  distance,
+  onClick
 }) => {
   const formatDistance = (distance: number): string => {
     if (distance < 1) {
@@ -27,7 +29,7 @@ export const DesignerCard: React.FC<DesignerCardProps> = ({
   }
 
   return (
-    <div className="designer-card">
+    <div className="designer-card" onClick={onClick}>
       <div className="designer-card-image">
         <img src={image} alt={name} />
         <div className="specialty-badge">{specialty}</div>

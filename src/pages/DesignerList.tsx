@@ -194,7 +194,7 @@ export default function DesignerList() {
 
           <div className="designers-grid">
             {designers.map((item) => (
-              <DesignerCard
+              <DesignerCard onClick={() => navigate(`/designerdetail/${item.id}`)}
                 key={item.id}
                 name={item.name}
                 price={item.price}
