@@ -1,117 +1,117 @@
 .designer-list-container {
-    font-family: "Paperlogy", sans-serif;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    background: var(--main-50);
-  }
-  
-  .designer-list-header {
-    background: var(--main-50);
-    border-bottom: 1px solid var(--main-200);
-  }
-  
-  .header-content {
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 12px 20px;
-    margin-top: 44px;
-  }
-  
-  .calendar-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: "Paperlogy", sans-serif;
-    font-size: 14px;
-    font-weight: 300;
-    border: none;
-    background: none;
-    gap: 4px;
-    cursor: pointer;
-  }
-  
-  .designerlist-content {
-    padding: 16px 20px;
-  }
-  
-  .filter-section {
-    display: flex;
-    margin-bottom: 25px;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .designers-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 11px;
-  }
-
-  .consulting-dropdown {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .tooltip-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .tooltip-wrapper:hover .tooltip {
-    opacity: 1;
-    visibility: visible;
-    left: 480%;
-    z-index: 1000;
+  font-family: "Paperlogy", sans-serif;
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  background: var(--main-50);
 }
 
-  .tooltip-wrapper img {
-    width: 16px;
-    height: 16px;
-  }
-  
-  /* @media (max-width: 640px) {
+.designer-list-header {
+  background: var(--main-50);
+  border-bottom: 1px solid var(--main-200);
+}
+
+.header-content {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  margin-top: 44px;
+}
+
+.calendar-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Paperlogy", sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  border: none;
+  background: none;
+  gap: 4px;
+  cursor: pointer;
+}
+
+.designerlist-content {
+  padding: 16px 20px;
+}
+
+.filter-section {
+  display: flex;
+  margin-bottom: 25px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.designers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 11px;
+}
+
+.consulting-dropdown {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.tooltip-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.tooltip-wrapper:hover .tooltip {
+  opacity: 1;
+  visibility: visible;
+  left: 480%;
+  z-index: 1000;
+}
+
+.tooltip-wrapper img {
+  width: 16px;
+  height: 16px;
+}
+
+/* @media (max-width: 640px) {
     .designers-grid {
       grid-template-columns: 1fr;
     }
   } */
 
-  .empty-container {
-    display: flex;
-    flex-direction: column;
-    align-content: center;
-    justify-content: center;
-  }
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-content: center;
+  justify-content: center;
+}
 
-  .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    margin-top: 40px;
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-top: 40px;
 }
 
 .empty-state-title {
-    font-size: 20px;
-    font-weight: 500;
-    font-family: "Paperlogy", sans-serif;
-    color: var(--main-800);
-    margin-bottom: 0px;
+  font-size: 20px;
+  font-weight: 500;
+  font-family: "Paperlogy", sans-serif;
+  color: var(--main-800);
+  margin-bottom: 0px;
 }
 
 .empty-state-subtitle {
-    font-size: 14px;
-    font-weight: 300;
-    color: var(--main-400);
-    margin-bottom: 24px;
+  font-size: 14px;
+  font-weight: 300;
+  color: var(--main-400);
+  margin-bottom: 24px;
 }
 
 .empty-filter {
@@ -119,34 +119,79 @@
 }
 
 .retry-button {
-    padding: 6px 10px;
-    border: 1px solid var(--main-500);
-    background: white;
-    border-radius: 2px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: "Paperlogy", sans-serif;
+  padding: 6px 10px;
+  border: 1px solid var(--main-500);
+  background: white;
+  border-radius: 2px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: "Paperlogy", sans-serif;
 }
 
 .retry-button:hover {
-    background: rgba(0, 0, 0, 0.05);
+  background: rgba(0, 0, 0, 0.05);
 }
 
 .designerlist-logo {
   width: 100%;
-margin-top: 195px;
-margin-bottom: 124px;
+  margin-top: 195px;
+  margin-bottom: 124px;
 }
-  
-  @media (min-width: 640px) {
-    .designers-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+
+@media (min-width: 640px) {
+  .designers-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
-  
-  @media (min-width: 1024px) {
-    .designers-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+}
+
+@media (min-width: 1024px) {
+  .designers-grid {
+    grid-template-columns: repeat(3, 1fr);
   }
+}
+
+/* 임박한 예약이 있을 때 */
+.calendar-buttoon-upComing {
+  position: relative;
+  display: inline-block;
+}
+
+.red-dot {
+  position: absolute;
+  top: 8px;
+  right: 65px;
+  background: var(--red-300);
+  width: 7px;
+  height: 7px;
+  border-radius: 11px;
+}
+
+.upComing-tooltip {
+  position: absolute;
+  top: 90%;
+  transform: translateX(-50%);
+  background: var(--main-800);
+  color: white;
+  padding: 10px 16px;
+  border-radius: 2px;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 300;
+  white-space: nowrap;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s ease-in-out;
+  margin-top: 3px;
+  opacity: 1;
+}
+
+.upComing-tooltip::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  right: 7%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent var(--main-800) transparent;
+}

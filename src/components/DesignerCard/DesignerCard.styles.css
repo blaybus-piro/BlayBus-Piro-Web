@@ -63,8 +63,10 @@
   color: var(--main-800);
 }
 
-.price {
+.price-and-distance {
+  display: flex;
   font-size: 13px;
   font-weight: 300;
   color: var(--main-400);
+  gap: 4px;
 }
