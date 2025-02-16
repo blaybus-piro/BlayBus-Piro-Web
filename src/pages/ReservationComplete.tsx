@@ -21,7 +21,7 @@ export default function ReservationComplete() {
     <div className="reservation-complete-container">
       <Header title={consultMethod === 'offline' ? '대면 컨설팅 예약하기' : '비대면 컨설팅 예약하기'} />
       
-      <div className="reservation-info">
+      <div className="reservation-complete-info">
         <div className="complete-message">예약이 완료되었어요</div>
         <p className="sub-message">예약 정보를 한 번 더 확인해 주세요</p>
         
