@@ -83,12 +83,18 @@
     }
   } */
 
+  .empty-container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    justify-content: center;
+  }
+
   .empty-state {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 80vh;
     text-align: center;
     margin-top: 40px;
 }
@@ -108,6 +114,10 @@
     margin-bottom: 24px;
 }
 
+.empty-filter {
+  padding: 16px 20px;
+}
+
 .retry-button {
     padding: 6px 10px;
     border: 1px solid var(--main-500);
@@ -124,7 +134,7 @@
 }
 
 .designerlist-logo {
-  width: 112%;
+  width: 100%;
 margin-top: 195px;
 margin-bottom: 124px;
 }
