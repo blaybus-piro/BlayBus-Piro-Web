@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { fetchDesigner } from "../api/designer";
 import Header from "../components/Header/Header";
 import Portfolio from "../components/Portfolio/Portfolio";
 import DesignerInfo from "../components/DesignerInfo/DesignerInfo";
@@ -6,47 +8,56 @@ import question from "../assets/question.svg";
 import Button from "../components/Button/Button";
 import ToolTip from "../components/ToolTip/ToolTip";
 import "../styles/DesignerDetail.styles.css";
-import { useNavigate } from "react-router-dom";
+
+interface Designer {
+    id: string;
+    name: string;
+    address: string;
+    specialty: "CUL" | "PERM" | "DYE" | "BLEACH";
+    profileImage: string;
+    portfolioImages: string[];
+    description: string;
+    type: "ONLINE" | "OFFLINE" | "BOTH";
+    remotePrice: number;
+    inPersonPrice: number;
+}
 
 const DesignerDetail: React.FC = () => {
+    const { designerId } = useParams<{ designerId: string }>();
+    const [designer, setDesigner] = useState<Designer | null>(null);
+
+    useEffect(() => {
+        if (!designerId) return;
+
+        fetchDesigner(designerId)
+            .then(setDesigner)
+            .catch((error) => console.error(error));
+    }, [designerId]);
+
+    if (!designer) return <p>로딩 중...</p>;
+
     const navigate = useNavigate();
 
-    const handleConsultingClick = (method: "online" | "offline") => {
+    const handleConsultingClick = (method: "ONLINE" | "OFFLINE") => {
         navigate(`/reservation?method=${method}`);
     };
 
-    const designerData = {
-        name: "이초 디자이너",
-        address: "서울 강남구 압구정 79길",
-        specialty: "펌 전문",
-        profileImage: "/src/assets/image1.png",
-        portfolioImages: [
-            "/src/assets/image1.png",
-            "/src/assets/image2.png",
-            "/src/assets/image3.png",
-            "/src/assets/image4.png"
-        ],
-        description: "레드립, ITZY가 자주 방문하는 스타일",
-        remotePrice: 20000,
-        inPersonPrice: 40000
-    };
-
-    const isRemoteDisabled = !designerData.remotePrice;
-    const isInpersonDisabled = !designerData.inPersonPrice;
+    const isRemoteDisabled = designer.type === "OFFLINE";
+    const isInpersonDisabled = designer.type === "ONLINE";
 
     return (
         <div className="designerDetail-container">
-            <Header title={designerData.name} />
-            <Portfolio images={designerData.portfolioImages} />
+            <Header title={designer.name} />
+            <Portfolio images={designer.portfolioImages} />
             <DesignerInfo
-                name={designerData.name}
-                address={designerData.address}
-                specialty={designerData.specialty}
-                profileImage={designerData.profileImage}
+                name={designer.name}
+                address={designer.address}
+                specialty={designer.specialty}
+                profileImage={designer.profileImage}
             />
             <div className="description">
                 <h4>소개글</h4>
-                <p>{designerData.description}</p>
+                <p>{designer.description}</p>
             </div>
             <div className="consulting-price">
                 <div className="price-top">
@@ -59,12 +70,12 @@ const DesignerDetail: React.FC = () => {
                     <p className={`price ${!isRemoteDisabled ? "" : "disabled"}`}>
                         <span>비대면 컨설팅</span>
                         <div />
-                        <span>{!isRemoteDisabled ? `${designerData.remotePrice.toLocaleString()}원` : "20,000원"}</span>
+                        <span>{designer.remotePrice.toLocaleString()}원</span>
                     </p>
                     <p className={`price ${!isInpersonDisabled ? "" : "disabled"}`}>
                         <span>대면 컨설팅</span>
                         <div />
-                        <span>{!isInpersonDisabled ? `${designerData.inPersonPrice.toLocaleString()}원` : "40,000원"}</span>
+                        <span>{designer.inPersonPrice.toLocaleString()}원</span>
                     </p>
                 </div>
             </div>
@@ -75,14 +86,14 @@ const DesignerDetail: React.FC = () => {
                     size="large"
                     children="비대면 컨설팅"
                     disabled={isRemoteDisabled}
-                    onClick={() => handleConsultingClick("online")}
+                    onClick={() => handleConsultingClick("ONLINE")}
                 />
                 <Button
                     variant="primary"
                     size="large"
                     children="대면 컨설팅"
                     disabled={isInpersonDisabled}
-                    onClick={() => handleConsultingClick("offline")}
+                    onClick={() => handleConsultingClick("OFFLINE")}
                 />
             </footer>
         </div >

@@ -1,25 +1,53 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { fetchReservations } from "../api/reservation";
+import { fetchDesigner } from "../api/designer";
 import { ReservationState } from "../types/Reservation";
 import Header from "../components/Header/Header";
 import ReservationCard from '../components/ReservationCard/ReservationCard';
 import "../styles/MyReservation.styles.css";
 
-interface Reservation {
-    id: number;
-    profileImage: string;
-    name: string;
-    time: string;
-    type: "대면" | "비대면";
-    status: "active" | "canceled" | "completed";
-    meetLink?: string;
-}
-
 const MyReservation: React.FC = () => {
+    const { userId } = useParams<{ userId: string }>();
+
     const [myReservations, setMyReservations] = useState<ReservationState[]>([]);
     const [scheduledTab, setScheduledTab] = useState<"scheduled" | "completed">("scheduled");
 
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!userId) return;
+        let isMounted = true;
+
+        fetchReservations(userId)
+            .then(async (data) => {
+                const formattedData = await Promise.all(
+                    data.map(async (myReservation: any) => {
+                        const designerInfo = await fetchDesigner(myReservation.designerId);
+
+                        return {
+                            id: myReservation.id,
+                            designerId: myReservation.designerId,
+                            name: designerInfo.name,
+                            profileImage: designerInfo.profileImage,
+                            time: myReservation.time,
+                            type: myReservation.type,
+                            status: myReservation.status,
+                            meetLink: myReservation.meetLink,
+                            paymentAmount: myReservation.paymentAmount,
+                            paymentMethod: myReservation.paymentMethod
+                        };
+                    })
+                );
+                if (isMounted) setMyReservations(formattedData);
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+        return () => {
+            isMounted = false;
+        };
+    }, [userId]);
 
     const parseDate = (timeString: string) => {
         const regex = /(\d{4})년 (\d{1,2})월 (\d{1,2})일.*?(\d{1,2}):(\d{2})/;
@@ -58,10 +86,9 @@ const MyReservation: React.FC = () => {
                 > 완료
                 </button>
             </div>
-            <div className="my-reservation-list">
-                {sortedReservations.length > 0 ? (
+            {sortedMyReservations.length > 0 ? (
                 <div className="my-reservation-list">
-                    {sortedReservations.map((res) => (
+                    {sortedMyReservations.map((res) => (
                         <ReservationCard key={res.id} {...res} />
                     ))}
                 </div>
@@ -75,7 +102,6 @@ const MyReservation: React.FC = () => {
                     <img src="/icons/reservation-logo.svg" alt="logo" className="myreservation-logo" />
                 </div>
             )}
-          </div>
         </div>
     );
 };
