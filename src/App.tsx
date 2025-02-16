@@ -33,7 +33,7 @@ function App() {
           <Route path="/reservationcomplete" element={<ReservationComplete />} />
           <Route path="/designerdetail/:designerId" element={<DesignerDetail />} />
           <Route path="/myreservation/:userId" element={<MyReservation />} />
-          <Route path="/myreservation/:myreservationId" element={<MyReservationDetail />} />
+          <Route path="/myreservationdetail/:myreservationId" element={<MyReservationDetail />} />
         </Route> */}
       </Routes>
     </Router>
