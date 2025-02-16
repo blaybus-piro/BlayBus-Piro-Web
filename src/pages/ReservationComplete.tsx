@@ -72,7 +72,7 @@ export default function ReservationComplete() {
             localStorage.removeItem("amount");
             localStorage.removeItem("approved_at");
             localStorage.removeItem("item_name");
-            navigate('/');
+            navigate('/designerlist');
           }}
         >
           홈으로 가기

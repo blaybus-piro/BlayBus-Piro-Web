@@ -16,43 +16,43 @@ interface Reservation {
 
 const MyReservation: React.FC = () => {
     const navigate = useNavigate();
-    const reservations: Reservation[] = [];
-    // const reservations = [
-    //     {
-    //         id: 1,
-    //         profileImage: "/src/assets/image1.png",
-    //         name: "이초 디자이너",
-    //         time: "2025년 2월 7일 (토) 18:30",
-    //         type: "비대면" as const,
-    //         status: "active" as const,
-    //         meetLink: "/",
-    //     },
-    //     {
-    //         id: 2,
-    //         name: "이초 디자이너",
-    //         profileImage: "/src/assets/image2.png",
-    //         time: "2025년 2월 8일 (일) 18:30",
-    //         type: "대면" as const,
-    //         status: "active" as const,
-    //     },
-    //     {
-    //         id: 3,
-    //         name: "이초 디자이너",
-    //         profileImage: "/src/assets/image3.png",
-    //         time: "2025년 2월 8일 (일) 20:30",
-    //         type: "대면" as const,
-    //         status: "canceled" as const,
-    //     },
-    //     {
-    //         id: 4,
-    //         name: "이초 디자이너",
-    //         profileImage: "/src/assets/image2.png",
-    //         time: "2025년 2월 3일 (토) 10:30",
-    //         type: "비대면" as const,
-    //         status: "completed" as const,
-    //         meetLink: "/",
-    //     },
-    // ];
+    // const reservations: Reservation[] = [];
+    const reservations: Reservation[] = [
+        {
+            id: 1,
+            profileImage: "/src/assets/image1.png",
+            name: "이초 디자이너",
+            time: "2025년 2월 7일 (토) 18:30",
+            type: "비대면" as const,
+            status: "active" as const,
+            meetLink: "/",
+        },
+        {
+            id: 2,
+            name: "이초 디자이너",
+            profileImage: "/src/assets/image2.png",
+            time: "2025년 2월 8일 (일) 18:30",
+            type: "대면" as const,
+            status: "active" as const,
+        },
+        {
+            id: 3,
+            name: "이초 디자이너",
+            profileImage: "/src/assets/image3.png",
+            time: "2025년 2월 8일 (일) 20:30",
+            type: "대면" as const,
+            status: "canceled" as const,
+        },
+        {
+            id: 4,
+            name: "이초 디자이너",
+            profileImage: "/src/assets/image2.png",
+            time: "2025년 2월 3일 (토) 10:30",
+            type: "비대면" as const,
+            status: "completed" as const,
+            meetLink: "/",
+        },
+    ];
 
     const parseDate = (timeString: string) => {
         const regex = /(\d{4})년 (\d{1,2})월 (\d{1,2})일.*?(\d{1,2}):(\d{2})/;
