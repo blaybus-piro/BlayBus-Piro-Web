@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchReservations } from "../api/reservation";
-import { fetchDesigner } from "../api/designer";
 import { ReservationState } from "../types/Reservation";
 import Header from "../components/Header/Header";
 import ReservationCard from '../components/ReservationCard/ReservationCard';
 import "../styles/MyReservation.styles.css";
 import { getUserIdFromToken } from '../utils/auth';
+import { apiRequest } from '../utils/api';
 
 const MyReservation: React.FC = () => {
     const userId = getUserIdFromToken();
@@ -20,11 +19,11 @@ const MyReservation: React.FC = () => {
         if (!userId) return;
         let isMounted = true;
 
-        fetchReservations(userId)
+        apiRequest(`/api/consulting/user/${userId}`)
             .then(async (data) => {
                 const formattedData = await Promise.all(
                     data.map(async (myReservation: ReservationState) => {
-                        const designerInfo = await fetchDesigner(myReservation.designerId);
+                        const designerInfo = await apiRequest(`/api/designer/${myReservation.designerId}`);
 
                         return {
                             id: myReservation.id,

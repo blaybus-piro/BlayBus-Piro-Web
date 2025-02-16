@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchDesigner } from "../api/designer";
 import Header from "../components/Header/Header";
 import Portfolio from "../components/Portfolio/Portfolio";
 import DesignerInfo from "../components/DesignerInfo/DesignerInfo";
@@ -8,6 +7,7 @@ import question from "../assets/question.svg";
 import Button from "../components/Button/Button";
 import ToolTip from "../components/ToolTip/ToolTip";
 import "../styles/DesignerDetail.styles.css";
+import { apiRequest } from "../utils/api";
 
 interface Designer {
     id: string;
@@ -29,7 +29,7 @@ const DesignerDetail: React.FC = () => {
     useEffect(() => {
         if (!designerId) return;
 
-        fetchDesigner(designerId)
+        apiRequest(`api/designer/${designerId}`)
             .then(setDesigner)
             .catch((error) => console.error(error));
     }, [designerId]);
