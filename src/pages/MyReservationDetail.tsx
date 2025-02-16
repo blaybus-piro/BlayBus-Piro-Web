@@ -22,13 +22,9 @@ const MyReservationDetail: React.FC = () => {
                     <p>결제 금액</p>
                     <p>20,000원</p>
                 </div>
-                <div className="deposit-account">
-                    <p>결제 계좌</p>
-                    <p>하나은행 13891030599207</p>
-                </div>
-                <div className="deposit-time">
-                    <p>결제 시간</p>
-                    <p>2025년 2월 4일 23:32:29</p>
+                <div className="deposit-method">
+                    <p>결제 방식</p>
+                    <p>카카오페이</p>
                 </div>
             </div>
             <div className="division" />
