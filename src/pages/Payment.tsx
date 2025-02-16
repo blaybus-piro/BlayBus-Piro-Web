@@ -56,12 +56,19 @@ export default function PaymentPage() {
         alert('결제 요청 중 오류가 발생했습니다.');
       }
     } else {
+      // 계좌이체 선택 시 localStorage에 필요한 정보 저장
+      localStorage.setItem("selectedDate", selectedDate);
+      localStorage.setItem("selectedTime", selectedTime);
+      localStorage.setItem("consultMethod", consultMethod);
+      localStorage.setItem("paymentType", transferMethod === 'direct' ? 'direct' : 'app');
+  
       navigate('/reservationcomplete', {
         state: {
           selectedDate,
           selectedTime,
           consultMethod,
           paymentMethod,
+          transferMethod,
         },
       });
     }
