@@ -14,6 +14,9 @@ interface Designer {
   price: number;
   image: string;
   specialty: string;
+  latitude: number;
+  longitude: number;
+  distance?: number;
 }
 
 const dummyDesigners = [
@@ -22,40 +25,83 @@ const dummyDesigners = [
     name: '이초 디자이너',
     price: 20000,
     image: '/api/placeholder/400/400',
-    specialty: '펌 전문'
+    specialty: '펌 전문',
+    latitude: 37.5035,
+    longitude: 126.9550,
+    distance: 0,
   },
   {
     id: 2,
     name: '로로 원장',
     price: 34000,
     image: '/api/placeholder/400/400',
-    specialty: '탈/염색 전문'
+    specialty: '탈/염색 전문',
+    latitude: 36.3504,
+    longitude: 87.3249328,
+    distance: 0,
   },
   {
     id: 3,
     name: '수 대표원장',
     price: 20000,
     image: '/api/placeholder/400/400',
-    specialty: '탈/염색 전문'
+    specialty: '탈/염색 전문',
+    latitude: 37.3405,
+    longitude: 127.3845,
+    distance: 0,
   },
   {
     id: 4,
     name: '랑 원장',
     price: 34000,
     image: '/api/placeholder/400/400',
-    specialty: '탈/염색 전문'
+    specialty: '탈/염색 전문',
+    latitude: 37.2735,
+    longitude: 127.6345,
+    distance: 0,
   }
 ];
 
 // const dummyDesigners: Designer[] = []; // 빈 배열에도 타입 명시
 
+const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
+  const R = 6371
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (Math.PI / 180)) *
+    Math.cos(lat2 * (Math.PI / 180)) *
+    Math.sin(dLon / 2) *
+    Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;  // 거리 (km)
+};
+
 export default function DesignerList() {
   const [consultingType, setConsultingType] = useState('');
   const [sortBy, setSortBy] = useState('distance');
   const [designers, setDesigners] = useState<Designer[]>(dummyDesigners);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
   const navigate = useNavigate();
-
   const userId = getUserIdFromToken();
+
+  useEffect(() => {
+    /* 디자이너 주소까지의 거리 구하기 */
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        setUserLocation({
+          lat: position.coords.latitude,
+          lon: position.coords.longitude,
+        });
+      },
+      (error) => {
+        console.error('위치 정보를 가져올 수 없습니다.', error);
+      }
+    );
+  }, []);
 
   useEffect(() => {
     let filtered = [...dummyDesigners];
@@ -71,6 +117,13 @@ export default function DesignerList() {
       });
     }
 
+    if (userLocation) {
+      filtered = filtered.map((designer) => ({
+        ...designer,
+        distance: haversineDistance(userLocation.lat, userLocation.lon, designer.latitude, designer.longitude),
+      }));
+    }
+
     switch (sortBy) {
       case 'price_asc':
         filtered.sort((a, b) => a.price - b.price);
@@ -79,12 +132,14 @@ export default function DesignerList() {
         filtered.sort((a, b) => b.price - a.price);
         break;
       case 'distance':
+        filtered.sort((a, b) => (a.distance ?? Infinity) - (b.distance ?? Infinity));
+        break;
       default:
         break;
     }
 
     setDesigners(filtered);
-  }, [consultingType, sortBy]);
+  }, [consultingType, sortBy, userLocation]);
 
   const handleRetry = () => {
     window.location.reload();
@@ -145,6 +200,7 @@ export default function DesignerList() {
                 price={item.price}
                 image={item.image}
                 specialty={item.specialty}
+                distance={item.distance}
               />
             ))}
           </div>
