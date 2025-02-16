@@ -28,6 +28,11 @@ export default function PaymentPage() {
   
     if (paymentMethod === 'kakao') {
       try {
+        // ✅ 예약 정보를 localStorage에 저장
+        localStorage.setItem("selectedDate", selectedDate);
+        localStorage.setItem("selectedTime", selectedTime);
+        localStorage.setItem("consultMethod", consultMethod);
+  
         const response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
           method: 'POST',
           headers: {
@@ -36,14 +41,12 @@ export default function PaymentPage() {
           body: JSON.stringify({ amount }),
         });
   
-        if (!response.ok) {
-          throw new Error('카카오페이 결제 요청 실패');
-        }
-  
         const data = await response.json();
         const redirectUrl = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
   
-        window.location.href = redirectUrl; // 카카오페이 결제 페이지로 이동
+        console.log("✅ 카카오페이 결제 페이지로 이동:", redirectUrl);
+        window.location.href = redirectUrl; // ✅ 카카오페이 결제창으로 이동
+      
       } catch (error) {
         console.error('카카오페이 결제 에러:', error);
         alert('결제 요청 중 오류가 발생했습니다.');
@@ -59,6 +62,7 @@ export default function PaymentPage() {
       });
     }
   };
+      
 
   return (
     <div className="payment-container">
