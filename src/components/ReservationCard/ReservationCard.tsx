@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate, useLocation } from "react-router-dom";
 import { ReservationState } from "../../types/Reservation";
 import component from "../../assets/component.svg";
 import calendar from "../../assets/calendar.svg";
@@ -11,19 +12,15 @@ const ReservationCard: React.FC = () => {
     const location = useLocation();
     const reservation = location.state as ReservationState;
 
-const ReservationCard: React.FC<ReservationCardProps> = ({
-    id,
-    profileImage,
-    name,
-    time,
-    type,
-    status,
-    meetLink
-}) => {
-    const displayText =
-        status === "active" ? `${type} 컨설팅`
-            : status === "canceled" ? "취소된 예약"
-                : "완료된 예약";
+    const displayTypeText =
+        reservation.type === "OFFLINE" ? "오프라인"
+            : "온라인";
+
+    const displayStatusText =
+        reservation.status === "FREE" ? "입금 확인 중"
+            : reservation.status === "SCHEDULED" ? `${displayTypeText} 컨설팅`
+                : reservation.status === "CANCELED" ? "취소된 예약"
+                    : "상담 완료";
 
     const navigate = useNavigate();
 

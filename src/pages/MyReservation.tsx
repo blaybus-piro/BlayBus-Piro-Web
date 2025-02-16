@@ -40,6 +40,14 @@ const MyReservation: React.FC = () => {
                 > 완료
                 </button>
             </div>
+            <div className="my-reservation-list">
+                {sortedMyReservations.map((res) => (
+                    <ReservationCard
+                        key={res.id}
+                        {...res}
+                    />
+                ))}
+            </div>
         </div>
     );
 };

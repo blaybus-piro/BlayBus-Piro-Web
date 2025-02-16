@@ -84,6 +84,11 @@
     font-weight: 600;
 }
 
+.reservation-cancel.CANCELED,
+.reservation-cancel.COMPLETED {
+    display: none;
+}
+
 .my-reservation-detail-container footer .button.primary {
     width: 100%;
     padding: 15px 24px;

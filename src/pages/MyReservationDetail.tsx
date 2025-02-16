@@ -9,7 +9,12 @@ import "../styles/MyReservationDetail.styles.css";
 const MyReservationDetail: React.FC = () => {
     const location = useLocation();
     const reservation = location.state;
+
     const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const displayMethodText =
+        reservation.paymentMethod === "ACCOUNTMENT" ? "계좌 이체"
+            : "카카오 페이";
 
     return (
         <div className="my-reservation-detail-container">
@@ -20,11 +25,11 @@ const MyReservationDetail: React.FC = () => {
                 <h3>입금 정보</h3>
                 <div className="deposit-price">
                     <p>결제 금액</p>
-                    <p>20,000원</p>
+                    <p>{reservation.paymentAmount}원</p>
                 </div>
                 <div className="deposit-method">
                     <p>결제 방식</p>
-                    <p>카카오페이</p>
+                    <p>{displayMethodText}</p>
                 </div>
             </div>
             <div className="division" />
@@ -40,7 +45,7 @@ const MyReservationDetail: React.FC = () => {
                 </div>
             </div>
             <footer>
-                <p className="reservation-cancel" onClick={() => setIsModalOpen(true)}>예약 취소</p>
+                <p className={`reservation-cancel ${reservation.status}`} onClick={() => setIsModalOpen(true)}>예약 취소</p>
                 {isModalOpen && (
                     <Modal
                         isOpen={isModalOpen}
@@ -49,7 +54,7 @@ const MyReservationDetail: React.FC = () => {
                         confirmVariant="negative"
                     />
                 )}
-                {reservation.type === "비대면" && (
+                {reservation.type === "OFFLINE" && (
                     <MeetLinkButton
                         children="구글 미트 링크"
                         meetLink={reservation.meetLink}
