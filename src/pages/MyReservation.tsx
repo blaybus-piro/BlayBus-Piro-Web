@@ -4,42 +4,7 @@ import ReservationCard from '../components/ReservationCard/ReservationCard';
 import "../styles/MyReservation.styles.css";
 
 const MyReservation: React.FC = () => {
-    const reservations = [
-        {
-            id: 1,
-            profileImage: "/src/assets/image1.png",
-            name: "이초 디자이너",
-            time: "2025년 2월 7일 (토) 18:30",
-            type: "비대면" as const,
-            status: "active" as const,
-            meetLink: "/",
-        },
-        {
-            id: 2,
-            name: "이초 디자이너",
-            profileImage: "/src/assets/image2.png",
-            time: "2025년 2월 8일 (일) 18:30",
-            type: "대면" as const,
-            status: "active" as const,
-        },
-        {
-            id: 3,
-            name: "이초 디자이너",
-            profileImage: "/src/assets/image3.png",
-            time: "2025년 2월 8일 (일) 20:30",
-            type: "대면" as const,
-            status: "canceled" as const,
-        },
-        {
-            id: 4,
-            name: "이초 디자이너",
-            profileImage: "/src/assets/image2.png",
-            time: "2025년 2월 3일 (토) 10:30",
-            type: "비대면" as const,
-            status: "completed" as const,
-            meetLink: "/",
-        },
-    ];
+    const [scheduledTab, setScheduledTab] = useState<"scheduled" | "completed">("scheduled");
 
     const parseDate = (timeString: string) => {
         const regex = /(\d{4})년 (\d{1,2})월 (\d{1,2})일.*?(\d{1,2}):(\d{2})/;
@@ -50,17 +15,29 @@ const MyReservation: React.FC = () => {
         return new Date(year, month - 1, day, hour, minute); // JavaScript Date 객체 생성
     };
 
-    const sortedReservations = [...reservations].sort((a, b) => {
+    const filteredReservations = myReservations.filter((res) => {
+        if (scheduledTab === "scheduled") return res.status === "FREE" || res.status === "SCHEDULED";
+        return res.status === "CANCELED" || res.status === "COMPLETED";
+    });
+
+    const sortedMyReservations = [...filteredReservations].sort((a, b) => {
         return parseDate(b.time).getTime() - parseDate(a.time).getTime();
     });
 
     return (
         <div className="my-reservation-container">
             <Header title="내 예약" />
-            <div className="my-reservation-list">
-                {sortedReservations.map((res) => (
-                    <ReservationCard key={res.id} {...res} />
-                ))}
+            <div className="my-reservation-tabs">
+                <button
+                    className={`tab ${scheduledTab === "scheduled" ? "active" : ""}`}
+                    onClick={() => setScheduledTab("scheduled")}
+                > 진행 예정
+                </button>
+                <button
+                    className={`tab ${scheduledTab === "completed" ? "active" : ""}`}
+                    onClick={() => setScheduledTab("completed")}
+                > 완료
+                </button>
             </div>
         </div>
     );
