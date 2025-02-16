@@ -23,7 +23,7 @@ const MyReservation: React.FC = () => {
         fetchReservations(userId)
             .then(async (data) => {
                 const formattedData = await Promise.all(
-                    data.map(async (myReservation: any) => {
+                    data.map(async (myReservation: ReservationState) => {
                         const designerInfo = await fetchDesigner(myReservation.designerId);
 
                         return {
