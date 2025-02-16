@@ -89,3 +89,9 @@
     background: var(--main-500);
     color: white;
 }
+
+.error-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
