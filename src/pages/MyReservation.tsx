@@ -1,9 +1,10 @@
-import React from 'react';
+import { ReservationState } from "../types/Reservation";
 import Header from "../components/Header/Header";
 import ReservationCard from '../components/ReservationCard/ReservationCard';
 import "../styles/MyReservation.styles.css";
 
 const MyReservation: React.FC = () => {
+    const [myReservations, setMyReservations] = useState<ReservationState[]>([]);
     const [scheduledTab, setScheduledTab] = useState<"scheduled" | "completed">("scheduled");
 
     const parseDate = (timeString: string) => {
