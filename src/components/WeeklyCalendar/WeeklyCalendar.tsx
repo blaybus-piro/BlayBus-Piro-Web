@@ -119,7 +119,7 @@ export default function WeeklyCalendar({
     return classes.join(' ');
   };
 
-  const dayNames = ['월', '화', '수', '목', '금', '토', '일'];
+  const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
   const dates = useMemo(() => generateDates(), [generateDates]);
 
   return (
