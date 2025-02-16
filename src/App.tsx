@@ -24,7 +24,7 @@ function App() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/reservationcomplete" element={<ReservationComplete />} />
         <Route path="/designerdetail/:designerId" element={<DesignerDetail />} />
-        <Route path="/myreservation/:userId" element={<MyReservation />} />
+        <Route path="/myreservation" element={<MyReservation />} />
         <Route path="/myreservationdetail/:myreservationId" element={<MyReservationDetail />} />
         {/* <Route element={<PrivateRoute />}>
           <Route path="/designerlist" element={<DesignerList />} />
