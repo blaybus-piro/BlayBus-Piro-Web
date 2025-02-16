@@ -19,7 +19,13 @@ export default function PaymentCallback() {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "SUCCESS") {
-          navigate("/reservationcomplete");
+          navigate("/reservationcomplete", {
+            state: {
+              amount: data.amount,
+              approved_at: data.approved_at,
+              item_name: data.item_name,
+            },
+          });
         } else {
           console.error("결제 실패:", data);
           alert("결제가 실패하였습니다.");
