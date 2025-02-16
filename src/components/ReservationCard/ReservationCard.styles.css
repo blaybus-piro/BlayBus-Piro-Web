@@ -36,12 +36,17 @@
     gap: 8px;
 }
 
-.reservation-info.canceled h3,
-.reservation-info.canceled p {
+.reservation-info.FREE,
+.reservation-info.CANCELED {
+    background: var(--main-100);
+}
+
+.reservation-info.CANCELED h3,
+.reservation-info.CANCELED p {
     color: white;
 }
 
-.reservation-info.canceled .my-reservation-date img {
+.reservation-info.CANCELED .my-reservation-date img {
     filter: brightness(0) invert(1);
 }
 
@@ -77,23 +82,24 @@
     border-radius: 2px;
 }
 
-.tag.active {
+.tag.SCHEDULED {
     background: var(--main-500);
     color: white;
 }
 
-.tag.canceled {
+.tag.CANCELED {
     background: white;
     color: var(--red-300);
 }
 
-.tag.completed {
+.tag.FREE,
+.tag.COMPLETED {
     background: var(--main-300);
     color: white;
 }
 
 /* 더보기 */
-.more.canceled {
+.more.CANCELED {
     filter: invert(1);
 }
 

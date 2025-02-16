@@ -11,6 +11,31 @@
     margin-bottom: 16px;
 }
 
+/* 예약 토글 탭 */
+.my-reservation-tabs {
+    padding-top: 12px;
+    display: flex;
+    justify-content: center;
+    height: 38px;
+}
+
+.my-reservation-tabs .tab {
+    width: 50%;
+    border: none;
+    background: var(--main-50);
+    font-family: Paperlogy;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 600;
+    color: var(--main-200);
+    border-bottom: 1px solid white;
+}
+
+.tab.active {
+    color: var(--main-500);
+    border-bottom: 2px solid var(--main-500);
+}
+
 .my-reservation-list {
     overflow: scroll;
     padding-bottom: 34px;
