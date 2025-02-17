@@ -136,7 +136,7 @@ export default function PaymentPage() {
       <Header title="결제하기" />
     </div>
       
-    <div className="payment-wrapper">
+    <div className="payment-wrapper" style={{ overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
       <div className="payment-content">
         <div className="info-section">
           <div className={`toggle-container ${isReservationInfoOpen ? 'open' : ''}`}>
@@ -277,9 +277,9 @@ export default function PaymentPage() {
         disabled={!paymentMethod}
         onClick={() => {
           if (paymentMethod === "account" && transferMethod === "app") {
-            handleBankPayment(); // ✅ 계좌이체(앱 송금) 선택 시 딥링크 실행
+            handleBankPayment();
           } else {
-            handlePayment(); // ✅ 기존 결제 로직 (카카오페이)
+            handlePayment();
           }
         }}
       >

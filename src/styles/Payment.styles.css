@@ -8,18 +8,19 @@
 }
 
 .payment-header {
-  position: sticky; /* 스크롤 시 헤더 고정 */
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
   background: var(--main-50);
-  z-index: 1000; /* 다른 요소 위에 배치 */
+  z-index: 1000;
 }
   
 .payment-wrapper {
   flex: 1;
-  overflow-y: auto; /* 내용 부분만 스크롤 가능하게 설정 */
-  height: calc(100vh - 60px); /* 헤더 높이만큼 제외 */
+  overflow-y: auto;
+  height: calc(100vh - 60px);
+  -webkit-overflow-scrolling: touch;
 }
 
 .payment-content {
