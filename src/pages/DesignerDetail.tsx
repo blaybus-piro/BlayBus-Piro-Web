@@ -55,6 +55,17 @@ const DesignerDetail: React.FC = () => {
                     remotePrice: data.onlinePrice
                 };
 
+                console.log(formattedDesigner.id);
+                console.log(formattedDesigner.name);
+                console.log(formattedDesigner.profileImage);
+                console.log(formattedDesigner.address);
+                console.log(formattedDesigner.specialty);
+                console.log(formattedDesigner.description);
+                console.log(formattedDesigner.portfolioImages);
+                console.log(formattedDesigner.type);
+                console.log(formattedDesigner.inPersonPrice);
+                console.log(formattedDesigner.remotePrice);
+
                 setDesigner(formattedDesigner);
             })
             .catch((error) => console.error(error));
