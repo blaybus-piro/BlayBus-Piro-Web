@@ -67,6 +67,9 @@ const DesignerDetail: React.FC = () => {
                 console.log(formattedDesigner.remotePrice);
 
                 setDesigner(formattedDesigner);
+                setTimeout(() => {
+                    console.log("✅ setDesigner() 이후 - designer 상태:", designer);
+                }, 500);
             })
             .catch((error) => console.error(error));
     }, [designerId]);
