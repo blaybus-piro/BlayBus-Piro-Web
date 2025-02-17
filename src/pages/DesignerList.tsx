@@ -17,6 +17,7 @@ interface Designer {
   image: string;
   specialty: string;
   distance: number;
+  type: string;
 }
 
 // const dummyDesigners = [
@@ -156,6 +157,7 @@ export default function DesignerList() {
           image: designer.profile,
           specialty: designer.expert_field,
           distance: designer.distance,
+          type: designer.type,
         }));
 
         setDesigners(formattedData);
@@ -173,9 +175,9 @@ export default function DesignerList() {
     if (consultingType) {
       filtered = filtered.filter(item => {
         if (consultingType === 'offline') {
-          return item.specialty.includes('펌');
+          return item.type === "OFFLINE" || item.type === "BOTH";
         } else if (consultingType === 'online') {
-          return item.specialty.includes('탈/염색');
+          return item.type === "ONLINE" || item.type === "BOTH";
         }
         return true;
       });
