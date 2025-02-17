@@ -1,20 +1,37 @@
 import React, { useState } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../components/Header/Header";
 import ReservationCard from "../components/ReservationCard/ReservationCard";
 import MeetLinkButton from "../components/MeetLinkButton";
 import Modal from "../components/Modal/Modal";
+import { cancelReservation } from "../api/cancelReservatin";
 import "../styles/MyReservationDetail.styles.css";
 
 const MyReservationDetail: React.FC = () => {
     const location = useLocation();
     const reservation = location.state;
+    const navigate = useNavigate();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const displayMethodText =
         reservation.paymentMethod === "ACCOUNTMENT" ? "계좌 이체"
             : "카카오 페이";
+
+    const handleCancelReservation = async () => {
+        setLoading(true);
+        try {
+            await cancelReservation(reservation.id);
+            setIsModalOpen(false);
+
+            navigate(`/myreservation`, { state: { showToast: true } });
+        } catch (error) {
+            console.error("예약 취소 실패", error);
+        } finally {
+            setLoading(false);
+        }
+    }
 
     return (
         <div className="my-reservation-detail-container">
@@ -50,6 +67,7 @@ const MyReservationDetail: React.FC = () => {
                     <Modal
                         isOpen={isModalOpen}
                         onClose={() => setIsModalOpen(false)}
+                        onConfirm={handleCancelReservation}
                         children="정말 예약을 취소할까요?"
                         confirmVariant="negative"
                     />

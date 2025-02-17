@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Button from '../Button/Button';
 import './Modal.styles.css';
 
 interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onConfirm?: () => void;
+    onConfirm?: () => Promise<void>;
     children: React.ReactNode;
     confirmText?: string;
     confirmVariant?: "primary" | "negative";
@@ -19,8 +19,6 @@ const Modal: React.FC<ModalProps> = ({
     confirmText = "예약 취소",
     confirmVariant = "primary",
 }) => {
-    if (!isOpen) return null;
-
     const overlayClass = ["modal-overlay", isOpen ? "visible" : "hidden"]
         .filter(Boolean)
         .join(" ");
@@ -28,6 +26,22 @@ const Modal: React.FC<ModalProps> = ({
     const contentClass = ["modal-content", isOpen ? "open" : "close"]
         .filter(Boolean)
         .join(" ");
+
+    const [loading, setLoading] = useState(false);
+    const handleConfirmClick = async () => {
+        if (!onConfirm) return onClose();
+        setLoading(true);
+        try {
+            await onConfirm();
+            onClose();
+        } catch (error) {
+            console.error("취소 실패", error);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    if (!isOpen) return null;
 
     return (
         <div className={overlayClass}>
@@ -39,7 +53,11 @@ const Modal: React.FC<ModalProps> = ({
                     <Button variant="secondary" size="large" onClick={onClose}>
                         아니요
                     </Button>
-                    <Button variant={confirmVariant} size="large" onClick={onConfirm}>
+                    <Button
+                        variant={confirmVariant}
+                        size="large"
+                        onClick={handleConfirmClick}
+                    >
                         {confirmText}
                     </Button>
                 </div>

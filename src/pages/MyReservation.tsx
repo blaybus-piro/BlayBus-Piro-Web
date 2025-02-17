@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ReservationState } from "../types/Reservation";
 import Header from "../components/Header/Header";
 import ReservationCard from '../components/ReservationCard/ReservationCard';
+import Toast from "../components/Toast/Toast";
 import "../styles/MyReservation.styles.css";
 import { getUserIdFromToken } from '../utils/auth';
 import { apiRequest } from '../utils/api';
 
 const MyReservation: React.FC = () => {
     const userId = getUserIdFromToken();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const [myReservations, setMyReservations] = useState<ReservationState[]>([]);
     const [scheduledTab, setScheduledTab] = useState<"scheduled" | "completed">("scheduled");
-
-    const navigate = useNavigate();
+    const [showToast, setShowToast] = useState(location.state?.showToast || false);
 
     useEffect(() => {
         if (!userId) return;
@@ -48,6 +50,15 @@ const MyReservation: React.FC = () => {
             isMounted = false;
         };
     }, [userId]);
+
+    useEffect(() => {
+        if (showToast) {
+            const timer = setTimeout(() => {
+                setShowToast(false);
+            }, 2000);
+            return () => clearTimeout(timer);
+        }
+    }, [showToast]);
 
     const parseDate = (timeString: string) => {
         const regex = /(\d{4})년 (\d{1,2})월 (\d{1,2})일.*?(\d{1,2}):(\d{2})/;
@@ -102,6 +113,7 @@ const MyReservation: React.FC = () => {
                     <img src="/icons/reservation-logo.svg" alt="logo" className="myreservation-logo" />
                 </div>
             )}
+            {showToast && <Toast message="예약이 취소되었습니다." isVisible={showToast} onClose={() => setShowToast(false)} />}
         </div>
     );
 };
