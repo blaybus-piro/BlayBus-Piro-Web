@@ -6,7 +6,7 @@
   flex-direction: column;
   position: relative;
   background: var(--main-50);
-  overflow: hidden; /* 컨테이너 자체의 스크롤을 방지 */
+  overflow: hidden;
 }
 
 .designer-list-header {
@@ -14,7 +14,8 @@
   border-bottom: 1px solid var(--main-200);
   position: sticky;
   top: 0;
-  z-index: 100; /* 다른 요소들 위에 표시되도록 */
+  z-index: 100;
+  overflow-y: hidden;
 }
 
 .header-content {
@@ -37,13 +38,15 @@
   background: none;
   gap: 4px;
   cursor: pointer;
+  color: var(--main-800);
 }
 
 .designerlist-content {
   padding: 16px 20px;
   flex: 1;
-  overflow-y: auto; /* 내용이 넘칠 경우 스크롤 생성 */
-  height: calc(100vh - 100px); /* 헤더 높이를 제외한 높이 설정 */
+  overflow-y: auto;
+  height: calc(100vh - 100px);
+  padding-bottom: 60px;
 }
 
 
