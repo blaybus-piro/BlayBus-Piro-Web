@@ -30,7 +30,22 @@ const DesignerDetail: React.FC = () => {
         if (!designerId) return;
 
         apiRequest(`/api/designers/${designerId}`)
-            .then(setDesigner)
+            .then((data) => {
+                const formattedDesigner = {
+                    id: data.id,
+                    name: data.name,
+                    address: data.address,
+                    specialty: data.expert_field,
+                    profileImage: data.profile,
+                    portfolioImages: data.portfolio,
+                    description: data.introduce,
+                    type: data.type,
+                    remotePrice: data.onlinePrice,
+                    inPersonPrice: data.offlinePrice
+                };
+
+                setDesigner(formattedDesigner);
+            })
             .catch((error) => console.error(error));
     }, [designerId]);
 
