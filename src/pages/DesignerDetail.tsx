@@ -24,6 +24,7 @@ interface Designer {
 
 const DesignerDetail: React.FC = () => {
     const { designerId } = useParams<{ designerId: string }>();
+    const navigate = useNavigate();
     const [designer, setDesigner] = useState<Designer | null>(null);
 
     useEffect(() => {
@@ -55,14 +56,12 @@ const DesignerDetail: React.FC = () => {
         }
     }, [designer]);
 
-    if (designer === undefined) return <p>로딩 중...</p>;
-    if (designer === null) return <p>디자이너 정보를 불러올 수 없습니다.</p>;
-
-    const navigate = useNavigate();
-
     const handleConsultingClick = (method: "ONLINE" | "OFFLINE") => {
         navigate(`/reservation?method=${method}`);
     };
+
+    if (designer === undefined) return <p>로딩 중...</p>;
+    if (designer === null) return <p>디자이너 정보를 불러올 수 없습니다.</p>;
 
     const isRemoteDisabled = designer.type === "OFFLINE";
     const isInpersonDisabled = designer.type === "ONLINE";
