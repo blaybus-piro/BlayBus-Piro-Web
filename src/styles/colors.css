@@ -21,6 +21,11 @@
 body {
   background-color: var(--main-50);
   color: var(--main-800);
+  overflow-y: hidden;
+}
+
+#root {
+  overflow-y: hidden;
 }
 
 head {
