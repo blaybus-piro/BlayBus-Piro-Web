@@ -31,7 +31,16 @@ const DesignerDetail: React.FC = () => {
 
         apiRequest(`/api/designers/${designerId}`)
             .then((data) => {
-                console.log(data);
+                console.log(data.id);
+                console.log(data.name);
+                console.log(data.profile);
+                console.log(data.address);
+                console.log(data.expertField);
+                console.log(data.introduce);
+                console.log(data.portfolio);
+                console.log(data.type);
+                console.log(data.offlinePrice);
+                console.log(data.onlinePrice);
 
                 const formattedDesigner = {
                     id: data.id,
