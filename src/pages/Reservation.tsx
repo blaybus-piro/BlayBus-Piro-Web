@@ -46,41 +46,40 @@ export default function ReservationPage() {
 
   return (
     <div className="reservation-container">
-      <Header title={pageTitle} />
-      
-      <WeeklyCalendar 
-        selectedDate={selectedDate}
-        onDateSelect={setSelectedDate}
-        bookedTimesByDate={bookedTimesByDate}
-      />
-      
-      <TimeSelector
-        selectedDate={selectedDate}
-        selectedTime={selectedTime}
-        onTimeSelect={setSelectedTime}
-        bookedTimes={selectedDate 
-          ? bookedTimesByDate[`${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`] || [] 
-          : []
-        }
-      />
-
-      {selectedDate && selectedTime && (
-        <div className="selected-datetime">
-          <img src="/icons/calendar.svg" alt="calendar" />
-          {formatSelectedDateTime()}
+      {/* 고정된 헤더 */}
+      <div className="reservation-header">
+        <Header title={pageTitle} />
+      </div>
+  
+      {/* 스크롤이 적용될 영역 */}
+      <div className="reservation-wrapper">
+        <div className="reservation-content">
+          <WeeklyCalendar 
+            selectedDate={selectedDate}
+            onDateSelect={setSelectedDate}
+            bookedTimesByDate={bookedTimesByDate}
+          />
+  
+          <TimeSelector
+            selectedDate={selectedDate}
+            selectedTime={selectedTime}
+            onTimeSelect={setSelectedTime}
+            bookedTimes={selectedDate 
+              ? bookedTimesByDate[`${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`] || [] 
+              : []
+            }
+          />
+  
+          {selectedDate && selectedTime && (
+            <div className="selected-datetime">
+              <img src="/icons/calendar.svg" alt="calendar" />
+              {formatSelectedDateTime()}
+            </div>
+          )}
         </div>
-      )}
-
-      {/* <footer className="reservation-footer">
-        <button 
-          className={`payment-button ${!(selectedDate && selectedTime) ? 'disabled' : ''}`}
-          disabled={!(selectedDate && selectedTime)}
-          onClick={handlePayment}
-        >
-          {consultMethod === 'offline' ? '40,000원' : '20,000원'} 결제하기
-        </button>
-      </footer> */}
-
+      </div>
+  
+      {/* 고정된 푸터 */}
       <footer className="reservation-footer">
         <button 
           className={`next-button ${!(selectedDate && selectedTime) ? 'disabled' : ''}`}
@@ -92,4 +91,5 @@ export default function ReservationPage() {
       </footer>
     </div>
   );
+  
 }

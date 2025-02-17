@@ -1,5 +1,5 @@
 .calendar-container {
-  padding: 12px 20px;
+  padding-block: 12px;
   background-color: white;
   margin-top: 16px;
   margin-bottom: 12px;
@@ -81,6 +81,7 @@
 }
 
 .calendar-date {
+  color: var(--main-800);
   background: none;
   border: none;
   width: 36px;
