@@ -6,7 +6,7 @@ export const apiRequest = async (endpoint: string, options = {}) => {
     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
   };
 
-  const response = await fetch('/api/user/report', {
+  const response = await fetch(`/api/user/report${endpoint}`, {
     ...options,
     headers,
   });
