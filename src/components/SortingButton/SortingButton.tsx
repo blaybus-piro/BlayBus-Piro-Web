@@ -16,11 +16,11 @@ export const SortingButton: React.FC<SortingButtonProps> = ({
 
   const getSortLabel = () => {
     const sortLabels = {
-      'distance': '가까운 순',
+      'distance': '가까운 거리순',
       'price_asc': '가격 낮은 순',
       'price_desc': '가격 높은 순'
     };
-    return sortLabels[value as keyof typeof sortLabels] || '가까운 순';
+    return sortLabels[value as keyof typeof sortLabels] || '가까운 거리순';
   };
 
   return (

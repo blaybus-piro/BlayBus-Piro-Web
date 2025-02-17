@@ -5,14 +5,14 @@
     border-radius: 2px;
     border: none;
     background: none;
-    min-width: 120px;
     cursor: pointer;
     justify-content: flex-end;
+    padding: 0;
   }
   
   .sorting-label {
     font-size: 14px;
     font-family: "Paperlogy", sans-serif;
     font-weight: 400;
-    color: var(--main-800);
+    color: var(--main-400);
   }

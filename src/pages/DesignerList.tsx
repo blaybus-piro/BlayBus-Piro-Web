@@ -129,6 +129,7 @@ export default function DesignerList() {
   const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [hasUpComingReservation, setHasUpComingReservation] = useState(false);
+  const [viewMode, setViewMode] = useState<'simple' | 'detailed'>('simple');
   const navigate = useNavigate();
   const userId = getUserIdFromToken();
 
@@ -229,7 +230,6 @@ export default function DesignerList() {
             )}
             <span className="sr-only">내 예약</span>
           </button>
-
         </div>
       </header>
 
@@ -265,18 +265,32 @@ export default function DesignerList() {
                 <img src={question} alt="question" />
               </ToolTip>
             </div>
-            <SortingButton value={sortBy} onChange={setSortBy} />
+            <div className="right-filters">
+              <button 
+                className="view-mode-button"
+                onClick={() => setViewMode(viewMode === 'simple' ? 'detailed' : 'simple')}
+              >
+                <img 
+                  src={viewMode === 'simple' ? "/icons/detail.svg" : "/icons/simple.svg"} 
+                  alt={viewMode === 'simple' ? "상세히 보기 아이콘" : "간단히 보기 아이콘"}
+                />
+                {viewMode === 'simple' ? '상세히' : '간단히'}
+              </button>
+              <SortingButton value={sortBy} onChange={setSortBy} />
+            </div>
           </div>
 
-          <div className="designers-grid">
+          <div className={`designers-grid ${viewMode === 'detailed' ? 'designers-grid-detailed' : ''}`}>
             {designers.map((item) => (
-              <DesignerCard onClick={() => navigate(`/designerdetail/${item.id}`)}
+              <DesignerCard
+                onClick={() => navigate(`/designerdetail/${item.id}`)}
                 key={item.id}
                 name={item.name}
                 price={item.price}
                 image={item.image}
                 specialty={item.specialty}
                 distance={item.distance}
+                viewMode={viewMode}
               />
             ))}
           </div>

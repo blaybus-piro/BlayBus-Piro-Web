@@ -4,7 +4,6 @@
   border-radius: 2px;
 }
 
-
 .designer-card-image {
   position: relative;
   width: 100%;
@@ -38,6 +37,53 @@
   font-family: "Paperlogy", sans-serif;
 }
 
+.specialty-badge-detailed {
+  padding: 4px 10px;
+  background: var(--main-300);
+  border-radius: 2px;
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 300;
+  font-family: "Paperlogy", sans-serif;
+  margin-bottom: 21px;
+}
+
+.detailed-profile-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  overflow: visible; /* ✅ 이 부분이 스크롤되지 않도록 설정 */
+}
+
+.designer-card-image-container {
+  position: relative;
+  width: 100%;
+  overflow-x: auto; /* ✅ 가로 스크롤 가능 */
+  overflow-y: hidden; /* ✅ 세로 스크롤 방지 */
+  white-space: nowrap;
+  scroll-snap-type: x mandatory;
+  -ms-overflow-style: none; /* IE, Edge에서 스크롤바 숨기기 */
+  scrollbar-width: none; /* Firefox에서 스크롤바 숨기기 */
+}
+
+.designer-card-image-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari에서 스크롤바 숨기기 */
+}
+
+.designer-card-image-scroll {
+  display: flex;
+  gap: 8px;
+}
+
+.designer-card-image-scroll img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  scroll-snap-align: start;
+}
+
 .designer-card-info {
   padding: 8px 0;
 }
@@ -50,11 +96,17 @@
 }
 
 .profile-card-image {
-  width: 24px;
-  height: 24px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   border: 0.5px solid white;
   box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+.profile-section {
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
 }
 
 .designer-card-name {
@@ -69,4 +121,53 @@
   font-weight: 300;
   color: var(--main-400);
   gap: 4px;
+}
+
+.detailed-view .designer-card-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--main-800);
+}
+
+.detailed-view .price-and-distance {
+  display: flex;
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--main-400);
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.detailed-view .designer-card-image-container {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  scroll-snap-type: x mandatory;
+}
+
+.detailed-view .designer-card-image-scroll {
+  display: flex;
+  gap: 8px;
+}
+
+.detailed-view .designer-card-image-scroll img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 4px;
+  scroll-snap-align: start;
+}
+
+.detailed-view .specialty-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 4px 10px;
+  background: var(--main-300);
+  border-radius: 4px;
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 500;
 }

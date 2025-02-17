@@ -203,3 +203,55 @@
   border-style: solid;
   border-color: transparent transparent var(--main-800) transparent;
 }
+
+.right-filters {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-mode-button {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 2px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  justify-content: flex-end;
+  font-size: 14px;
+  font-family: "Paperlogy", sans-serif;
+  font-weight: 400;
+  color: var(--main-400);
+  padding: 0;
+}
+
+.designers-grid-detailed {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.designers-grid-detailed .designer-card {
+  display: flex;
+  gap: 8px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--main-100);
+  border-radius: 2px;
+  background: none;
+  flex-direction: column;
+  overflow-x: auto;
+}
+
+.designers-grid-detailed .designer-card-image {
+  width: 120px;
+  min-width: 120px;
+  aspect-ratio: 1;
+}
+
+.designers-grid-detailed .designer-card-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0;
+}
