@@ -71,7 +71,12 @@ const DesignerDetail: React.FC = () => {
             .catch((error) => console.error(error));
     }, [designerId]);
 
-    if (!designer) return <p>로딩 중...</p>;
+    useEffect(() => {
+        console.log("🔥 상태 변경 감지 - designer:", designer);
+    }, [designer]);
+
+    if (designer === undefined) return <p>로딩 중...</p>;
+    if (designer === null) return <p>디자이너 정보를 불러올 수 없습니다.</p>;
 
     const navigate = useNavigate();
 
