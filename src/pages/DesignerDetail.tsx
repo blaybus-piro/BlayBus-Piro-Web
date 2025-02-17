@@ -29,7 +29,7 @@ const DesignerDetail: React.FC = () => {
     useEffect(() => {
         if (!designerId) return;
 
-        apiRequest(`api/designer/${designerId}`)
+        apiRequest(`/api/designer/${designerId}`)
             .then(setDesigner)
             .catch((error) => console.error(error));
     }, [designerId]);
