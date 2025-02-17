@@ -58,7 +58,7 @@ const Modal: React.FC<ModalProps> = ({
                         size="large"
                         onClick={handleConfirmClick}
                     >
-                        {confirmText}
+                        {loading ? "처리 중..." : confirmText}
                     </Button>
                 </div>
             </div>

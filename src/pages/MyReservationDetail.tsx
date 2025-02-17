@@ -13,14 +13,12 @@ const MyReservationDetail: React.FC = () => {
     const navigate = useNavigate();
 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [loading, setLoading] = useState(false);
 
     const displayMethodText =
         reservation.paymentMethod === "ACCOUNTMENT" ? "계좌 이체"
             : "카카오 페이";
 
     const handleCancelReservation = async () => {
-        setLoading(true);
         try {
             await cancelReservation(reservation.id);
             setIsModalOpen(false);
@@ -28,8 +26,6 @@ const MyReservationDetail: React.FC = () => {
             navigate(`/myreservation`, { state: { showToast: true } });
         } catch (error) {
             console.error("예약 취소 실패", error);
-        } finally {
-            setLoading(false);
         }
     }
 
