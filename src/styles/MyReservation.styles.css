@@ -13,7 +13,6 @@
 
 /* 예약 토글 탭 */
 .my-reservation-tabs {
-    padding-top: 12px;
     display: flex;
     justify-content: center;
     height: 38px;
@@ -29,6 +28,7 @@
     font-weight: 600;
     color: var(--main-200);
     border-bottom: 1px solid white;
+    padding: 10px 0;
 }
 
 .tab.active {
@@ -72,7 +72,7 @@
     font-size: 14px;
     font-weight: 300;
     color: var(--main-400);
-    margin-bottom: 24px;
+    margin-block: 11px;
 }
 
 .retry-button {
@@ -84,6 +84,7 @@
     font-weight: 600;
     cursor: pointer;
     font-family: "Paperlogy", sans-serif;
+    color: var(--main-500);
 }
 
 .retry-button:hover {
@@ -92,6 +93,6 @@
 
 .myreservation-logo {
     width: 100%;
-    margin-top: 195px;
-    margin-bottom: 124px;
+    margin-top: auto;
+    margin-bottom: 188px;
 }
