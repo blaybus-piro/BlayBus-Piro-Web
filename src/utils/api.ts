@@ -6,7 +6,7 @@ export const apiRequest = async (endpoint: string, options = {}) => {
     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
   };
 
-  const response = await fetch(`${endpoint}`, {
+  const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${endpoint}`, {
     ...options,
     headers,
   });
