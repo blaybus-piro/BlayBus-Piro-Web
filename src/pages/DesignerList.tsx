@@ -103,7 +103,7 @@ export default function DesignerList() {
   useEffect(() => {
     if (!userId) return;
 
-    apiRequest(`api/consulting/user/${userId}`)
+    apiRequest(`/api/consulting/user/${userId}`)
       .then((reservations) => {
         const now = new Date();
         const hasUpComing = reservations.some((reservation: ReservationState) => {
