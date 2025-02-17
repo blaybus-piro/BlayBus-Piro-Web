@@ -21,6 +21,7 @@
   overflow-y: auto;
   height: calc(100vh - 60px);
   -webkit-overflow-scrolling: touch;
+  margin-bottom: 80px;
 }
 
 .payment-content {
