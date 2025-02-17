@@ -131,8 +131,12 @@ export default function PaymentPage() {
   
   return (
     <div className="payment-container">
+    {/* 고정된 헤더 */}
+    <div className="payment-header">
       <Header title="결제하기" />
+    </div>
       
+    <div className="payment-wrapper">
       <div className="payment-content">
         <div className="info-section">
           <div className={`toggle-container ${isReservationInfoOpen ? 'open' : ''}`}>
@@ -282,6 +286,7 @@ export default function PaymentPage() {
         {amount.toLocaleString()}원 결제하기
       </button>
       </footer>
+    </div>
     </div>
   );
 }
