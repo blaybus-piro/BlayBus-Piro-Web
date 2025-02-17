@@ -34,14 +34,14 @@ const DesignerDetail: React.FC = () => {
                 const formattedDesigner = {
                     id: data.id,
                     name: data.name,
-                    address: data.address,
-                    specialty: data.expert_field,
                     profileImage: data.profile,
-                    portfolioImages: data.portfolio,
+                    address: data.address,
+                    specialty: data.expertField,
                     description: data.introduce,
+                    portfolioImages: data.portfolio,
                     type: data.type,
-                    remotePrice: data.onlinePrice,
-                    inPersonPrice: data.offlinePrice
+                    inPersonPrice: data.offlinePrice,
+                    remotePrice: data.onlinePrice
                 };
 
                 setDesigner(formattedDesigner);
