@@ -13,120 +13,87 @@ import { ReservationState } from '../types/Reservation';
 interface Designer {
   id: number;
   name: string;
-  price: number;
+  offLinePrice: number;
+  onLinePrice: number;
   image: string;
   specialty: string;
-  latitude: number;
-  longitude: number;
   distance?: number;
 }
 
-const dummyDesigners = [
-  {
-    id: 1,
-    name: '이초 디자이너',
-    price: 20000,
-    image: '/api/placeholder/400/400',
-    specialty: '펌 전문',
-    latitude: 37.5035,
-    longitude: 126.9550,
-    distance: 0,
-  },
-  {
-    id: 2,
-    name: '로로 원장',
-    price: 34000,
-    image: '/api/placeholder/400/400',
-    specialty: '탈/염색 전문',
-    latitude: 36.3504,
-    longitude: 87.3249328,
-    distance: 0,
-  },
-  {
-    id: 3,
-    name: '수 대표원장',
-    price: 20000,
-    image: '/api/placeholder/400/400',
-    specialty: '탈/염색 전문',
-    latitude: 37.3405,
-    longitude: 127.3845,
-    distance: 0,
-  },
-  {
-    id: 4,
-    name: '랑 원장',
-    price: 34000,
-    image: '/api/placeholder/400/400',
-    specialty: '탈/염색 전문',
-    latitude: 37.2735,
-    longitude: 127.6345,
-    distance: 0,
-  },
-  {
-    id: 5,
-    name: '수 대표원장',
-    price: 20000,
-    image: '/api/placeholder/400/400',
-    specialty: '탈/염색 전문',
-    latitude: 37.3405,
-    longitude: 127.3845,
-    distance: 0,
-  },
-  {
-    id: 6,
-    name: '랑 원장',
-    price: 34000,
-    image: '/api/placeholder/400/400',
-    specialty: '탈/염색 전문',
-    latitude: 37.2735,
-    longitude: 127.6345,
-    distance: 0,
-  },
-  {
-    id: 7,
-    name: '수 대표원장',
-    price: 20000,
-    image: '/api/placeholder/400/400',
-    specialty: '탈/염색 전문',
-    latitude: 37.3405,
-    longitude: 127.3845,
-    distance: 0,
-  },
-  {
-    id: 8,
-    name: '랑 원장',
-    price: 34000,
-    image: '/api/placeholder/400/400',
-    specialty: '탈/염색 전문',
-    latitude: 37.2735,
-    longitude: 127.6345,
-    distance: 0,
-  }
-];
+// const dummyDesigners = [
+//   {
+//     id: 1,
+//     name: '이초 디자이너',
+//     price: 20000,
+//     image: '/api/placeholder/400/400',
+//     specialty: '펌 전문',
+//     distance: 0,
+//   },
+//   {
+//     id: 2,
+//     name: '로로 원장',
+//     price: 34000,
+//     image: '/api/placeholder/400/400',
+//     specialty: '탈/염색 전문',
+//     distance: 0,
+//   },
+//   {
+//     id: 3,
+//     name: '수 대표원장',
+//     price: 20000,
+//     image: '/api/placeholder/400/400',
+//     specialty: '탈/염색 전문',
+//     distance: 0,
+//   },
+//   {
+//     id: 4,
+//     name: '랑 원장',
+//     price: 34000,
+//     image: '/api/placeholder/400/400',
+//     specialty: '탈/염색 전문',
+//     distance: 0,
+//   },
+//   {
+//     id: 5,
+//     name: '수 대표원장',
+//     price: 20000,
+//     image: '/api/placeholder/400/400',
+//     specialty: '탈/염색 전문',
+//     distance: 0,
+//   },
+//   {
+//     id: 6,
+//     name: '랑 원장',
+//     price: 34000,
+//     image: '/api/placeholder/400/400',
+//     specialty: '탈/염색 전문',
+//     distance: 0,
+//   },
+//   {
+//     id: 7,
+//     name: '수 대표원장',
+//     price: 20000,
+//     image: '/api/placeholder/400/400',
+//     specialty: '탈/염색 전문',
+//     distance: 0,
+//   },
+//   {
+//     id: 8,
+//     name: '랑 원장',
+//     price: 34000,
+//     image: '/api/placeholder/400/400',
+//     specialty: '탈/염색 전문',
+//     distance: 0,
+//   }
+// ];
 
 // const dummyDesigners: Designer[] = []; // 빈 배열에도 타입 명시
-
-const haversineDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-  const R = 6371
-  const dLat = (lat2 - lat1) * (Math.PI / 180);
-  const dLon = (lon2 - lon1) * (Math.PI / 180);
-
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(lat1 * (Math.PI / 180)) *
-    Math.cos(lat2 * (Math.PI / 180)) *
-    Math.sin(dLon / 2) *
-    Math.sin(dLon / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;  // 거리 (km)
-};
 
 export default function DesignerList() {
   const [consultingType, setConsultingType] = useState('');
   const [sortBy, setSortBy] = useState('distance');
-  const [designers, setDesigners] = useState<Designer[]>(dummyDesigners);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | null>(null);
+  const [designers, setDesigners] = useState<Designer[]>([]);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [hasUpComingReservation, setHasUpComingReservation] = useState(false);
   const [viewMode, setViewMode] = useState<'simple' | 'detailed'>('simple');
@@ -158,13 +125,13 @@ export default function DesignerList() {
       });
   }, [userId]);
 
+  // 현재 위치 구하기
   useEffect(() => {
-    /* 디자이너 주소까지의 거리 구하기 */
     navigator.geolocation.getCurrentPosition(
       (position) => {
         setUserLocation({
           lat: position.coords.latitude,
-          lon: position.coords.longitude,
+          lng: position.coords.longitude,
         });
       },
       (error) => {
@@ -173,8 +140,26 @@ export default function DesignerList() {
     );
   }, []);
 
+  // 거리 순으로 디자이너 리스트 가져오기
   useEffect(() => {
-    let filtered = [...dummyDesigners];
+    if (!userLocation) return;
+
+    const fetchDesigners = async () => {
+      try {
+        const response = await apiRequest(
+          `/designers/by-location?lat=${userLocation.lat}&lng=${userLocation.lng}&type=ASC`
+        );
+        setDesigners(response);
+      } catch (error) {
+        console.error('디자이너 목록을 불러오는 데 실패했습니다.', error);
+      }
+    };
+
+    fetchDesigners();
+  }, [userLocation, sortBy]);
+
+  useEffect(() => {
+    let filtered = [...designers];
 
     if (consultingType) {
       filtered = filtered.filter(item => {
@@ -187,29 +172,21 @@ export default function DesignerList() {
       });
     }
 
-    if (userLocation) {
-      filtered = filtered.map((designer) => ({
-        ...designer,
-        distance: haversineDistance(userLocation.lat, userLocation.lon, designer.latitude, designer.longitude),
-      }));
-    }
-
-    switch (sortBy) {
-      case 'price_asc':
-        filtered.sort((a, b) => a.price - b.price);
-        break;
-      case 'price_desc':
-        filtered.sort((a, b) => b.price - a.price);
-        break;
-      case 'distance':
-        filtered.sort((a, b) => (a.distance ?? Infinity) - (b.distance ?? Infinity));
-        break;
-      default:
-        break;
+    if (sortBy === "price_asc") {
+      filtered.sort(
+        (a, b) =>
+          Math.min(a.offLinePrice, a.onLinePrice) - Math.min(b.offLinePrice, b.onLinePrice)
+      );
+    } else if (sortBy === "price_desc") {
+      filtered.sort(
+        (a, b) =>
+          Math.min(b.offLinePrice, b.onLinePrice) -
+          Math.min(a.offLinePrice, a.onLinePrice)
+      );
     }
 
     setDesigners(filtered);
-  }, [consultingType, sortBy, userLocation]);
+  }, [consultingType, sortBy]);
 
   const handleRetry = () => {
     window.location.reload();
@@ -225,7 +202,7 @@ export default function DesignerList() {
             <img src="/icons/home-calendar.svg" alt="home-calendar" />
             {showTooltip && hasUpComingReservation && (
               <div className="upComing-tooltip">
-                임박한 예약이 없어요!
+                임박한 예약이 있어요!
               </div>
             )}
             <span className="sr-only">내 예약</span>
@@ -266,12 +243,12 @@ export default function DesignerList() {
               </ToolTip>
             </div>
             <div className="right-filters">
-              <button 
+              <button
                 className="view-mode-button"
                 onClick={() => setViewMode(viewMode === 'simple' ? 'detailed' : 'simple')}
               >
-                <img 
-                  src={viewMode === 'simple' ? "/icons/detail.svg" : "/icons/simple.svg"} 
+                <img
+                  src={viewMode === 'simple' ? "/icons/detail.svg" : "/icons/simple.svg"}
                   alt={viewMode === 'simple' ? "상세히 보기 아이콘" : "간단히 보기 아이콘"}
                 />
                 {viewMode === 'simple' ? '상세히' : '간단히'}
@@ -286,7 +263,7 @@ export default function DesignerList() {
                 onClick={() => navigate(`/designerdetail/${item.id}`)}
                 key={item.id}
                 name={item.name}
-                price={item.price}
+                price={Math.min(item.onLinePrice, item.offLinePrice)}
                 image={item.image}
                 specialty={item.specialty}
                 distance={item.distance}
