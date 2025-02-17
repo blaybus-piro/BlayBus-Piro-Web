@@ -11,13 +11,12 @@ import { apiRequest } from '../utils/api';
 import { ReservationState } from '../types/Reservation';
 
 interface Designer {
-  id: number;
+  id: string;
   name: string;
-  offLinePrice: number;
-  onLinePrice: number;
+  price: number;
   image: string;
   specialty: string;
-  distance?: number;
+  distance: number;
 }
 
 // const dummyDesigners = [
@@ -149,7 +148,17 @@ export default function DesignerList() {
         const response = await apiRequest(
           `/designers/by-location?lat=${userLocation.lat}&lng=${userLocation.lng}&type=ASC`
         );
-        setDesigners(response);
+
+        const formattedData = response.map((designer: any) => ({
+          id: designer.id,
+          name: designer.name,
+          price: Math.min(designer.offlinePrice, designer.onlinePrice),
+          image: designer.profile,
+          specialty: designer.expert_field,
+          distance: designer.distance,
+        }));
+
+        setDesigners(formattedData);
       } catch (error) {
         console.error('디자이너 목록을 불러오는 데 실패했습니다.', error);
       }
@@ -173,16 +182,9 @@ export default function DesignerList() {
     }
 
     if (sortBy === "price_asc") {
-      filtered.sort(
-        (a, b) =>
-          Math.min(a.offLinePrice, a.onLinePrice) - Math.min(b.offLinePrice, b.onLinePrice)
-      );
+      filtered.sort((a, b) => a.price - b.price);
     } else if (sortBy === "price_desc") {
-      filtered.sort(
-        (a, b) =>
-          Math.min(b.offLinePrice, b.onLinePrice) -
-          Math.min(a.offLinePrice, a.onLinePrice)
-      );
+      filtered.sort((a, b) => b.price - a.price);
     }
 
     setDesigners(filtered);
@@ -263,7 +265,7 @@ export default function DesignerList() {
                 onClick={() => navigate(`/designerdetail/${item.id}`)}
                 key={item.id}
                 name={item.name}
-                price={Math.min(item.onLinePrice, item.offLinePrice)}
+                price={item.price}
                 image={item.image}
                 specialty={item.specialty}
                 distance={item.distance}
