@@ -9,7 +9,9 @@
   
   .payment-content {
     padding: 24px 20px;
+    padding-bottom: 100px;
     flex: 1;
+    overflow-y: auto;
   }
   
   .section-title {
