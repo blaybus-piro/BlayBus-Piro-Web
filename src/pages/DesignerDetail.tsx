@@ -31,17 +31,6 @@ const DesignerDetail: React.FC = () => {
 
         apiRequest(`/api/designers/${designerId}`)
             .then((data) => {
-                console.log(data.id);
-                console.log(data.name);
-                console.log(data.profile);
-                console.log(data.address);
-                console.log(data.expertField);
-                console.log(data.introduce);
-                console.log(data.portfolio);
-                console.log(data.type);
-                console.log(data.offlinePrice);
-                console.log(data.onlinePrice);
-
                 const formattedDesigner = {
                     id: data.id,
                     name: data.name,
@@ -55,27 +44,15 @@ const DesignerDetail: React.FC = () => {
                     remotePrice: data.onlinePrice
                 };
 
-                console.log(formattedDesigner.id);
-                console.log(formattedDesigner.name);
-                console.log(formattedDesigner.profileImage);
-                console.log(formattedDesigner.address);
-                console.log(formattedDesigner.specialty);
-                console.log(formattedDesigner.description);
-                console.log(formattedDesigner.portfolioImages);
-                console.log(formattedDesigner.type);
-                console.log(formattedDesigner.inPersonPrice);
-                console.log(formattedDesigner.remotePrice);
-
                 setDesigner(formattedDesigner);
-                setTimeout(() => {
-                    console.log("✅ setDesigner() 이후 - designer 상태:", designer);
-                }, 500);
             })
             .catch((error) => console.error(error));
     }, [designerId]);
 
     useEffect(() => {
-        console.log("🔥 상태 변경 감지 - designer:", designer);
+        if (designer) {
+            console.log("디자이너 데이터 업데이트됨: ", designer);
+        }
     }, [designer]);
 
     if (designer === undefined) return <p>로딩 중...</p>;
