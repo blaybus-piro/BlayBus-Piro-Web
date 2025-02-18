@@ -3,7 +3,7 @@ export const apiRequest = async (endpoint: string, options: RequestInit = {}) =>
   
   if (!accessToken) {
     console.error('No token found in localStorage');
-    window.location.href = '/'; // 로그인 페이지로 리다이렉트
+    // window.location.href = '/'; // 로그인 페이지로 리다이렉트
     throw new Error('Authentication required');
   }
 
