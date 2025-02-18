@@ -1,9 +1,10 @@
 export const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   const accessToken = localStorage.getItem("accessToken");
-
+  
+  console.log("Current access token:", accessToken); // 토큰 값 확인
+  
   if (!accessToken) {
-    // 토큰이 없을 경우 로그인 페이지로 리다이렉트하거나 에러를 throw
-    throw new Error("Authentication required");
+    throw new Error("No access token found");
   }
 
   const headers = {
@@ -11,6 +12,8 @@ export const apiRequest = async (endpoint: string, options: RequestInit = {}) =>
     "Authorization": `Bearer ${accessToken}`,
     ...(options.headers || {})
   };
+  
+  console.log("Request headers:", headers);
 
   try {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${endpoint}`, {
