@@ -147,7 +147,7 @@ export default function DesignerList() {
     const fetchDesigners = async () => {
       try {
         const response = await apiRequest(
-          `/designers/by-location?lat=${userLocation.lat}&lng=${userLocation.lng}`
+          `/designers/nearby?lat=${userLocation.lat}&lng=${userLocation.lng}`
         );
 
         const formattedData = response.map((designer: any) => ({
