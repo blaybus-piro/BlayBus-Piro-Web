@@ -11,6 +11,7 @@ import "./ReservationCard.styles.css";
 const ReservationCard: React.FC = () => {
     const location = useLocation();
     const reservation = location.state as ReservationState;
+    const navigate = useNavigate();
 
     const displayTypeText =
         reservation.type === "OFFLINE" ? "오프라인"
@@ -22,7 +23,18 @@ const ReservationCard: React.FC = () => {
                 : reservation.status === "CANCELED" ? "취소된 예약"
                     : "상담 완료";
 
-    const navigate = useNavigate();
+    const formatDate = (timestamp: string) => {
+        const date = new Date(timestamp);
+        return date.toLocaleString("ko-KR", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            weekday: "short",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false // 24시간 형식 사용
+        });
+    };
 
     return (
         <div className={`reservation-card ${reservation.status}`} key={reservation.id}>
@@ -32,7 +44,7 @@ const ReservationCard: React.FC = () => {
                     <h3>{reservation.designerName}</h3>
                     <div className="my-reservation-date">
                         <img src={calendar} alt="calendar" />
-                        <p>{reservation.time}</p>
+                        <p>{formatDate(reservation.time)}</p>
                     </div>
                     <span className={`tag ${reservation.status}`}>{displayStatusText}</span>
                 </div>

@@ -21,31 +21,47 @@ const MyReservation: React.FC = () => {
         if (!userId) return;
         let isMounted = true;
 
-        apiRequest(`/api/consulting/user/${userId}`)
-            .then(async (data) => {
-                const formattedData = await Promise.all(
-                    data.map(async (myReservation: ReservationState) => {
-                        const designerInfo = await apiRequest(`/api/designer/${myReservation.designerId}`);
+        const fetchReservations = async () => {
+            try {
+                const response = await apiRequest(`/api/consulting/user/${userId}`);
+                if (!response) return;
 
-                        return {
-                            id: myReservation.id,
-                            designerId: myReservation.designerId,
-                            name: designerInfo.name,
-                            profileImage: designerInfo.profileImage,
-                            time: myReservation.time,
-                            type: myReservation.type,
-                            status: myReservation.status,
-                            meetLink: myReservation.meetLink,
-                            paymentAmount: myReservation.paymentAmount,
-                            paymentMethod: myReservation.paymentMethod
-                        };
-                    })
-                );
-                if (isMounted) setMyReservations(formattedData);
-            })
-            .catch((error) => {
-                console.log(error);
-            });
+                console.log("원본 데이터: ", response);
+
+                const formattedReservations = response.map((reservation: any) => ({
+                    id: reservation.id,
+                    designerId: reservation.designer.id,
+                    designerName: reservation.designer.name,
+                    profileImage: reservation.designer.profile,
+                    time: reservation.time,
+                    meetLink: reservation.meeting?.meetUrl || null,
+                    type: reservation.type,
+                    status: reservation.status,
+                    paymentAmount: reservation.paymentAmount,
+                    paymentMethod: reservation.paymentMethod
+                }));
+
+                console.log("포맷팅된 예약 데이터: ", formattedReservations);
+
+                // 예약 상태에 따라서 filter
+                const filteredReservations = myReservations.filter((res) => {
+                    if (scheduledTab === "scheduled") return res.status === "FREE" || res.status === "SCHEDULED";
+                    return res.status === "CANCELED" || res.status === "COMPLETED";
+                });
+
+                // 최신 순 정렬
+                const sortedMyReservations = [...filteredReservations].sort((a, b) => {
+                    return new Date(b.time).getTime() - new Date(a.time).getTime();
+                });
+
+                setMyReservations(sortedMyReservations);
+
+            } catch (error) {
+                console.error("내 예약 목록을 불러오는 데 실패했습니다.", error);
+            }
+        };
+
+        fetchReservations();
         return () => {
             isMounted = false;
         };
@@ -59,24 +75,6 @@ const MyReservation: React.FC = () => {
             return () => clearTimeout(timer);
         }
     }, [showToast]);
-
-    const parseDate = (timeString: string) => {
-        const regex = /(\d{4})년 (\d{1,2})월 (\d{1,2})일.*?(\d{1,2}):(\d{2})/;
-        const match = timeString.match(regex);
-        if (!match) return new Date(0);
-
-        const [, year, month, day, hour, minute] = match.map(Number);
-        return new Date(year, month - 1, day, hour, minute);
-    };
-
-    const filteredReservations = myReservations.filter((res) => {
-        if (scheduledTab === "scheduled") return res.status === "FREE" || res.status === "SCHEDULED";
-        return res.status === "CANCELED" || res.status === "COMPLETED";
-    });
-
-    const sortedMyReservations = [...filteredReservations].sort((a, b) => {
-        return parseDate(b.time).getTime() - parseDate(a.time).getTime();
-    });
 
     const handleSearchDesigners = () => {
         navigate('/designerlist');
@@ -97,9 +95,9 @@ const MyReservation: React.FC = () => {
                 > 완료
                 </button>
             </div>
-            {sortedMyReservations.length > 0 ? (
+            {myReservations.length > 0 ? (
                 <div className="my-reservation-list">
-                    {sortedMyReservations.map((res) => (
+                    {myReservations.map((res) => (
                         <ReservationCard key={res.id} {...res} />
                     ))}
                 </div>
