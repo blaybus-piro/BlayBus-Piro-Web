@@ -32,37 +32,34 @@ export default function OAuthCallback() {
       credentials: "include",
     })
     .then(async (res) => {
-      console.log('Response status:', res.status);  // 응답 상태 확인
-      console.log('Response headers:', Object.fromEntries(res.headers));  // 모든 헤더 확인
-
+      console.log('Response status:', res.status);
+    
       if (!res.ok) {
-        // 에러 응답의 내용도 확인
         const errorText = await res.text();
         console.error('Error response:', errorText);
         throw new Error(`OAuth2 토큰 요청 실패: ${res.status}`);
       }
-
+    
+      // 전체 헤더 로그 출력
+      const headers = Object.fromEntries(res.headers);
+      console.log('All headers:', headers);
+    
       let accessToken = res.headers.get("Authorization");
-      if (!accessToken) {
-        // 응답 본문에서도 토큰을 확인
-        try {
-          const body = await res.json();
-          accessToken = body.access_token || body.token;
-          if (!accessToken) throw new Error("토큰을 찾을 수 없음");
-        } catch (e) {
-          throw new Error("Authorization 헤더와 응답 본문에 토큰이 없음");
-        }
-      } else {
+      console.log('Raw Authorization header:', accessToken);
+    
+      if (accessToken) {
+        // Bearer 접두어 제거
         accessToken = accessToken.replace("Bearer ", "");
+        localStorage.setItem("accessToken", accessToken);
+        console.log('Token saved:', accessToken);
+      } else {
+        throw new Error("토큰이 없습니다");
       }
-
-      localStorage.setItem("accessToken", accessToken);
-      console.log("OAuth2 AccessToken 저장 완료. 토큰 길이:", accessToken.length);
-      
+    
       // 저장된 토큰 확인
       const storedToken = localStorage.getItem("accessToken");
-      console.log("저장된 토큰 확인. 길이:", storedToken?.length);
-
+      console.log('Stored token:', storedToken);
+    
       navigate("/designerlist");
     })
     .catch((err) => {
