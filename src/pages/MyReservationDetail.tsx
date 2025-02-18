@@ -23,7 +23,11 @@ const MyReservationDetail: React.FC = () => {
             try {
                 const reservationData = await apiRequest(`/api/consulting/${reservationId}`);
 
+                console.log(reservationData);
+
                 const designerInfo = await apiRequest(`/api/designer/${reservationData.designerId}`);
+
+                console.log(designerInfo);
 
                 const formattedData = {
                     id: reservationData.id,
@@ -38,8 +42,12 @@ const MyReservationDetail: React.FC = () => {
                     paymentMethod: reservationData.paymentMethod,
                 };
 
+                console.log("포맷팅 후: ", formattedData);
+
                 if (isMountedRef.current) {
                     setMyReservationDetail(formattedData);
+
+                    console.log("셋후: ", myReservationDetail);
                 }
             } catch (error) {
                 console.error("예약 상세 조회를 실패했습니다.", error);
