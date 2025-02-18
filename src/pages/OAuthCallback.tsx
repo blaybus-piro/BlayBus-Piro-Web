@@ -19,7 +19,7 @@ export default function OAuthCallback() {
     const isDockerEnv = window.location.hostname === "backend";
     const BACKEND_URL = isDockerEnv
       ? "http://backend:8080"
-      : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
+      : import.meta.env.VITE_BACKEND_URL || "https://blarybus.seunghooo.p-e.kr";
 
     fetch(`${BACKEND_URL}/api/oauth2/callback`, {
       method: "POST",
