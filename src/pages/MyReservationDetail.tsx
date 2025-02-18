@@ -11,6 +11,7 @@ import "../styles/MyReservationDetail.styles.css";
 
 const MyReservationDetail: React.FC = () => {
     const { myreservationId } = useParams();
+    console.log("myreservationId확인: ", myreservationId);
     const [myReservationDetail, setMyReservationDetail] = useState<ReservationState | null>(null);
     const isMountedRef = useRef(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,7 +20,7 @@ const MyReservationDetail: React.FC = () => {
     useEffect(() => {
         const fetchReservationDetail = async () => {
             if (!myreservationId) {
-                console.log("reservationId 존재하지 않음");
+                console.log("myreservationId 존재하지 않음");
                 return;
             }
 
