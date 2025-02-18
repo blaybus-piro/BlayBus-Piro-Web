@@ -155,21 +155,16 @@ export default function DesignerList() {
           ? '/api/designer/online' 
           : '/api/designer/offline';
         
+        // queryParams를 먼저 만들고
         const queryParams = userLocation 
           ? `sortOrder=ASC&lat=${userLocation.lat}&lng=${userLocation.lng}`
           : 'sortOrder=ASC';
         
+        // API 호출할 때 사용
         const response = await apiRequest(
           `${endpoint}?${queryParams}`
         );
         
-        // response가 undefined인지 확인
-        if (!response || !Array.isArray(response)) {
-          console.error('Invalid response format:', response);
-          setError(true);
-          return;
-        }
-  
         const formattedData = response.map((designer: Designer) => ({
           id: designer.id,
           name: designer.name,
