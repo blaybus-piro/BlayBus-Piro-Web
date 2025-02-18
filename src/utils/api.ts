@@ -1,48 +1,20 @@
-export const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
-  const accessToken = localStorage.getItem("accessToken");
-  
-  if (!accessToken) {
-    console.error('No token found in localStorage');
-    // window.location.href = '/'; // 로그인 페이지로 리다이렉트
-    throw new Error('Authentication required');
-  }
+export async function apiRequest(url: string, options: RequestInit = {}) {
+  const token = localStorage.getItem("accessToken");
 
   const headers = {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${accessToken}`,
-    ...(options.headers || {})
+    ...(token ? { Authorization: `Bearer ${token}` } : {}), // ✅ Authorization 헤더 추가
   };
 
-  console.log('Request URL:', `${import.meta.env.VITE_BACKEND_URL}${endpoint}`);
-  console.log('Request headers:', headers);
+  const response = await fetch(url, {
+    ...options,
+    headers: { ...headers, ...options.headers },
+  });
 
-  try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${endpoint}`, {
-      ...options,
-      headers,
-    });
-
-    // 응답 상세 로깅
-    console.log('Response status:', response.status);
-    
-    if (!response.ok) {
-      if (response.status === 401) {
-        // 토큰이 만료되었거나 유효하지 않은 경우
-        localStorage.removeItem('accessToken');
-        // window.location.href = '/'; // 로그인 페이지로 리다이렉트
-        throw new Error('Authentication failed');
-      }
-      throw new Error(`Request failed with status ${response.status}`);
-    }
-
-    const contentType = response.headers.get("content-type");
-    if (contentType && contentType.includes("application/json")) {
-      return response.json();
-    }
-    
-    return response;
-  } catch (error) {
-    console.error('API request error:', error);
-    throw error;
+  if (!response.ok) {
+    console.error("API 요청 실패:", response.status);
+    throw new Error(`API 요청 실패: ${response.status}`);
   }
-};
+
+  return response.json();
+}
