@@ -201,7 +201,7 @@ export default function DesignerList() {
       <header className="designer-list-header">
         <div className="header-content">
           <img src="/icons/header-logo.svg" alt="header-logo" />
-          <button className="calendar-button" onClick={() => navigate(`/myreservation/${userId}`)}>
+          <button className="calendar-button" onClick={() => navigate(`/myreservation`)}>
             {hasUpComingReservation && <div className="red-dot" />}
             <img src="/icons/home-calendar.svg" alt="home-calendar" />
             {showTooltip && hasUpComingReservation && (
