@@ -19,7 +19,7 @@ export default function OAuthCallback() {
     const isDockerEnv = window.location.hostname === "backend";
     const BACKEND_URL = isDockerEnv
       ? "http://backend:8080"
-      : import.meta.env.VITE_BACKEND_URL || "https://blarybus.seunghooo.p-e.kr";
+      : import.meta.env.VITE_BACKEND_URL || "https://blaybus-haertz.netlify.app";
 
     fetch(`${BACKEND_URL}/api/oauth2/callback`, {
       method: "POST",
@@ -29,24 +29,24 @@ export default function OAuthCallback() {
       body: new URLSearchParams({ code }).toString(),
       credentials: "include",
     })
-    .then((res) => {
-      if (!res.ok) throw new Error("OAuth2 토큰 요청 실패");
-      console.log(res.headers);
+      .then((res) => {
+        if (!res.ok) throw new Error("OAuth2 토큰 요청 실패");
+        console.log(res.headers);
 
-      let accessToken = res.headers.get("Authorization");
-      if (!accessToken) throw new Error("Authorization 헤더 없음");
+        let accessToken = res.headers.get("Authorization");
+        if (!accessToken) throw new Error("Authorization 헤더 없음");
 
-      accessToken = accessToken.replace("Bearer ", "");
+        accessToken = accessToken.replace("Bearer ", "");
 
-      localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("accessToken", accessToken);
 
-      console.log("OAuth2 AccessToken 저장 완료:", accessToken);
-      navigate("/designerlist");
-    })
-    .catch((err) => {
-      console.error("OAuth Callback Error:", err);
-      navigate("/");
-    });
+        console.log("OAuth2 AccessToken 저장 완료:", accessToken);
+        navigate("/designerlist");
+      })
+      .catch((err) => {
+        console.error("OAuth Callback Error:", err);
+        navigate("/");
+      });
   }, [location, navigate]);
 
   return <div>로그인 처리 중...</div>;
