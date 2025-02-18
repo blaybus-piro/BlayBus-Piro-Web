@@ -31,22 +31,17 @@ const MyReservationDetail: React.FC = () => {
 
                 console.log(reservationData);
 
-                console.log("디자이너 정보 조회 API 호출: ", `/api/designer/${reservationData.designerId}`);
-                const designerInfo = await apiRequest(`/api/designer/${reservationData.designerId}`);
-
-                console.log(designerInfo);
-
                 const formattedData = {
-                    id: reservationData.id,
-                    designerId: reservationData.designer.id,
-                    designerName: reservationData.designer.name,
-                    profileImage: designerInfo.profileImage,
-                    time: reservationData.time,
+                    id: reservationData.consultingId,
+                    designerId: reservationData.designerId,
+                    designerName: reservationData.designerName,
+                    profileImage: reservationData.designerProfile,
+                    time: reservationData.startTime,
                     type: reservationData.type,
                     status: reservationData.status,
-                    meetLink: reservationData.meeting?.meetUrl || null,
-                    paymentAmount: reservationData.paymentAmount,
-                    paymentMethod: reservationData.paymentMethod,
+                    meetLink: reservationData.meetLink || null,
+                    paymentAmount: reservationData.paymentAmount || 0,
+                    paymentMethod: reservationData.pay,
                 };
 
                 console.log("포맷팅 후: ", formattedData);
