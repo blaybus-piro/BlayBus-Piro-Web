@@ -19,7 +19,6 @@ const MyReservation: React.FC = () => {
 
     useEffect(() => {
         if (!userId) return;
-        let isMounted = true;
 
         const fetchReservations = async () => {
             try {
@@ -62,9 +61,6 @@ const MyReservation: React.FC = () => {
         };
 
         fetchReservations();
-        return () => {
-            isMounted = false;
-        };
     }, [userId]);
 
     useEffect(() => {
