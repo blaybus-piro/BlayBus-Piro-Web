@@ -13,15 +13,11 @@ import { ReservationState } from '../types/Reservation';
 interface Designer {
   id: string;
   name: string;
-  profile: string;
-  area: string;
-  expert_field: string;
-  introduce: string;
-  portfolio: string;
+  price: number;
+  image: string;
+  specialty: string;
+  distance: number;
   type: string;
-  offlinePrice: number;
-  onlinePrice: number;
-  distance?: number;
 }
 
 // const dummyDesigners = [
@@ -91,12 +87,10 @@ interface Designer {
 //   }
 // ];
 
-// const dummyDesigners: Designer[] = [];
+// const dummyDesigners: Designer[] = []; // 빈 배열에도 타입 명시
 
 export default function DesignerList() {
-  const [error, setError] = useState<boolean>(false);
-  const [consultingType, setConsultingType] = useState('OFFLINE');
-  const [filteredDesigners, setFilteredDesigners] = useState<Designer[]>([]);
+  const [consultingType, setConsultingType] = useState('');
   const [sortBy, setSortBy] = useState('distance');
   const [designers, setDesigners] = useState<Designer[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
@@ -148,51 +142,36 @@ export default function DesignerList() {
 
   // 거리 순으로 디자이너 리스트 가져오기
   useEffect(() => {
+    if (!userLocation) return;
+
     const fetchDesigners = async () => {
       try {
-        setError(false);
-        const endpoint = consultingType === 'ONLINE' 
-          ? '/api/designer/online' 
-          : '/api/designer/offline';
-        
-        // queryParams를 먼저 만들고
-        const queryParams = userLocation 
-          ? `sortOrder=ASC&lat=${userLocation.lat}&lng=${userLocation.lng}`
-          : 'sortOrder=ASC';
-        
-        // API 호출할 때 사용
         const response = await apiRequest(
-          `${endpoint}?${queryParams}`
+          `/designers/by-location?lat=${userLocation.lat}&lng=${userLocation.lng}&type=ASC`
         );
-        
-        const formattedData = response.map((designer: Designer) => ({
+
+        const formattedData = response.map((designer: any) => ({
           id: designer.id,
           name: designer.name,
-          profile: designer.profile,
-          area: designer.area,
-          expert_field: designer.expert_field,
-          introduce: designer.introduce,
-          portfolio: designer.portfolio,
+          price: Math.min(designer.offlinePrice, designer.onlinePrice),
+          image: designer.profile,
+          specialty: designer.expert_field,
+          distance: designer.distance,
           type: designer.type,
-          offlinePrice: designer.offlinePrice,
-          onlinePrice: designer.onlinePrice,
-          distance: designer.distance
         }));
-        
+
         setDesigners(formattedData);
       } catch (error) {
         console.error('디자이너 목록을 불러오는 데 실패했습니다.', error);
-        setError(true);
       }
     };
-  
+
     fetchDesigners();
-  }, [consultingType, userLocation]);
+  }, [userLocation, sortBy]);
 
   useEffect(() => {
     let filtered = [...designers];
-  
-    // 타입에 따른 필터링
+
     if (consultingType) {
       filtered = filtered.filter(item => {
         if (consultingType === 'OFFLINE') {
@@ -203,16 +182,15 @@ export default function DesignerList() {
         return true;
       });
     }
-  
-    // 가격에 따른 정렬
+
     if (sortBy === "price_asc") {
-      filtered.sort((a, b) => Math.min(a.offlinePrice, a.onlinePrice) - Math.min(b.offlinePrice, b.onlinePrice));
+      filtered.sort((a, b) => a.price - b.price);
     } else if (sortBy === "price_desc") {
-      filtered.sort((a, b) => Math.min(b.offlinePrice, b.onlinePrice) - Math.min(a.offlinePrice, a.onlinePrice));
+      filtered.sort((a, b) => b.price - a.price);
     }
-  
-    setFilteredDesigners(filtered); // designers 대신 filteredDesigners 사용
-  }, [designers, sortBy, consultingType]);
+
+    setDesigners(filtered);
+  }, [consultingType, sortBy]);
 
   const handleRetry = () => {
     window.location.reload();
@@ -236,20 +214,10 @@ export default function DesignerList() {
         </div>
       </header>
 
-
-      {error ? (
-      <div className="empty-container">
-        <div className="empty-state">
-          <p className="empty-state-title">오류가 발생했습니다</p>
-          <p className="empty-state-subtitle">잠시 후 다시 시도해주세요</p>
-          <button onClick={handleRetry} className="retry-button">
-            다시 시도하기
-          </button>
-        </div>
-      </div>
-    ) : filteredDesigners.length === 0 ? (
+      {/* 빈 배열일 경우 main이 아닌 다른 곳에 표시 */}
+      {designers.length === 0 && (
         <div className="empty-container">
-          <div className={`filter-section ${filteredDesigners.length === 0 ? "empty-filter" : ""}`}>
+          <div className={`filter-section ${designers.length === 0 ? "empty-filter" : ""}`}>
             <div className="consulting-dropdown">
               <ConsultingTypeButton value={consultingType} onChange={setConsultingType} />
               <ToolTip text={"비대면 컨설팅은 구글 미트에서 진행해요!<br/>진행 후에 요약된 컨설팅 리포트를 드릴게요."}>
@@ -267,7 +235,9 @@ export default function DesignerList() {
           </div>
           <img src="/icons/reservation-logo.svg" alt="logo" className="designerlist-logo" />
         </div>
-      ) : (
+      )}
+
+      {designers.length > 0 && (
         <main className="designerlist-content">
           <div className="filter-section">
             <div className="consulting-dropdown">
@@ -292,14 +262,14 @@ export default function DesignerList() {
           </div>
 
           <div className={`designers-grid ${viewMode === 'detailed' ? 'designers-grid-detailed' : ''}`}>
-            {filteredDesigners.map((item) => (
+            {designers.map((item) => (
               <DesignerCard
                 onClick={() => navigate(`/designerdetail/${item.id}`)}
                 key={item.id}
                 name={item.name}
-                price={Math.min(item.offlinePrice, item.onlinePrice)}
-                image={item.profile}
-                specialty={item.expert_field}
+                price={item.price}
+                image={item.image}
+                specialty={item.specialty}
                 distance={item.distance}
                 viewMode={viewMode}
               />
@@ -307,6 +277,6 @@ export default function DesignerList() {
           </div>
         </main>
       )}
-      </div>
-    );
+    </div>
+  );
 }
