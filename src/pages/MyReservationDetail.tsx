@@ -10,7 +10,7 @@ import { ReservationState } from "../types/Reservation";
 import "../styles/MyReservationDetail.styles.css";
 
 const MyReservationDetail: React.FC = () => {
-    const { reservationId } = useParams();
+    const { myreservationId } = useParams();
     const [myReservationDetail, setMyReservationDetail] = useState<ReservationState | null>(null);
     const isMountedRef = useRef(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,14 +18,14 @@ const MyReservationDetail: React.FC = () => {
 
     useEffect(() => {
         const fetchReservationDetail = async () => {
-            if (!reservationId) {
+            if (!myreservationId) {
                 console.log("reservationId 존재하지 않음");
                 return;
             }
 
             try {
                 console.log("api 호출 시작");
-                const reservationData = await apiRequest(`/api/consulting/${reservationId}`);
+                const reservationData = await apiRequest(`/api/consulting/${myreservationId}`);
 
                 console.log(reservationData);
 
@@ -63,7 +63,7 @@ const MyReservationDetail: React.FC = () => {
         return () => {
             isMountedRef.current = false;
         };
-    }, [reservationId]);
+    }, [myreservationId]);
 
 
     if (!myReservationDetail) return <p>예약 정보를 찾을 수 없습니다.</p>
