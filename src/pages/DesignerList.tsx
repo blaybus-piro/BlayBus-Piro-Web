@@ -94,6 +94,7 @@ interface Designer {
 // const dummyDesigners: Designer[] = [];
 
 export default function DesignerList() {
+  const [error, setError] = useState<boolean>(false);
   const [consultingType, setConsultingType] = useState('OFFLINE');
   const [filteredDesigners, setFilteredDesigners] = useState<Designer[]>([]);
   const [sortBy, setSortBy] = useState('distance');
@@ -149,19 +150,21 @@ export default function DesignerList() {
   useEffect(() => {
     const fetchDesigners = async () => {
       try {
+        setError(false);
         const endpoint = consultingType === 'ONLINE' 
           ? '/api/designer/online' 
           : '/api/designer/offline';
         
-        // userLocation이 있을 때만 위치 정보 포함
+        // queryParams를 먼저 만들고
         const queryParams = userLocation 
           ? `sortOrder=ASC&lat=${userLocation.lat}&lng=${userLocation.lng}`
           : 'sortOrder=ASC';
         
+        // API 호출할 때 사용
         const response = await apiRequest(
           `${endpoint}?${queryParams}`
         );
-    
+        
         const formattedData = response.map((designer: Designer) => ({
           id: designer.id,
           name: designer.name,
@@ -175,10 +178,11 @@ export default function DesignerList() {
           onlinePrice: designer.onlinePrice,
           distance: designer.distance
         }));
-    
+        
         setDesigners(formattedData);
       } catch (error) {
         console.error('디자이너 목록을 불러오는 데 실패했습니다.', error);
+        setError(true);
       }
     };
   
@@ -232,8 +236,18 @@ export default function DesignerList() {
         </div>
       </header>
 
-      {/* 빈 배열일 경우 main이 아닌 다른 곳에 표시 */}
-      {filteredDesigners.length === 0 && (
+
+      {error ? (
+      <div className="empty-container">
+        <div className="empty-state">
+          <p className="empty-state-title">오류가 발생했습니다</p>
+          <p className="empty-state-subtitle">잠시 후 다시 시도해주세요</p>
+          <button onClick={handleRetry} className="retry-button">
+            다시 시도하기
+          </button>
+        </div>
+      </div>
+    ) : filteredDesigners.length === 0 ? (
         <div className="empty-container">
           <div className={`filter-section ${filteredDesigners.length === 0 ? "empty-filter" : ""}`}>
             <div className="consulting-dropdown">
@@ -253,9 +267,7 @@ export default function DesignerList() {
           </div>
           <img src="/icons/reservation-logo.svg" alt="logo" className="designerlist-logo" />
         </div>
-      )}
-
-      {designers.length > 0 && (
+      ) : (
         <main className="designerlist-content">
           <div className="filter-section">
             <div className="consulting-dropdown">
@@ -295,6 +307,6 @@ export default function DesignerList() {
           </div>
         </main>
       )}
-    </div>
-  );
+      </div>
+    );
 }
