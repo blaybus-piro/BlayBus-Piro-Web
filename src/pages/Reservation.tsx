@@ -32,9 +32,33 @@ export default function ReservationPage() {
     return `${selectedDate.getFullYear()}년 ${selectedDate.getMonth() + 1}월 ${selectedDate.getDate()}일 (${day}) ${selectedTime}`;
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (selectedDate && selectedTime) {
-      navigate('/payment', { state: { selectedDate, selectedTime, consultMethod } });
+      try {
+        const startTime = `${selectedDate.toISOString().split('T')[0]}T${selectedTime}:00`;
+        const designerId = searchParams.get("designerId") || "";
+        
+        // localStorage에 예약 정보 저장
+        localStorage.setItem("reservationInfo", JSON.stringify({
+          startTime,
+          designerId,
+          consultMethod,
+          selectedTime
+        }));
+  
+        navigate('/payment', { 
+          state: { 
+            selectedDate, 
+            selectedTime, 
+            consultMethod,
+            startTime,
+            designerId
+          } 
+        });
+      } catch (error) {
+        console.error('예약 정보 저장 실패:', error);
+        alert('예약 정보 저장에 실패했습니다. 다시 시도해주세요.');
+      }
     }
   };
 

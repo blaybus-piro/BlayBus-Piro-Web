@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import '../styles/Payment.styles.css';
+import { createConsulting } from '../api/consulting';
 
 type PaymentMethod = 'account' | 'kakao' | null;
 type TransferMethod = 'app' | 'direct' | null;
@@ -31,12 +32,11 @@ export default function PaymentPage() {
   const handlePayment = async () => {
     if (!paymentMethod) return;
   
-    if (paymentMethod === 'kakao') {
-      try {
-        localStorage.setItem("selectedDate", selectedDate);
-        localStorage.setItem("selectedTime", selectedTime);
-        localStorage.setItem("consultMethod", consultMethod);
+    const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
+    const { startTime, designerId } = reservationInfo;
   
+    try {
+      if (paymentMethod === 'kakao') {
         const response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
           method: 'POST',
           headers: {
@@ -46,31 +46,39 @@ export default function PaymentPage() {
         });
   
         const data = await response.json();
+        
+        // 카카오페이 결제 전에 컨설팅 예약 생성
+        await createConsulting({
+          startTime,
+          designer_id: designerId,
+          meet: consultMethod,
+          pay: 'KAKAO'
+        });
+  
         const redirectUrl = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
-  
-        console.log("✅ 카카오페이 결제 페이지로 이동:", redirectUrl);
         window.location.href = redirectUrl;
-      
-      } catch (error) {
-        console.error('카카오페이 결제 에러:', error);
-        alert('결제 요청 중 오류가 발생했습니다.');
-      }
-    } else {
-      // 계좌이체 선택 시 localStorage에 필요한 정보 저장
-      localStorage.setItem("selectedDate", selectedDate);
-      localStorage.setItem("selectedTime", selectedTime);
-      localStorage.setItem("consultMethod", consultMethod);
-      localStorage.setItem("paymentType", transferMethod === 'direct' ? 'direct' : 'app');
+      } else {
+        // 계좌이체 선택 시 컨설팅 예약 생성
+        await createConsulting({
+          startTime,
+          designer_id: designerId,
+          meet: consultMethod,
+          pay: transferMethod === 'direct' ? 'ACCOUNT' : 'APP'
+        });
   
-      navigate('/reservationcomplete', {
-        state: {
-          selectedDate,
-          selectedTime,
-          consultMethod,
-          paymentMethod,
-          transferMethod,
-        },
-      });
+        navigate('/reservationcomplete', {
+          state: {
+            selectedDate,
+            selectedTime,
+            consultMethod,
+            paymentMethod,
+            transferMethod,
+          },
+        });
+      }
+    } catch (error) {
+      console.error('결제 또는 예약 생성 실패:', error);
+      alert('결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
     }
   };
 
