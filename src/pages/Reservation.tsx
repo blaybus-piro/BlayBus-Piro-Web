@@ -11,9 +11,9 @@ export default function ReservationPage() {
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const consultMethod = searchParams.get("method") === "offline" ? "offline" : "online";
+  const consultMethod = searchParams.get("method") === "OFFLINE" ? "OFFLINE" : "ONLINE";
 
-  const pageTitle = consultMethod === "offline" 
+  const pageTitle = consultMethod === "OFFLINE" 
     ? "대면 컨설팅 예약하기" 
     : "비대면 컨설팅 예약하기";
 
