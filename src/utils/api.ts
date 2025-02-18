@@ -1,30 +1,24 @@
 export const apiRequest = async (endpoint: string, options: RequestInit = {}) => {
   const accessToken = localStorage.getItem("accessToken");
   
-  console.log("Current access token:", accessToken); // 토큰 값 확인
-  
-  if (!accessToken) {
-    throw new Error("No access token found");
-  }
-
   const headers = {
     "Content-Type": "application/json",
     "Authorization": `Bearer ${accessToken}`,
     ...(options.headers || {})
   };
   
-  console.log("Request headers:", headers);
-
   try {
     const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}${endpoint}`, {
       ...options,
       headers,
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response headers:', Object.fromEntries(response.headers));
+    
     if (!response.ok) {
-      // 에러 응답의 body도 확인할 수 있도록 수정
       const errorBody = await response.text();
-      console.error(`API Error: ${response.status}`, errorBody);
+      console.log('Error response body:', errorBody);  // 서버 에러 메시지 확인
       throw new Error(`Request failed with status ${response.status}`);
     }
 
