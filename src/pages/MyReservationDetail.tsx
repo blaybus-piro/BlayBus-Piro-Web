@@ -18,9 +18,13 @@ const MyReservationDetail: React.FC = () => {
 
     useEffect(() => {
         const fetchReservationDetail = async () => {
-            if (!reservationId) return;
+            if (!reservationId) {
+                console.log("reservationId 존재하지 않음");
+                return;
+            }
 
             try {
+                console.log("api 호출 시작");
                 const reservationData = await apiRequest(`/api/consulting/${reservationId}`);
 
                 console.log(reservationData);
