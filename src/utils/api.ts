@@ -2,13 +2,13 @@ export const apiRequest = async (endpoint: string, options: RequestInit = {}) =>
   const accessToken = localStorage.getItem("accessToken");
 
   if (!accessToken) {
-    console.warn("No access token found");
-    // 토큰이 없을 때의 처리를 추가할 수 있습니다
+    // 토큰이 없을 경우 로그인 페이지로 리다이렉트하거나 에러를 throw
+    throw new Error("Authentication required");
   }
 
   const headers = {
     "Content-Type": "application/json",
-    "Authorization": `Bearer ${accessToken}`, // 항상 Authorization 헤더 포함
+    "Authorization": `Bearer ${accessToken}`,
     ...(options.headers || {})
   };
 
