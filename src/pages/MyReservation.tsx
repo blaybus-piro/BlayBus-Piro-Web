@@ -94,7 +94,7 @@ const MyReservation: React.FC = () => {
             {myReservations.length > 0 ? (
                 <div className="my-reservation-list">
                     {myReservations.map((res) => (
-                        <ReservationCard key={res.id} {...res} />
+                        <ReservationCard key={res.id} reservation={res} />
                     ))}
                 </div>
             ) : (

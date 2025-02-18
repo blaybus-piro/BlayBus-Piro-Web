@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ReservationState } from "../../types/Reservation";
 import component from "../../assets/component.svg";
 import calendar from "../../assets/calendar.svg";
@@ -8,9 +8,11 @@ import LinkButton from "../LinkButton/LinkButton";
 import MeetLinkButton from "../MeetLinkButton";
 import "./ReservationCard.styles.css";
 
-const ReservationCard: React.FC = () => {
-    const location = useLocation();
-    const reservation = location.state as ReservationState;
+interface ReservationCardProps {
+    reservation: ReservationState;
+}
+
+const ReservationCard: React.FC<ReservationCardProps> = ({ reservation }) => {
     const navigate = useNavigate();
 
     const displayTypeText =
