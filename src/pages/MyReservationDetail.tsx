@@ -26,10 +26,12 @@ const MyReservationDetail: React.FC = () => {
 
             try {
                 console.log("api 호출 시작");
+                console.log("예약 상세 조회 API 호출: ", `/api/consulting/${myreservationId}`);
                 const reservationData = await apiRequest(`/api/consulting/${myreservationId}`);
 
                 console.log(reservationData);
 
+                console.log("디자이너 정보 조회 API 호출: ", `/api/designer/${reservationData.designerId}`);
                 const designerInfo = await apiRequest(`/api/designer/${reservationData.designerId}`);
 
                 console.log(designerInfo);
