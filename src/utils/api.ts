@@ -4,7 +4,6 @@ export const apiRequest = async (endpoint: string, options: RequestInit = {}) =>
   // 토큰 상태 확인
   if (!accessToken) {
     console.error('No token found in localStorage');
-    window.location.href = '/login'; // 로그인 페이지로 리다이렉트
     return;
   }
 
@@ -31,7 +30,6 @@ export const apiRequest = async (endpoint: string, options: RequestInit = {}) =>
       if (response.status === 401) {
         // 토큰이 만료되었거나 유효하지 않은 경우
         localStorage.removeItem('accessToken');
-        window.location.href = '/login';
         return;
       }
       throw new Error(`Request failed with status ${response.status}`);
