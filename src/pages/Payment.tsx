@@ -91,8 +91,9 @@ export default function PaymentPage() {
 
   } catch (error) {
     console.error('결제 또는 예약 생성 실패:', error);
-    alert(`결제 처리 중 오류가 발생했습니다: ${error.message}`);
-  }
+    const errorMessage = (error as Error).message || '알 수 없는 오류가 발생했습니다.';
+    alert(`결제 처리 중 오류가 발생했습니다: ${errorMessage}`);
+  }  
 };
 
       
