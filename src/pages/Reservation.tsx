@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParams } from "react-router-dom";
 import Header from '../components/Header/Header';
 import WeeklyCalendar from '../components/WeeklyCalendar/WeeklyCalendar';
 import TimeSelector from '../components/TimeSelector/TimeSelector';
 import '../styles/Reservation.styles.css';
+import { apiRequest } from '../utils/api';
 
 export default function ReservationPage() {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -13,16 +14,49 @@ export default function ReservationPage() {
   const [searchParams] = useSearchParams();
   const consultMethod = searchParams.get("method") === "OFFLINE" ? "OFFLINE" : "ONLINE";
   const price = searchParams.get("price");
+  const [bookedTimesByDate, setBookedTimesByDate] = useState<Record<string, string[]>>({});
+  const designerId = searchParams.get("designerId") || "";
 
   const pageTitle = consultMethod === "OFFLINE"
     ? "대면 컨설팅 예약하기"
     : "비대면 컨설팅 예약하기";
 
+  useEffect(() => {
+    if (!designerId) return;
+
+    const fetchBookedTimes = async () => {
+      try {
+        const response = await apiRequest(`/api/time/${designerId}`);
+
+        if (Array.isArray(response)) {
+          const formattedBookedTimes: Record<string, string[]> = response.reduce((acc, item) => {
+            const [date, time] = item.startTime.split("T");
+            const formattedTime = time.slice(0, 5);
+
+            if (!acc[date]) {
+              acc[date] = [];
+            }
+            acc[date].push(formattedTime);
+            return acc;
+          }, {} as Record<string, string[]>);
+
+          setBookedTimesByDate(formattedBookedTimes);
+        } else {
+          console.error("API 응답이 배열이 아닙니다.", response);
+          setBookedTimesByDate({});
+        }
+      } catch (error) {
+        console.error("예약된 시간 조회 실패: ", error);
+      }
+    };
+
+    fetchBookedTimes();
+  }, [designerId]);
   // 예약된 시간들 (날짜별로 구성)
-  const bookedTimesByDate: Record<string, string[]> = {
-    '2025-02-15': ['13:00', '15:30', '16:00'],
-    '2025-02-16': ['10:00', '11:00', '13:00', '14:00']
-  };
+  // const bookedTimesByDate: Record<string, string[]> = {
+  //   '2025-02-15': ['13:00', '15:30', '16:00'],
+  //   '2025-02-16': ['10:00', '11:00', '13:00', '14:00']
+  // };
 
   const formatSelectedDateTime = () => {
     if (!selectedDate || !selectedTime) return '';
@@ -38,7 +72,6 @@ export default function ReservationPage() {
     if (selectedDate && selectedTime) {
       try {
         const startTime = `${selectedDate.toISOString().split('T')[0]}T${selectedTime}:00`;
-        const designerId = searchParams.get("designerId") || "";
 
         // 중요: localStorage에 디자이너 ID 직접 저장
         localStorage.setItem("designerId", designerId);
