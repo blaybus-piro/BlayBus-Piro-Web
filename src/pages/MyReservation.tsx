@@ -28,16 +28,16 @@ const MyReservation: React.FC = () => {
                 console.log("원본 데이터: ", response);
 
                 const formattedReservations = response.map((reservation: any) => ({
-                    id: reservation.id,
-                    designerId: reservation.designer.id,
-                    designerName: reservation.designer.name,
-                    profileImage: reservation.designer.profile,
-                    time: reservation.time,
-                    meetLink: reservation.meeting?.meetUrl || null,
+                    id: reservation.consultingId,
+                    designerId: reservation.designerId,
+                    designerName: reservation.designerName,
+                    profileImage: reservation.designerProfile,
+                    time: reservation.startTime,
+                    meetLink: reservation.meetLink || null,
                     type: reservation.type,
                     status: reservation.status,
-                    paymentAmount: reservation.paymentAmount,
-                    paymentMethod: reservation.paymentMethod
+                    paymentAmount: reservation.paymentAmount || 0,
+                    paymentMethod: reservation.pay
                 }));
 
                 console.log("포맷팅된 예약 데이터: ", formattedReservations);
