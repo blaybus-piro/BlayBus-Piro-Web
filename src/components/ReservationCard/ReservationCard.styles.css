@@ -4,7 +4,7 @@
     margin-bottom: 18px;
 }
 
-.reservation-card.canceled {
+.reservation-card.CANCELED {
     background: var(--main-100);
 }
 
