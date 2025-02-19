@@ -92,6 +92,7 @@ interface Designer {
 export default function DesignerList() {
   const [consultingType, setConsultingType] = useState('');
   const [sortBy, setSortBy] = useState('distance');
+  const [originalDesigners, setOriginalDesigners] = useState<Designer[]>([]);
   const [designers, setDesigners] = useState<Designer[]>([]);
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [showTooltip, setShowTooltip] = useState(false);
@@ -163,23 +164,28 @@ export default function DesignerList() {
             type: designer.type,
           }));
 
+          setOriginalDesigners(formattedData);
           setDesigners(formattedData);
         } else {
           // 응답이 배열이 아닌 경우 처리
           console.error('API 응답이 배열 형식이 아닙니다:', response);
+          setOriginalDesigners([]);
           setDesigners([]);
         }
       } catch (error) {
         console.error('디자이너 목록을 불러오는 데 실패했습니다.', error);
+        setOriginalDesigners([]);
         setDesigners([]);
       }
     };
 
     fetchDesigners();
-  }, [userLocation, sortBy]);
+  }, [userLocation]);
 
   useEffect(() => {
-    let filtered = [...designers];
+    if (originalDesigners.length === 0) return;
+
+    let filtered = [...originalDesigners];
 
     if (consultingType) {
       filtered = filtered.filter(item => {
@@ -200,7 +206,7 @@ export default function DesignerList() {
 
     setDesigners([...filtered]);
     console.log("정렬된 데이터: ", filtered);
-  }, [consultingType, sortBy]);
+  }, [sortBy, consultingType, originalDesigners]);
 
   const handleRetry = () => {
     window.location.reload();
