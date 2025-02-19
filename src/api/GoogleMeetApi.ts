@@ -80,8 +80,24 @@ export const createMeetingFromReservation = async (
     const endTime = new Date(startTime.getTime() + duration * 60000);
 
     // ISO 형식으로 변환
-    const startTimeISO = startTime.toISOString();
+    const startTimeISOSS = startTime.toISOString();
     const endTimeISO = endTime.toISOString();
+
+    const formatToFullTimestamp = (isoString: string) => {
+      const date = new Date(isoString); // ISO 문자열을 Date 객체로 변환
+
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+      const day = String(date.getDate()).padStart(2, '0');
+      const hours = String(date.getHours()).padStart(2, '0');
+      const minutes = String(date.getMinutes()).padStart(2, '0');
+      const seconds = String(date.getSeconds()).padStart(2, '0');
+      const milliseconds = String(date.getMilliseconds()).padStart(6, '0'); // 마이크로초까지 확장
+
+      return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+    }
+
+    const startTimeISO = formatToFullTimestamp(startTimeISOSS);
 
     // 미팅 제목 생성
     const title = `${designerName}님과 상담 예약 - ${startTime.getMonth() + 1}월 ${startTime.getDate()}일 ${startTime.getHours()}시 ${startTime.getMinutes()}분`;
