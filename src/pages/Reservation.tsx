@@ -30,6 +30,11 @@ export default function ReservationPage() {
 
         if (Array.isArray(response)) {
           const formattedBookedTimes: Record<string, string[]> = response.reduce((acc, item) => {
+            if (!item.startTime) {
+              console.log("startTime이 없습니다!");
+              return acc;
+            }
+
             const [date, time] = item.startTime.split("T");
             const formattedTime = time.slice(0, 5);
 
