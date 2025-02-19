@@ -4,10 +4,6 @@
     margin-bottom: 18px;
 }
 
-.reservation-card.CANCELED {
-    background: var(--main-100);
-}
-
 /* 카드 헤더 */
 .reservation-card-header {
     display: flex;
