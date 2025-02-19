@@ -30,13 +30,19 @@ export const DesignerCard: React.FC<DesignerCardProps> = ({
     }
   }
 
+  const displaySpecialtyText =
+    specialty === "CUL" ? "컬 전문"
+      : specialty === "PERM" ? "펌 전문"
+        : specialty === "DYE" ? "염색 전문"
+          : "탈/염색 전문";
+
   return (
     <div className={`designer-card ${viewMode === 'detailed' ? 'detailed-view' : ''}`} onClick={onClick}>
       {viewMode === 'simple' ? (
         <>
           <div className="designer-card-image">
             <img src={image} alt={name} />
-            <div className="specialty-badge">{specialty}</div>
+            <div className="specialty-badge">{displaySpecialtyText}</div>
           </div>
           <div className="designer-card-info">
             <div className="designer-card-profile">
