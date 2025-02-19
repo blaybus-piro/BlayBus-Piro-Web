@@ -141,15 +141,18 @@ export default function DesignerList() {
   }, []);
 
   // 거리 순으로 디자이너 리스트 가져오기
-  useEffect(() => {
-    if (!userLocation) return;
+  // fetchDesigners 함수 부분을 다음과 같이 수정하세요
+useEffect(() => {
+  if (!userLocation) return;
 
-    const fetchDesigners = async () => {
-      try {
-        const response = await apiRequest(
-          `/api/designers/nearby?lat=${userLocation.lat}&lng=${userLocation.lng}`
-        );
+  const fetchDesigners = async () => {
+    try {
+      const response = await apiRequest(
+        `/api/designers/nearby?lat=${userLocation.lat}&lng=${userLocation.lng}`
+      );
 
+      // 응답이 배열인지 확인
+      if (Array.isArray(response)) {
         const formattedData = response.map((designer: any) => ({
           id: designer.id,
           name: designer.name,
@@ -161,13 +164,19 @@ export default function DesignerList() {
         }));
 
         setDesigners(formattedData);
-      } catch (error) {
-        console.error('디자이너 목록을 불러오는 데 실패했습니다.', error);
+      } else {
+        // 응답이 배열이 아닌 경우 처리
+        console.error('API 응답이 배열 형식이 아닙니다:', response);
+        setDesigners([]);
       }
-    };
+    } catch (error) {
+      console.error('디자이너 목록을 불러오는 데 실패했습니다.', error);
+      setDesigners([]);
+    }
+  };
 
-    fetchDesigners();
-  }, [userLocation, sortBy]);
+  fetchDesigners();
+}, [userLocation, sortBy]);
 
   useEffect(() => {
     let filtered = [...designers];
