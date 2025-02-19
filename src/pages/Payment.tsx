@@ -2,11 +2,11 @@ import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import '../styles/Payment.styles.css';
-import { createConsulting } from '../api/consulting';
+// createConsulting 임포트 제거 (사용하지 않음)
 import { getUserIdFromToken } from '../utils/auth';
 import { apiRequest } from "../utils/api";
 
-type PaymentMethod = 'account' | 'kakao' | null;
+type PaymentMethod = 'account' | '카카오페이' | null;
 type TransferMethod = 'app' | 'direct' | null;
 type BankOption = 'toss' | 'kakaopay' | 'won' | 'kb' | null;
 
@@ -16,7 +16,7 @@ export default function PaymentPage() {
   const [selectedBank, setSelectedBank] = useState<BankOption>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { selectedDate, selectedTime, consultMethod } = location.state || {};
+  const { selectedDate, selectedTime, consultMethod, designerId } = location.state || {};
   const amount = consultMethod === 'OFFLINE' ? 40000 : 20000;
   const [isReservationInfoOpen, setIsReservationInfoOpen] = useState(false);
   const [isAppTransferVisible, setIsAppTransferVisible] = useState(false);
@@ -32,39 +32,37 @@ export default function PaymentPage() {
     ? "http://backend:8080"
     : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
 
-  // const handlePayment = async () => {
-  //   if (!paymentMethod) return;
+  // 예약 생성 함수
+  // 예약 생성 함수도 useCallback으로 감싸기
+const createReservation = useCallback(async (payType: string) => {
+  try {
+    const response = await apiRequest("/api/consulting/create", {
+      method: "POST",
+      body: JSON.stringify({
+        startTime: `${selectedDate}T${selectedTime}`,
+        designerId: designerId,
+        meet: consultMethod,
+        pay: payType === '카카오페이' ? "카카오페이" : "계좌이체",
+        address_id: 1
+      })
+    });
 
-  //   const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
-  //   const { startTime, designerId } = reservationInfo;
-
-  //   try {
-  //     let response;
-  //     if (paymentMethod === 'kakao') {
-  //       response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
-  //         method: 'POST',
-  //         headers: {
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({ amount }),
-  //       });
-
-  //       if (!response.ok) {
-  //         throw new Error(`결제 요청 실패: ${response.status}`);
-  //       }
-
-  //       const data = await response.json();
-  //       localStorage.setItem("kakao_tid", data.tid);  // 결제 고유 ID 저장
-  //       window.location.href = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
-  //       return; // 결제 리디렉트 후에는 함수 종료
-  //     }
-  //   } catch (error) {
-  //     console.error('결제 요청 중 오류:', error);
-  //     alert(`결제 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
-  //   }
-  // };
+    console.log("✅ 예약 생성 성공:", response);
+    
+    if (response && response.consultingId) {
+      localStorage.setItem("consultingId", response.consultingId);
+      localStorage.setItem("status", response.status || "PENDING");
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("❌ 예약 생성 실패:", error);
+    return false;
+  }
+}, [selectedDate, selectedTime, designerId, consultMethod]);
 
   // 결제 승인 API를 통해 결제 확인 후 예약 생성
+  // exhaustive-deps 경고 수정: 모든 의존성 추가
   const confirmPaymentAndReserve = useCallback(async (pg_token: string) => {
     const tid = localStorage.getItem("kakao_tid");
     if (!tid) {
@@ -90,44 +88,32 @@ export default function PaymentPage() {
         throw new Error("결제가 승인되지 않았습니다.");
       }
 
-      // ✅ 결제 정보를 localStorage에 더 확실하게 저장
-      localStorage.setItem("paymentType", "kakao");
+      // ✅ 결제 정보를 localStorage에 저장
+      localStorage.setItem("paymentType", "카카오페이");
       localStorage.setItem("approved_at", new Date().toISOString());
       localStorage.setItem("item_name", consultMethod === 'OFFLINE' ? 'OFFLINE' : 'ONLINE');
       localStorage.setItem("amount", amount.toString());
+      localStorage.setItem("designerId", designerId);
 
       // 필요한 정보도 모두 저장
       localStorage.setItem("selectedDate", selectedDate || "");
       localStorage.setItem("selectedTime", selectedTime || "");
       localStorage.setItem("consultMethod", consultMethod || "");
 
-      // 결제 성공 시 예약 생성
-      const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
-      const { startTime, designerId } = reservationInfo;
-
-      const reservationResponse = await createConsulting({
-        startTime,
-        designer_id: designerId,
-        meet: consultMethod,
-        pay: 'KAKAO'
-      });
-
-      if (!reservationResponse.ok) {
-        throw new Error(`예약 요청 실패: ${reservationResponse.status}`);
+      // 결제 성공 시 예약 생성 - 여기에서 API 호출
+      const reservationSuccess = await createReservation('카카오페이');
+      
+      if (reservationSuccess) {
+        navigate('/reservationcomplete');
+      } else {
+        throw new Error("예약 생성에 실패했습니다.");
       }
-
-      const reservationData = await reservationResponse.json();
-      // localStorage에 consulting ID 저장
-      localStorage.setItem("consultingId", reservationData.consultingId);
-      localStorage.setItem("status", reservationData.status);
-      navigate('/reservationcomplete');
 
     } catch (error) {
       console.error("결제 승인 또는 예약 생성 실패:", error);
       alert(`결제 승인 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
     }
-  }, [navigate, amount, selectedDate, selectedTime, consultMethod, BACKEND_URL]);
-
+  }, [navigate, amount, selectedDate, selectedTime, consultMethod, BACKEND_URL, designerId, createReservation]);
 
   // ✅ useEffect에서 pg_token 감지하여 실행
   useEffect(() => {
@@ -145,7 +131,7 @@ export default function PaymentPage() {
     console.log("결제 시작:", paymentMethod, amount);
 
     try {
-      if (paymentMethod === 'kakao') {
+      if (paymentMethod === '카카오페이') {
         console.log("카카오페이 결제 요청", BACKEND_URL);
         const response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
           method: 'POST',
@@ -163,6 +149,7 @@ export default function PaymentPage() {
         const data = await response.json();
         console.log("카카오페이 응답:", data);
         localStorage.setItem("kakao_tid", data.tid);  // 결제 고유 ID 저장
+        localStorage.setItem("designerId", designerId); // 디자이너 ID 저장
 
         // 예약 정보도 저장
         localStorage.setItem("selectedDate", selectedDate || "");
@@ -180,7 +167,6 @@ export default function PaymentPage() {
     }
   };
 
-
   const handleAccountTransfer = () => {
     setPaymentMethod('account');
     setIsAppTransferVisible(true);
@@ -189,7 +175,7 @@ export default function PaymentPage() {
   };
 
   const handleKakaoPay = () => {
-    setPaymentMethod('kakao');
+    setPaymentMethod('카카오페이');
     setIsAppTransferVisible(false);
     setTransferMethod(null);
     setSelectedBank(null);
@@ -233,6 +219,32 @@ export default function PaymentPage() {
     });
 
     window.location.href = deeplink;
+  };
+
+  // 직접 이체 결제 완료 처리
+  const handleDirectPayment = async () => {
+    try {
+      // 결제 정보 저장
+      localStorage.setItem("paymentType", "direct");
+      localStorage.setItem("selectedDate", selectedDate || "");
+      localStorage.setItem("selectedTime", selectedTime || "");
+      localStorage.setItem("consultMethod", consultMethod || "");
+      localStorage.setItem("amount", amount.toString());
+      localStorage.setItem("designerId", designerId);
+      localStorage.setItem("approved_at", new Date().toISOString());
+      
+      // 예약 생성 API 호출
+      const reservationSuccess = await createReservation('direct');
+      
+      if (reservationSuccess) {
+        navigate('/reservationcomplete');
+      } else {
+        throw new Error("예약 생성에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("계좌이체 결제 처리 오류:", error);
+      alert(`결제 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
+    }
   };
 
   useEffect(() => {
@@ -297,7 +309,7 @@ export default function PaymentPage() {
                 계좌이체
               </button>
               <button
-                className={`payment-method-button ${paymentMethod === 'kakao' ? 'selected' : ''}`}
+                className={`payment-method-button ${paymentMethod === '카카오페이' ? 'selected' : ''}`}
                 onClick={handleKakaoPay}
               >
                 <img src="/icons/kakaopay.svg" alt="kakaopay" className="kakao-icon" />
@@ -408,15 +420,10 @@ export default function PaymentPage() {
                 if (transferMethod === "app") {
                   handleBankPayment();
                 } else if (transferMethod === "direct") {
-                  // 직접 이체 선택 시 예약 완료 페이지로 이동
-                  localStorage.setItem("paymentType", "direct");
-                  localStorage.setItem("selectedDate", selectedDate || "");
-                  localStorage.setItem("selectedTime", selectedTime || "");
-                  localStorage.setItem("consultMethod", consultMethod || "");
-                  localStorage.setItem("amount", amount.toString());
-                  navigate('/reservationcomplete');
+                  // 직접 이체 시 예약 생성 후 완료 페이지로 이동
+                  handleDirectPayment();
                 }
-              } else if (paymentMethod === "kakao") {
+              } else if (paymentMethod === "카카오페이") {
                 handlePayment();
               }
             }}

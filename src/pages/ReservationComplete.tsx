@@ -3,11 +3,9 @@ import Button from '../components/Button/Button';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import '../styles/ReservationComplete.styles.css';
-import { apiRequest } from '../utils/api';
 
 export default function ReservationComplete() {
   const navigate = useNavigate();
-  const [reservationCreated, setReservationCreated] = useState(false);
   const [missingData, setMissingData] = useState(false);
 
   // localStorage에서 데이터 불러오기
@@ -18,16 +16,16 @@ export default function ReservationComplete() {
   const approved_at = localStorage.getItem("approved_at");
   const item_name = localStorage.getItem("item_name");
   const paymentType = localStorage.getItem("paymentType");
-  const designerId = localStorage.getItem("designerId");
+  const consultingId = localStorage.getItem("consultingId");
 
   // 필수 데이터 확인
   useEffect(() => {
-    if (!selectedDate || !selectedTime || !consultMethod) {
+    if (!selectedDate || !selectedTime || !consultMethod || !consultingId) {
       setMissingData(true);
     } else {
       setMissingData(false);
     }
-  }, [selectedDate, selectedTime, consultMethod]);
+  }, [selectedDate, selectedTime, consultMethod, consultingId]);
 
   // 날짜 형식 변환
   const days = ['일', '월', '화', '수', '목', '금', '토'];
@@ -37,36 +35,6 @@ export default function ReservationComplete() {
 
   // 결제 승인 시간 변환
   const formattedApprovedDate = approved_at ? new Date(approved_at).toLocaleString() : '';
-
-  // 예약 생성 Effect
-  useEffect(() => {
-    console.log("useEffect 실행");
-    if (missingData || !designerId || reservationCreated) {
-      return;
-    }
-
-    const createReservation = async () => {
-      try {
-        const response = await apiRequest("/api/consulting/create", {
-          method: "POST",
-          body: JSON.stringify({
-            startTime: `${selectedDate}T${selectedTime}`,
-            designerId: designerId,
-            meet: consultMethod,
-            pay: paymentType === 'kakao' ? "카카오페이" : "계좌이체",
-            address_id: 1
-          })
-        });
-
-        console.log("✅ 예약 생성 성공:", response);
-        setReservationCreated(true);
-      } catch (error) {
-        console.error("예약 생성 실패: ", error);
-      }
-    };
-
-    createReservation();
-  }, [selectedDate, selectedTime, consultMethod, designerId, reservationCreated, paymentType, missingData]);
 
   // 메시지 결정
   const getMessage = () => {
@@ -123,6 +91,7 @@ export default function ReservationComplete() {
             <p><strong>상품명:</strong> {item_name}</p>
             <p><strong>결제 금액:</strong> {parseInt(amount).toLocaleString()}원</p>
             <p><strong>승인 시간:</strong> {formattedApprovedDate}</p>
+            {consultingId && <p><strong>예약 번호:</strong> {consultingId}</p>}
           </div>
         )}
       </div>
@@ -143,6 +112,9 @@ export default function ReservationComplete() {
             localStorage.removeItem("item_name");
             localStorage.removeItem("paymentType");
             localStorage.removeItem("designerId");
+            localStorage.removeItem("consultingId");
+            localStorage.removeItem("status");
+            localStorage.removeItem("kakao_tid");
             navigate('/designerlist');
           }}
         >
