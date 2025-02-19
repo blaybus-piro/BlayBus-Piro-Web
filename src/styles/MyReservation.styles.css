@@ -98,6 +98,7 @@
     margin-bottom: 188px;
 }
 
+.my-reservation-container .reservation-card.FREE,
 .my-reservation-container .reservation-card.CANCELED {
     background: var(--main-100);
 }
