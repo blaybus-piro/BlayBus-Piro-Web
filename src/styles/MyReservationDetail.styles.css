@@ -32,16 +32,17 @@
 }
 
 /* 입금 정보 */
-.deposit-info,
-.reservation-person {
+.my-reservation-detail-container .deposit-info,
+.my-reservation-detail-container .reservation-person {
     padding: 24px 20px;
     display: flex;
     flex-direction: column;
     gap: 12px;
+    background: var(--main-50);
 }
 
-.deposit-info h3,
-.reservation-person h3 {
+.my-reservation-detail-container .deposit-info h3,
+.my-reservation-detail-container .reservation-person h3 {
     color: var(--main-800);
     font-size: 16px;
     font-style: normal;
@@ -50,8 +51,8 @@
     margin-bottom: 4px;
 }
 
-.deposit-info p,
-.reservation-person p {
+.my-reservation-detail-container .deposit-info p,
+.my-reservation-detail-container .reservation-person p {
     color: var(--main-400);
     font-size: 14px;
     font-style: normal;
@@ -59,8 +60,8 @@
     margin: 0;
 }
 
-.deposit-info div,
-.reservation-person div {
+.my-reservation-detail-container .deposit-info div,
+.my-reservation-detail-container .reservation-person div {
     display: flex;
     justify-content: space-between;
 }
