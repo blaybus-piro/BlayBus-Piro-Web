@@ -56,6 +56,7 @@ export default function ReservationComplete() {
           })
         });
 
+        console.log("✅ 예약 생성 성공:", response);
         setReservationCreated(true);
       } catch (error) {
         console.error("예약 생성 실패: ", error);
