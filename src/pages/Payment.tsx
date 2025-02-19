@@ -16,8 +16,7 @@ export default function PaymentPage() {
   const [selectedBank, setSelectedBank] = useState<BankOption>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { selectedDate, selectedTime, consultMethod, designerId } = location.state || {};
-  const amount = consultMethod === 'OFFLINE' ? 40000 : 20000;
+  const { selectedDate, selectedTime, consultMethod, designerId, price } = location.state || {};
   const [isReservationInfoOpen, setIsReservationInfoOpen] = useState(false);
   const [isAppTransferVisible, setIsAppTransferVisible] = useState(false);
   const userId = getUserIdFromToken();
@@ -34,32 +33,32 @@ export default function PaymentPage() {
 
   // 예약 생성 함수
   // 예약 생성 함수도 useCallback으로 감싸기
-const createReservation = useCallback(async (payType: string) => {
-  try {
-    const response = await apiRequest("/api/consulting/create", {
-      method: "POST",
-      body: JSON.stringify({
-        startTime: `${selectedDate}T${selectedTime}`,
-        designerId: designerId,
-        meet: consultMethod === 'ONLINE' ? 'ONLINE' : 'OFFLINE',
-        pay: payType === '카카오페이' ? "카카오페이" : "계좌이체",
-        address_id: 1
-      })
-    });
+  const createReservation = useCallback(async (payType: string) => {
+    try {
+      const response = await apiRequest("/api/consulting/create", {
+        method: "POST",
+        body: JSON.stringify({
+          startTime: `${selectedDate}T${selectedTime}`,
+          designerId: designerId,
+          meet: consultMethod === 'ONLINE' ? 'ONLINE' : 'OFFLINE',
+          pay: payType === '카카오페이' ? "카카오페이" : "계좌이체",
+          address_id: 1
+        })
+      });
 
-    console.log("✅ 예약 생성 성공:", response);
-    
-    if (response && response.consultingId) {
-      localStorage.setItem("consultingId", response.consultingId);
-      localStorage.setItem("status", response.status || "PENDING");
+      console.log("✅ 예약 생성 성공:", response);
+
+      if (response && response.consultingId) {
+        localStorage.setItem("consultingId", response.consultingId);
+        localStorage.setItem("status", response.status || "PENDING");
+      }
+
+      return true;
+    } catch (error) {
+      console.error("❌ 예약 생성 실패:", error);
+      return false;
     }
-    
-    return true;
-  } catch (error) {
-    console.error("❌ 예약 생성 실패:", error);
-    return false;
-  }
-}, [selectedDate, selectedTime, designerId, consultMethod]);
+  }, [selectedDate, selectedTime, designerId, consultMethod]);
 
   // 결제 승인 API를 통해 결제 확인 후 예약 생성
   // exhaustive-deps 경고 수정: 모든 의존성 추가
@@ -76,7 +75,7 @@ const createReservation = useCallback(async (payType: string) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tid, pg_token, amount }),
+        body: JSON.stringify({ tid, pg_token, price }),
       });
 
       if (!response.ok) {
@@ -92,7 +91,7 @@ const createReservation = useCallback(async (payType: string) => {
       localStorage.setItem("paymentType", "카카오페이");
       localStorage.setItem("approved_at", new Date().toISOString());
       localStorage.setItem("item_name", consultMethod === 'OFFLINE' ? 'OFFLINE' : 'ONLINE');
-      localStorage.setItem("amount", amount.toString());
+      localStorage.setItem("amount", price.toString());
       localStorage.setItem("designerId", designerId);
 
       // 필요한 정보도 모두 저장
@@ -102,7 +101,7 @@ const createReservation = useCallback(async (payType: string) => {
 
       // 결제 성공 시 예약 생성 - 여기에서 API 호출
       const reservationSuccess = await createReservation('카카오페이');
-      
+
       if (reservationSuccess) {
         navigate('/reservationcomplete');
       } else {
@@ -113,7 +112,7 @@ const createReservation = useCallback(async (payType: string) => {
       console.error("결제 승인 또는 예약 생성 실패:", error);
       alert(`결제 승인 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
     }
-  }, [navigate, amount, selectedDate, selectedTime, consultMethod, BACKEND_URL, designerId, createReservation]);
+  }, [navigate, price, selectedDate, selectedTime, consultMethod, BACKEND_URL, designerId, createReservation]);
 
   // ✅ useEffect에서 pg_token 감지하여 실행
   useEffect(() => {
@@ -128,7 +127,7 @@ const createReservation = useCallback(async (payType: string) => {
   // ✅ 결제 요청 함수
   const handlePayment = async () => {
     if (!paymentMethod) return;
-    console.log("결제 시작:", paymentMethod, amount);
+    console.log("결제 시작:", paymentMethod, price);
 
     try {
       if (paymentMethod === '카카오페이') {
@@ -136,7 +135,7 @@ const createReservation = useCallback(async (payType: string) => {
         const response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ amount }),
+          body: JSON.stringify({ price }),
           credentials: 'include', // 쿠키 포함
         });
 
@@ -229,13 +228,13 @@ const createReservation = useCallback(async (payType: string) => {
       localStorage.setItem("selectedDate", selectedDate || "");
       localStorage.setItem("selectedTime", selectedTime || "");
       localStorage.setItem("consultMethod", consultMethod || "");
-      localStorage.setItem("amount", amount.toString());
+      localStorage.setItem("amount", price.toString());
       localStorage.setItem("designerId", designerId);
       localStorage.setItem("approved_at", new Date().toISOString());
-      
+
       // 예약 생성 API 호출
       const reservationSuccess = await createReservation('direct');
-      
+
       if (reservationSuccess) {
         navigate('/reservationcomplete');
       } else {
@@ -393,7 +392,7 @@ const createReservation = useCallback(async (payType: string) => {
                       </div>
                       <div className="deposit-item">
                         <span className="deposit-label">금액</span>
-                        <span className="deposit-value">{amount.toLocaleString()}원 ({amount === 40000 ? '4만원' : '2만원'})</span>
+                        <span className="deposit-value">{price.toLocaleString()}원 ({price === 40000 ? '4만원' : '2만원'})</span>
                       </div>
                       <button onClick={() => {
                         navigator.clipboard.writeText('138910305992207');
@@ -428,7 +427,7 @@ const createReservation = useCallback(async (payType: string) => {
               }
             }}
           >
-            {amount.toLocaleString()}원 결제하기
+            {price.toLocaleString()}원 결제하기
           </button>
         </footer>
       </div>

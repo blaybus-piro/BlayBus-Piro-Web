@@ -56,8 +56,8 @@ const DesignerDetail: React.FC = () => {
         }
     }, [designer]);
 
-    const handleConsultingClick = (method: "ONLINE" | "OFFLINE") => {
-        navigate(`/reservation?method=${method}&designerId=${designerId}`);
+    const handleConsultingClick = (method: "ONLINE" | "OFFLINE", price: number) => {
+        navigate(`/reservation?method=${method}&designerId=${designerId}&price=${price}`);
     };
 
     if (designer === undefined) return <p>로딩 중...</p>;
@@ -107,14 +107,14 @@ const DesignerDetail: React.FC = () => {
                     size="large"
                     children="비대면 컨설팅"
                     disabled={isRemoteDisabled}
-                    onClick={() => handleConsultingClick("ONLINE")}
+                    onClick={() => handleConsultingClick("ONLINE", designer.remotePrice)}
                 />
                 <Button
                     variant="primary"
                     size="large"
                     children="대면 컨설팅"
                     disabled={isInpersonDisabled}
-                    onClick={() => handleConsultingClick("OFFLINE")}
+                    onClick={() => handleConsultingClick("OFFLINE", designer.inPersonPrice)}
                 />
             </footer>
         </div >
