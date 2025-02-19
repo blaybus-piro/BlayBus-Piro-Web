@@ -55,8 +55,15 @@ export default function PaymentPage() {
   // 예약 생성 함수도 useCallback으로 감싸기
   const createReservation = useCallback(async (payType: string) => {
     try {
-      console.log("6");
-      console.log(payType);
+      console.log("예약 생성 요청 데이터:", {
+        startTime: startTimeISO,
+        designerId,
+        meet: consultMethod === 'ONLINE' ? 'ONLINE' : 'OFFLINE',
+        pay: payType === '카카오페이' ? "카카오페이" : "계좌이체",
+        address_id: 1
+      });
+
+      console.log("apiRequest 호출 직전");
       const response = await apiRequest("/api/consulting/create", {
         method: "POST",
         body: JSON.stringify({
@@ -85,14 +92,16 @@ export default function PaymentPage() {
   // 결제 승인 API를 통해 결제 확인 후 예약 생성
   // exhaustive-deps 경고 수정: 모든 의존성 추가
   const confirmPaymentAndReserve = useCallback(async (pg_token: string) => {
+    console.log("confirmPaymentAndReserve 시작");
     const tid = localStorage.getItem("kakao_tid");
     if (!tid) {
       alert("결제 정보가 없습니다.");
       return;
     }
-    console.log("1");
+    console.log("tid 확인", tid);
 
     try {
+      console.log("카카오페이 승인 요청 시작");
       const response = await fetch(`${BACKEND_URL}/api/pay/approve`, {
         method: 'POST',
         headers: {
@@ -100,16 +109,18 @@ export default function PaymentPage() {
         },
         body: JSON.stringify({ tid, pg_token, amount }),
       });
-      console.log("2");
+      console.log("카카오페이 응답:", response.status);
       if (!response.ok) {
         throw new Error(`결제 승인 실패: ${response.status}`);
       }
-      console.log("3");
+
       const paymentData = await response.json();
+      console.log("카카오페이 승인 데이터:", paymentData);
+
       if (!paymentData.approved) {
         throw new Error("결제가 승인되지 않았습니다.");
       }
-      console.log("4");
+
       // ✅ 결제 정보를 localStorage에 저장
       localStorage.setItem("paymentType", "카카오페이");
       localStorage.setItem("approved_at", new Date().toISOString());
@@ -123,6 +134,7 @@ export default function PaymentPage() {
       localStorage.setItem("consultMethod", consultMethod || "");
       console.log("5");
       // 결제 성공 시 예약 생성 - 여기에서 API 호출
+      console.log("createReservation 호출 직전");
       const reservationSuccess = await createReservation('카카오페이');
 
       if (reservationSuccess) {
