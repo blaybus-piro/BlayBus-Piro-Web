@@ -1,24 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useUserLocation } from '../hooks/useUserLocation';
+import { useDesignerList } from '../hooks/useDesignerList';
+import { useConsultings } from '../hooks/useConsultings';
 import { DesignerCard } from '../components/DesignerCard/DesignerCard';
 import { ConsultingTypeButton } from '../components/ConsultingTypeButton/ConsultingTypeButton';
 import { SortingButton } from '../components/SortingButton/SortingButton';
 import '../styles/DesignerList.styles.css';
 import ToolTip from "../components/ToolTip/ToolTip";
 import question from "../assets/question.svg";
-import { getUserIdFromToken } from '../utils/auth';
-import { apiRequest } from '../utils/api';
-import { ReservationState } from '../types/Reservation';
-
-interface Designer {
-  id: string;
-  name: string;
-  price: number;
-  image: string;
-  specialty: string;
-  distance: number;
-  type: string;
-}
 
 // const dummyDesigners = [
 //   {
@@ -90,155 +80,14 @@ interface Designer {
 // const dummyDesigners: Designer[] = []; // 빈 배열에도 타입 명시
 
 export default function DesignerList() {
+  const navigate = useNavigate();
   const [consultingType, setConsultingType] = useState('');
   const [sortBy, setSortBy] = useState('distance');
-  const [originalDesigners, setOriginalDesigners] = useState<Designer[]>([]);
-  const [designers, setDesigners] = useState<Designer[]>([]);
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [showTooltip, setShowTooltip] = useState(false);
-  const [hasUpComingReservation, setHasUpComingReservation] = useState(false);
   const [viewMode, setViewMode] = useState<'simple' | 'detailed'>('simple');
-  const navigate = useNavigate();
-  const userId = getUserIdFromToken();
 
-  const updateCompletedReservations = async (completedReservations: ReservationState[]) => {
-    if (completedReservations.length === 0) return;
-
-    try {
-      const updateRequests = completedReservations.map(reservation =>
-        apiRequest(`/api/consulting/${reservation.id}/complete`, { method: "PATCH" })
-      );
-
-      await Promise.all(updateRequests);  // 한 번에 여러 개의 요청을 처리
-    } catch (error) {
-      console.error("예약 상태 업데이트 실패: ", error);
-    }
-  }
-
-  useEffect(() => {
-    if (!userId) return;
-
-    const fetchReservations = async () => {
-      try {
-        const reservations = await apiRequest(`/api/consulting/user/${userId}`);
-        const now = new Date();
-
-        // 예약 목록 필터링해 업데이트할 예약 찾기
-        const completedReservations = reservations.filter((reservation: ReservationState) => {
-          const reservationTime = new Date(reservation.time);
-          return reservationTime < now && reservation.status == "SCHEDULED";
-        })
-
-        await updateCompletedReservations(completedReservations);
-
-        // 임박한 예약이 있는지 확인
-        const hasUpComing = reservations.some((reservation: ReservationState) => {
-          const reservationTime = new Date(reservation.time);
-          const diffHours = (reservationTime.getTime() - now.getTime()) / (1000 * 60 * 60);
-          return diffHours > 0 && diffHours <= 24;
-        });
-
-        setHasUpComingReservation(hasUpComing);
-
-        // 툴팁을 3초 동안 표시
-        if (hasUpComing) {
-          setShowTooltip(true);
-          setTimeout(() => setShowTooltip(false), 3000);
-        }
-      } catch (error) {
-        console.error('예약 정보를 불러오는 데 실패했습니다.', error);
-      }
-    };
-    fetchReservations();
-  }, [userId]);
-
-  const getUserLocation = (): Promise<{ lat: number; lng: number }> => {
-    return new Promise((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(
-        (position) => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
-        (error) => reject(error)
-      );
-    });
-  };
-
-  useEffect(() => {
-    const fetchLocation = async () => {
-      try {
-        const location = await getUserLocation();
-        setUserLocation(location);
-      } catch (error) {
-        console.log("위치 정보를 가져올 수 없습니다: ", error);
-      }
-    };
-
-    fetchLocation();
-  }, []);
-
-  // 거리 순으로 디자이너 리스트 가져오기
-  useEffect(() => {
-    if (!userLocation) return;
-
-    const fetchDesigners = async () => {
-      try {
-        const response = await apiRequest(
-          `/api/designers/nearby?lat=${userLocation.lat}&lng=${userLocation.lng}`
-        );
-
-        // 응답이 배열인지 확인
-        if (Array.isArray(response)) {
-          const formattedData = response.map((designer: any) => ({
-            id: designer.id,
-            name: designer.name,
-            price: Math.min(designer.offlinePrice, designer.onlinePrice),
-            image: designer.profile,
-            specialty: designer.expertField,
-            distance: designer.distance,
-            type: designer.type,
-          }));
-
-          setOriginalDesigners(formattedData);
-          setDesigners(formattedData);
-        } else {
-          // 응답이 배열이 아닌 경우 처리
-          console.error('API 응답이 배열 형식이 아닙니다:', response);
-          setOriginalDesigners([]);
-          setDesigners([]);
-        }
-      } catch (error) {
-        console.error('디자이너 목록을 불러오는 데 실패했습니다.', error);
-        setOriginalDesigners([]);
-        setDesigners([]);
-      }
-    };
-
-    fetchDesigners();
-  }, [userLocation]);
-
-  useEffect(() => {
-    if (originalDesigners.length === 0) return;
-
-    let filtered = [...originalDesigners];
-
-    if (consultingType) {
-      filtered = filtered.filter(item => {
-        if (consultingType === 'offline') {
-          return item.type === "OFFLINE" || item.type === "BOTH";
-        } else if (consultingType === 'online') {
-          return item.type === "ONLINE" || item.type === "BOTH";
-        }
-        return true;
-      });
-    }
-
-    if (sortBy === "price_asc") {
-      filtered.sort((a, b) => a.price - b.price);
-    } else if (sortBy === "price_desc") {
-      filtered.sort((a, b) => b.price - a.price);
-    }
-
-    setDesigners([...filtered]);
-    console.log("정렬된 데이터: ", filtered);
-  }, [sortBy, consultingType, originalDesigners]);
+  const { hasUpComingReservation, showTooltip } = useConsultings();
+  const userLocation = useUserLocation();
+  const { designers } = useDesignerList(userLocation, sortBy, consultingType);
 
   const handleRetry = () => {
     window.location.reload();
