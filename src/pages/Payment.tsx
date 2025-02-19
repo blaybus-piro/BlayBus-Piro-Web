@@ -26,6 +26,8 @@ export default function PaymentPage() {
     setIsReservationInfoOpen((prev) => !prev);
   };
 
+  console.log("결제 금액: ", amount);
+
   const isDockerEnv = window.location.hostname === "backend";
   const BACKEND_URL = isDockerEnv
     ? "http://backend:8080"
