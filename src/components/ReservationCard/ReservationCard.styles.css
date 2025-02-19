@@ -32,16 +32,6 @@
     gap: 8px;
 }
 
-.reservation-info.FREE,
-.reservation-info.CANCELED {
-    background: var(--main-100);
-}
-
-.reservation-info.CANCELED h3,
-.reservation-info.CANCELED p {
-    color: white;
-}
-
 .reservation-info.CANCELED .my-reservation-date img {
     filter: brightness(0) invert(1);
 }

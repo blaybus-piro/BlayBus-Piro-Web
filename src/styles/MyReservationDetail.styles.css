@@ -86,7 +86,7 @@
 }
 
 .reservation-cancel.CANCELED,
-.reservation-cancel.COMPLETED {
+.reservation-cancel.COMPLETE {
     display: none;
 }
 

@@ -101,3 +101,13 @@
 .my-reservation-container .reservation-card.CANCELED {
     background: var(--main-100);
 }
+
+.my-reservation-container .reservation-info.FREE,
+.my-reservation-container .reservation-info.CANCELED {
+    background: var(--main-100);
+}
+
+.my-reservation-container .reservation-info.CANCELED h3,
+.my-reservation-container .reservation-info.CANCELED p {
+    color: white;
+}
