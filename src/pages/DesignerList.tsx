@@ -198,7 +198,8 @@ export default function DesignerList() {
       filtered.sort((a, b) => b.price - a.price);
     }
 
-    setDesigners(filtered);
+    setDesigners([...filtered]);
+    console.log("정렬된 데이터: ", filtered);
   }, [consultingType, sortBy]);
 
   const handleRetry = () => {
