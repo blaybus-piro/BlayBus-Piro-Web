@@ -91,7 +91,7 @@ export default function PaymentPage() {
 
   // 결제 승인 API를 통해 결제 확인 후 예약 생성
   // exhaustive-deps 경고 수정: 모든 의존성 추가
-  const confirmPaymentAndReserve = useCallback(async (pg_token: string) => {
+  const confirmPaymentAndReserve = useCallback(async (pg_token?: string) => {
     console.log("confirmPaymentAndReserve 시작");
     const tid = localStorage.getItem("kakao_tid");
     if (!tid) {
@@ -156,9 +156,10 @@ export default function PaymentPage() {
 
     console.log("🔍 pgToken 감지:", pgToken);
 
-    if (pgToken) {
-      confirmPaymentAndReserve(pgToken);
-    }
+    // if (pgToken) {
+    //   confirmPaymentAndReserve(pgToken);
+    // }
+    confirmPaymentAndReserve();
   }, [location.search, confirmPaymentAndReserve]);
 
   // ✅ 결제 요청 함수
