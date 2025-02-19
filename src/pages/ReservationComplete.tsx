@@ -2,7 +2,9 @@ import Header from '../components/Header/Header';
 import Button from '../components/Button/Button';
 // import { useNavigate, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
 import '../styles/ReservationComplete.styles.css';
+import { apiRequest } from '../utils/api';
 
 export default function ReservationComplete() {
   const navigate = useNavigate();
@@ -55,18 +57,18 @@ export default function ReservationComplete() {
         sub: '예약 정보를 한 번 더 확인해 주세요!'
       };
     }
-  };  
+  };
 
   const messages = getMessage();
 
   return (
     <div className="reservation-complete-container">
-      <Header title={consultMethod === 'offline' ? '대면 컨설팅 예약하기' : '비대면 컨설팅 예약하기'} />
-      
+      <Header title={consultMethod === 'OFFLINE' ? '대면 컨설팅 예약하기' : '비대면 컨설팅 예약하기'} />
+
       <div className="reservation-complete-info">
         <div className="complete-message">{messages.main}</div>
         <p className="sub-message">{messages.sub}</p>
-        
+
         <div className="complete-selected-datetime">
           <img src="/icons/calendar.svg" alt="calendar" className="calendar-icon" />
           <span>{formattedDate}</span>
@@ -83,12 +85,12 @@ export default function ReservationComplete() {
         )}
       </div>
 
-      <img src="/icons/reservation-logo.svg" alt="logo" className="reservation-logo" />     
-      
+      <img src="/icons/reservation-logo.svg" alt="logo" className="reservation-logo" />
+
       <footer className="reservation-complete-footer">
-        <Button 
-          variant="secondary" 
-          size="large" 
+        <Button
+          variant="secondary"
+          size="large"
           onClick={() => {
             // localStorage 정리
             localStorage.removeItem("selectedDate");
