@@ -55,11 +55,9 @@ const ReservationCard: React.FC<ReservationCardProps> = ({ reservation }) => {
                     src={component}
                     alt="component"
                     onClick={() => {
-                        if (reservation.status !== "CANCELED") {
-                            navigate(`/myreservationdetail/${reservation.id}`, {
-                                state: reservation,
-                            });
-                        }
+                        navigate(`/myreservationdetail/${reservation.id}`, {
+                            state: reservation,
+                        });
                     }}
                     style={{ cursor: "pointer" }}
                 />
