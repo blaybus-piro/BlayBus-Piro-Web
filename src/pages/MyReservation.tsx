@@ -48,13 +48,17 @@ const MyReservation: React.FC = () => {
                     return res.status === "CANCELED" || res.status === "COMPLETED";
                 });
 
+                console.log("filter 예약 데이터: ", filteredReservations);
+
                 // 최신 순 정렬
                 const sortedMyReservations = [...filteredReservations].sort((a, b) => {
                     return new Date(b.time).getTime() - new Date(a.time).getTime();
                 });
 
-                setMyReservations(sortedMyReservations);
+                console.log("정렬 예약 데이터: ", sortedMyReservations);
 
+                setMyReservations(sortedMyReservations);
+                console.log("상테 업데이트 완료: ", myReservations);
             } catch (error) {
                 console.error("내 예약 목록을 불러오는 데 실패했습니다.", error);
             }
