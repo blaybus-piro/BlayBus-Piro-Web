@@ -88,8 +88,16 @@ export default function PaymentPage() {
         throw new Error("결제가 승인되지 않았습니다.");
       }
   
-      // ✅ 결제가 승인되었으므로 paymentType을 kakao로 저장
+      // ✅ 결제 정보를 localStorage에 더 확실하게 저장
       localStorage.setItem("paymentType", "kakao");
+      localStorage.setItem("approved_at", new Date().toISOString());
+      localStorage.setItem("item_name", consultMethod === 'offline' ? '대면 컨설팅' : '비대면 컨설팅');
+      localStorage.setItem("amount", amount.toString());
+      
+      // 필요한 정보도 모두 저장
+      localStorage.setItem("selectedDate", selectedDate || "");
+      localStorage.setItem("selectedTime", selectedTime || "");
+      localStorage.setItem("consultMethod", consultMethod || "");
   
       // 결제 성공 시 예약 생성
       const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
@@ -107,16 +115,10 @@ export default function PaymentPage() {
       }
   
       const reservationData = await reservationResponse.json();
-      navigate('/reservationcomplete', {
-        state: {
-          selectedDate,
-          selectedTime,
-          consultMethod,
-          paymentMethod: 'kakao',
-          consultingId: reservationData.consultingId,
-          status: reservationData.status
-        },
-      });
+      // localStorage에 consulting ID 저장
+      localStorage.setItem("consultingId", reservationData.consultingId);
+      localStorage.setItem("status", reservationData.status);
+      navigate('/reservationcomplete');
   
     } catch (error) {
       console.error("결제 승인 또는 예약 생성 실패:", error);
@@ -138,22 +140,37 @@ export default function PaymentPage() {
   // ✅ 결제 요청 함수
   const handlePayment = async () => {
     if (!paymentMethod) return;
-
+    console.log("결제 시작:", paymentMethod, amount);
+  
     try {
       if (paymentMethod === 'kakao') {
+        console.log("카카오페이 결제 요청", BACKEND_URL);
         const response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ amount }),
+          credentials: 'include', // 쿠키 포함
         });
-
+  
         if (!response.ok) {
+          const errorText = await response.text();
+          console.error("결제 요청 응답:", errorText);
           throw new Error(`결제 요청 실패: ${response.status}`);
         }
-
+  
         const data = await response.json();
+        console.log("카카오페이 응답:", data);
         localStorage.setItem("kakao_tid", data.tid);  // 결제 고유 ID 저장
-        window.location.href = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
+        
+        // 예약 정보도 저장
+        localStorage.setItem("selectedDate", selectedDate || "");
+        localStorage.setItem("selectedTime", selectedTime || "");
+        localStorage.setItem("consultMethod", consultMethod || "");
+        
+        // 리디렉션
+        const redirectUrl = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
+        console.log("리디렉션:", redirectUrl);
+        window.location.href = redirectUrl;
       }
     } catch (error) {
       console.error('결제 요청 중 오류:', error);
@@ -364,9 +381,21 @@ export default function PaymentPage() {
         className={`payment-button ${!paymentMethod ? 'disabled' : ''}`}
         disabled={!paymentMethod}
         onClick={() => {
-          if (paymentMethod === "account" && transferMethod === "app") {
-            handleBankPayment();
-          } else {
+          if (!paymentMethod) return;
+          
+          if (paymentMethod === "account") {
+            if (transferMethod === "app") {
+              handleBankPayment();
+            } else if (transferMethod === "direct") {
+              // 직접 이체 선택 시 예약 완료 페이지로 이동
+              localStorage.setItem("paymentType", "direct");
+              localStorage.setItem("selectedDate", selectedDate || "");
+              localStorage.setItem("selectedTime", selectedTime || "");
+              localStorage.setItem("consultMethod", consultMethod || "");
+              localStorage.setItem("amount", amount.toString());
+              navigate('/reservationcomplete');
+            }
+          } else if (paymentMethod === "kakao") {
             handlePayment();
           }
         }}
