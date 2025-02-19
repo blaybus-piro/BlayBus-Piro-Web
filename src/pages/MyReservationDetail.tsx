@@ -46,7 +46,7 @@ const MyReservationDetail: React.FC = () => {
                     type: reservationData.type,
                     status: reservationData.status,
                     meetLink: reservationData.meetLink || null,
-                    paymentAmount: reservationData.paymentAmount || 0,
+                    paymentAmount: reservationData.money || 0,
                     paymentMethod: reservationData.pay,
                 };
 

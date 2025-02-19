@@ -13,7 +13,7 @@ export default function ReservationPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const consultMethod = searchParams.get("method") === "OFFLINE" ? "OFFLINE" : "ONLINE";
-  const price = searchParams.get("price");
+  const amount = searchParams.get("amount");
   const [bookedTimesByDate, setBookedTimesByDate] = useState<Record<string, string[]>>({});
   const designerId = searchParams.get("designerId") || "";
 
@@ -78,14 +78,15 @@ export default function ReservationPage() {
         localStorage.setItem("selectedDate", selectedDate.toISOString().split('T')[0]);
         localStorage.setItem("selectedTime", selectedTime);
         localStorage.setItem("consultMethod", consultMethod);
-        localStorage.setItem("price", String(price));
+        localStorage.setItem("amoount", String(amount));
 
         // 기존 코드 유지
         localStorage.setItem("reservationInfo", JSON.stringify({
           startTime,
           designerId,
           consultMethod,
-          selectedTime
+          selectedTime,
+          amount
         }));
 
         navigate('/payment', {
@@ -95,7 +96,7 @@ export default function ReservationPage() {
             consultMethod,
             startTime,
             designerId,
-            price
+            amount,
           }
         });
       } catch (error) {
