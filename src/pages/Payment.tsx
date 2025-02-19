@@ -41,7 +41,7 @@ const createReservation = useCallback(async (payType: string) => {
       body: JSON.stringify({
         startTime: `${selectedDate}T${selectedTime}`,
         designerId: designerId,
-        meet: consultMethod,
+        meet: consultMethod === 'ONLINE' ? 'ONLINE' : 'OFFLINE',
         pay: payType === '카카오페이' ? "카카오페이" : "계좌이체",
         address_id: 1
       })
