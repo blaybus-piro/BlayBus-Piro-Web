@@ -206,9 +206,9 @@ export default function DesignerList() {
 
     if (consultingType) {
       filtered = filtered.filter(item => {
-        if (consultingType === 'offline') {
+        if (consultingType === 'OFFLINE') {
           return item.type === "OFFLINE" || item.type === "BOTH";
-        } else if (consultingType === 'online') {
+        } else if (consultingType === 'ONLINE') {
           return item.type === "ONLINE" || item.type === "BOTH";
         }
         return true;
