@@ -93,7 +93,7 @@ export default function PaymentPage() {
       // ✅ 결제 정보를 localStorage에 더 확실하게 저장
       localStorage.setItem("paymentType", "kakao");
       localStorage.setItem("approved_at", new Date().toISOString());
-      localStorage.setItem("item_name", consultMethod === 'OFFLINE' ? '대면 컨설팅' : '비대면 컨설팅');
+      localStorage.setItem("item_name", consultMethod === 'OFFLINE' ? 'ONLINE' : 'OFFLINE');
       localStorage.setItem("amount", amount.toString());
 
       // 필요한 정보도 모두 저장
