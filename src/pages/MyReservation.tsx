@@ -1,72 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { ReservationState } from "../types/Reservation";
+import { useMyReservations } from '../hooks/useMyReservations';
+import { useFilteredReservations } from '../hooks/useFilteredReservations';
 import Header from "../components/Header/Header";
 import ReservationCard from '../components/ReservationCard/ReservationCard';
 import Toast from "../components/Toast/Toast";
 import "../styles/MyReservation.styles.css";
-import { getUserIdFromToken } from '../utils/auth';
-import { apiRequest } from '../utils/api';
 
 const MyReservation: React.FC = () => {
-    const userId = getUserIdFromToken();
     const navigate = useNavigate();
     const location = useLocation();
+    const { myReservations, loading, error } = useMyReservations();
+    const { filteredReservations, scheduledTab, setScheduledTab } = useFilteredReservations(myReservations);
 
-    const [myReservations, setMyReservations] = useState<ReservationState[]>([]);
-    const [scheduledTab, setScheduledTab] = useState<"scheduled" | "completed">("scheduled");
     const [showToast, setShowToast] = useState(location.state?.showToast || false);
-
-    useEffect(() => {
-        if (!userId) return;
-
-        const fetchReservations = async () => {
-            try {
-                const response = await apiRequest(`/api/consulting/user/${userId}`);
-                if (!response) return;
-
-                console.log("원본 데이터: ", response);
-
-                const formattedReservations = response.map((reservation: any) => ({
-                    id: reservation.consultingId,
-                    designerId: reservation.designerId,
-                    designerName: reservation.designerName,
-                    profileImage: reservation.designerProfile,
-                    time: reservation.startTime,
-                    meetLink: reservation.meetLink || null,
-                    type: reservation.type,
-                    status: reservation.status,
-                    paymentAmount: reservation.paymentAmount || 0,
-                    paymentMethod: reservation.pay
-                }));
-
-                console.log("포맷팅된 예약 데이터: ", formattedReservations);
-
-                // 예약 상태에 따라서 filter
-                const filteredReservations = formattedReservations.filter((res: ReservationState) => {
-                    console.log("필터링 전 상태 값: ", res.status);
-                    if (scheduledTab === "scheduled") return res.status === "FREE" || res.status === "SCHEDULED";
-                    return res.status === "CANCELED" || res.status === "COMPLETE";
-                });
-
-                console.log("filter 예약 데이터: ", filteredReservations);
-
-                // 최신 순 정렬
-                const sortedMyReservations = [...filteredReservations].sort((a, b) => {
-                    return new Date(b.time).getTime() - new Date(a.time).getTime();
-                });
-
-                console.log("정렬 예약 데이터: ", sortedMyReservations);
-
-                setMyReservations(sortedMyReservations);
-                console.log("상테 업데이트 완료: ", myReservations);
-            } catch (error) {
-                console.error("내 예약 목록을 불러오는 데 실패했습니다.", error);
-            }
-        };
-
-        fetchReservations();
-    }, [userId, scheduledTab]);
 
     useEffect(() => {
         if (showToast) {
@@ -80,6 +27,9 @@ const MyReservation: React.FC = () => {
     const handleSearchDesigners = () => {
         navigate('/designerlist');
     };
+
+    if (loading) return <p>로딩 중...</p>;
+    if (error) return <p>{error}</p>;
 
     return (
         <div className="my-reservation-container">
@@ -96,9 +46,9 @@ const MyReservation: React.FC = () => {
                 > 완료
                 </button>
             </div>
-            {myReservations.length > 0 ? (
+            {filteredReservations.length > 0 ? (
                 <div className="my-reservation-list">
-                    {myReservations.map((res) => (
+                    {filteredReservations.map((res) => (
                         <ReservationCard key={res.id} reservation={res} />
                     ))}
                 </div>
