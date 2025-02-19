@@ -8,12 +8,16 @@ import Modal from "../components/Modal/Modal";
 import { cancelReservation } from "../api/cancelReservatin";
 import { apiRequest } from "../utils/api";
 import { ReservationState } from "../types/Reservation";
+import { getUserIdFromToken } from '../utils/auth';
 import "../styles/MyReservationDetail.styles.css";
 
 const MyReservationDetail: React.FC = () => {
     const { myreservationId } = useParams();
-    console.log("myreservationId확인: ", myreservationId);
+    const userId = getUserIdFromToken();
+
     const [myReservationDetail, setMyReservationDetail] = useState<ReservationState | null>(null);
+    const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
+
     const isMountedRef = useRef(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
@@ -50,6 +54,15 @@ const MyReservationDetail: React.FC = () => {
 
                 if (isMountedRef.current) {
                     setMyReservationDetail(formattedData);
+
+                    if (userId) {
+                        const userData = await apiRequest(`/api/users/${userId}`);
+
+                        setUserInfo({
+                            name: userData.name,
+                            email: userData.mail,
+                        });
+                    }
                     // 기존에 미팅 링크가 없고 OFFLINE 타입이면 동적 링크 생성 활성화
                     if (formattedData.type === "OFFLINE" && !formattedData.meetLink) {
                         setUseDynamicMeetLink(true);
@@ -107,11 +120,11 @@ const MyReservationDetail: React.FC = () => {
                 <h3>예약자 정보</h3>
                 <div className="reservation-person-name">
                     <p>이름</p>
-                    <p>장지요</p>
+                    <p>{userInfo?.name}</p>
                 </div>
                 <div className="reservation-person-email">
                     <p>이메일</p>
-                    <p>wldy4627@gmail.com</p>
+                    <p>{userInfo?.email}</p>
                 </div>
             </div>
             <footer>
