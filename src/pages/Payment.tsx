@@ -17,7 +17,7 @@ export default function PaymentPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedDate, selectedTime, consultMethod } = location.state || {};
-  const amount = consultMethod === 'offline' ? 40000 : 20000;
+  const amount = consultMethod === 'OFFLINE' ? 40000 : 20000;
   const [isReservationInfoOpen, setIsReservationInfoOpen] = useState(false);
   const [isAppTransferVisible, setIsAppTransferVisible] = useState(false);
   const userId = getUserIdFromToken();
@@ -93,7 +93,7 @@ export default function PaymentPage() {
       // ✅ 결제 정보를 localStorage에 더 확실하게 저장
       localStorage.setItem("paymentType", "kakao");
       localStorage.setItem("approved_at", new Date().toISOString());
-      localStorage.setItem("item_name", consultMethod === 'OFFLINE' ? 'ONLINE' : 'OFFLINE');
+      localStorage.setItem("item_name", consultMethod === 'OFFLINE' ? 'OFFLINE' : 'ONLINE');
       localStorage.setItem("amount", amount.toString());
 
       // 필요한 정보도 모두 저장
