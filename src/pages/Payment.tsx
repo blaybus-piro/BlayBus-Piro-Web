@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import '../styles/Payment.styles.css';
@@ -15,10 +15,11 @@ export default function PaymentPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { selectedDate, selectedTime, consultMethod } = location.state || {};
-  
   const amount = consultMethod === 'offline' ? 40000 : 20000;
   const [isReservationInfoOpen, setIsReservationInfoOpen] = useState(false);
   const [isAppTransferVisible, setIsAppTransferVisible] = useState(false);
+
+  
 
   const toggleReservationInfo = () => {
     setIsReservationInfoOpen((prev) => !prev);
@@ -29,73 +30,132 @@ export default function PaymentPage() {
       ? "http://backend:8080"
       : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
 
-      const handlePayment = async () => {
-  if (!paymentMethod) return;
-
-  const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
-  const { startTime, designerId } = reservationInfo;
-
-  try {
-    let response;
-    if (paymentMethod === 'kakao') {
-      response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
+  // const handlePayment = async () => {
+  //   if (!paymentMethod) return;
+  
+  //   const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
+  //   const { startTime, designerId } = reservationInfo;
+  
+  //   try {
+  //     let response;
+  //     if (paymentMethod === 'kakao') {
+  //       response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //         },
+  //         body: JSON.stringify({ amount }),
+  //       });
+  
+  //       if (!response.ok) {
+  //         throw new Error(`결제 요청 실패: ${response.status}`);
+  //       }
+  
+  //       const data = await response.json();
+  //       localStorage.setItem("kakao_tid", data.tid);  // 결제 고유 ID 저장
+  //       window.location.href = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
+  //       return; // 결제 리디렉트 후에는 함수 종료
+  //     }
+  //   } catch (error) {
+  //     console.error('결제 요청 중 오류:', error);
+  //     alert(`결제 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
+  //   }
+  // };
+  
+  // 결제 승인 API를 통해 결제 확인 후 예약 생성
+  const confirmPaymentAndReserve = useCallback(async (pg_token: string) => {
+    const tid = localStorage.getItem("kakao_tid");
+    if (!tid) {
+      alert("결제 정보가 없습니다.");
+      return;
+    }
+  
+    try {
+      const response = await fetch(`${BACKEND_URL}/api/pay/approve`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ amount }),
+        body: JSON.stringify({ tid, pg_token, amount }),
       });
-
+  
       if (!response.ok) {
-        throw new Error(`결제 요청 실패: ${response.status}`);
+        throw new Error(`결제 승인 실패: ${response.status}`);
       }
-
-      const data = await response.json();
-      window.location.href = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
+  
+      const paymentData = await response.json();
+      if (!paymentData.approved) {
+        throw new Error("결제가 승인되지 않았습니다.");
+      }
+  
+      // 결제 성공 시 예약 생성
+      const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
+      const { startTime, designerId } = reservationInfo;
+  
+      const reservationResponse = await createConsulting({
+        startTime,
+        designer_id: designerId,
+        meet: consultMethod,
+        pay: 'KAKAO'
+      });
+  
+      if (!reservationResponse.ok) {
+        throw new Error(`예약 요청 실패: ${reservationResponse.status}`);
+      }
+  
+      const reservationData = await reservationResponse.json();
+      navigate('/reservationcomplete', {
+        state: {
+          selectedDate,
+          selectedTime,
+          consultMethod,
+          paymentMethod: 'kakao',
+          consultingId: reservationData.consultingId,
+          status: reservationData.status
+        },
+      });
+  
+    } catch (error) {
+      console.error("결제 승인 또는 예약 생성 실패:", error);
+      alert(`결제 승인 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
     }
+  }, [navigate, amount, selectedDate, selectedTime, consultMethod, BACKEND_URL]);
+  
+  // ✅ useEffect에서 pg_token 감지하여 실행
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const pgToken = queryParams.get("pg_token");
 
-    // 컨설팅 예약 생성
-    response = await createConsulting({
-      startTime,
-      designer_id: designerId,
-      meet: consultMethod,
-      pay: paymentMethod === 'kakao' ? 'KAKAO' : transferMethod === 'direct' ? 'ACCOUNT' : 'APP'
-    });
-
-    if (!response.ok) {
-      throw new Error(`예약 요청 실패: ${response.status}`);
+    if (pgToken) {
+      confirmPaymentAndReserve(pgToken);
     }
+  }, [location.search, confirmPaymentAndReserve]);
 
-    const responseData = await response.json();
-    console.log("예약 응답 데이터:", responseData);
+  // ✅ 결제 요청 함수
+  const handlePayment = async () => {
+    if (!paymentMethod) return;
 
-    if (!responseData.consultingId || !responseData.status) {
-      throw new Error("API 응답 데이터가 올바르지 않습니다.");
+    try {
+      if (paymentMethod === 'kakao') {
+        const response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ amount }),
+        });
+
+        if (!response.ok) {
+          throw new Error(`결제 요청 실패: ${response.status}`);
+        }
+
+        const data = await response.json();
+        localStorage.setItem("kakao_tid", data.tid);  // 결제 고유 ID 저장
+        window.location.href = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
+      }
+    } catch (error) {
+      console.error('결제 요청 중 오류:', error);
+      alert(`결제 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
     }
-
-    // 응답 데이터 저장
-    localStorage.setItem("consultingId", responseData.consultingId);
-    localStorage.setItem("reservationStatus", responseData.status);
-
-    navigate('/reservationcomplete', {
-      state: {
-        selectedDate,
-        selectedTime,
-        consultMethod,
-        paymentMethod,
-        transferMethod,
-        consultingId: responseData.consultingId,
-        status: responseData.status
-      },
-    });
-
-  } catch (error) {
-    console.error('결제 또는 예약 생성 실패:', error);
-    const errorMessage = (error as Error).message || '알 수 없는 오류가 발생했습니다.';
-    alert(`결제 처리 중 오류가 발생했습니다: ${errorMessage}`);
-  }  
-};
-
+  };
       
 
   const handleAccountTransfer = () => {
