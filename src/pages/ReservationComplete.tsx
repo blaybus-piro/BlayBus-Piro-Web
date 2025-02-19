@@ -2,13 +2,14 @@ import Header from '../components/Header/Header';
 import Button from '../components/Button/Button';
 // import { useNavigate, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import '../styles/ReservationComplete.styles.css';
 import { apiRequest } from '../utils/api';
 
 export default function ReservationComplete() {
   const navigate = useNavigate();
   // const location = useLocation();
+  const [reservationCreated, setReservationCreated] = useState(false);
 
   // localStorage에서 데이터 불러오기
   const selectedDate = localStorage.getItem("selectedDate");
@@ -18,6 +19,7 @@ export default function ReservationComplete() {
   const approved_at = localStorage.getItem("approved_at");
   const item_name = localStorage.getItem("item_name");
   const paymentType = localStorage.getItem("paymentType");
+  const designerId = localStorage.getItem("designerId");
 
   // 필수 데이터 확인
   if (!selectedDate || !selectedTime || !consultMethod) {
@@ -38,6 +40,30 @@ export default function ReservationComplete() {
 
   // 결제 승인 시간 변환
   const formattedApprovedDate = approved_at ? new Date(approved_at).toLocaleString() : '';
+
+  useEffect(() => {
+    if (!selectedDate || !selectedTime || !consultMethod || !designerId || reservationCreated) return;
+
+    const createReservation = async () => {
+      try {
+        const response = await apiRequest("/api/consulting/create", {
+          method: "POST",
+          body: JSON.stringify({
+            startTime: `${selectedDate}T${selectedTime}`,
+            designer_id: designerId,
+            meet: consultMethod,
+            pay: paymentType === 'kakao' ? "카카오페이" : "계좌이체"
+          })
+        });
+
+        setReservationCreated(true);
+      } catch (error) {
+        console.error("예약 생성 실패: ", error);
+      }
+    };
+
+    createReservation();
+  }, [selectedDate, selectedTime, consultMethod, designerId, reservationCreated]);
 
   // 메시지 결정
   const getMessage = () => {
@@ -100,6 +126,7 @@ export default function ReservationComplete() {
             localStorage.removeItem("approved_at");
             localStorage.removeItem("item_name");
             localStorage.removeItem("paymentType");
+            localStorage.removeItem("designerId");
             navigate('/designerlist');
           }}
         >

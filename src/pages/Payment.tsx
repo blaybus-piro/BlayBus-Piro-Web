@@ -19,23 +19,21 @@ export default function PaymentPage() {
   const [isReservationInfoOpen, setIsReservationInfoOpen] = useState(false);
   const [isAppTransferVisible, setIsAppTransferVisible] = useState(false);
 
-  
-
   const toggleReservationInfo = () => {
     setIsReservationInfoOpen((prev) => !prev);
   };
 
   const isDockerEnv = window.location.hostname === "backend";
   const BACKEND_URL = isDockerEnv
-      ? "http://backend:8080"
-      : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
+    ? "http://backend:8080"
+    : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
 
   // const handlePayment = async () => {
   //   if (!paymentMethod) return;
-  
+
   //   const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
   //   const { startTime, designerId } = reservationInfo;
-  
+
   //   try {
   //     let response;
   //     if (paymentMethod === 'kakao') {
@@ -46,11 +44,11 @@ export default function PaymentPage() {
   //         },
   //         body: JSON.stringify({ amount }),
   //       });
-  
+
   //       if (!response.ok) {
   //         throw new Error(`결제 요청 실패: ${response.status}`);
   //       }
-  
+
   //       const data = await response.json();
   //       localStorage.setItem("kakao_tid", data.tid);  // 결제 고유 ID 저장
   //       window.location.href = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
@@ -61,7 +59,7 @@ export default function PaymentPage() {
   //     alert(`결제 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
   //   }
   // };
-  
+
   // 결제 승인 API를 통해 결제 확인 후 예약 생성
   const confirmPaymentAndReserve = useCallback(async (pg_token: string) => {
     const tid = localStorage.getItem("kakao_tid");
@@ -69,7 +67,7 @@ export default function PaymentPage() {
       alert("결제 정보가 없습니다.");
       return;
     }
-  
+
     try {
       const response = await fetch(`${BACKEND_URL}/api/pay/approve`, {
         method: 'POST',
@@ -78,55 +76,55 @@ export default function PaymentPage() {
         },
         body: JSON.stringify({ tid, pg_token, amount }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`결제 승인 실패: ${response.status}`);
       }
-  
+
       const paymentData = await response.json();
       if (!paymentData.approved) {
         throw new Error("결제가 승인되지 않았습니다.");
       }
-  
+
       // ✅ 결제 정보를 localStorage에 더 확실하게 저장
       localStorage.setItem("paymentType", "kakao");
       localStorage.setItem("approved_at", new Date().toISOString());
       localStorage.setItem("item_name", consultMethod === 'offline' ? '대면 컨설팅' : '비대면 컨설팅');
       localStorage.setItem("amount", amount.toString());
-      
+
       // 필요한 정보도 모두 저장
       localStorage.setItem("selectedDate", selectedDate || "");
       localStorage.setItem("selectedTime", selectedTime || "");
       localStorage.setItem("consultMethod", consultMethod || "");
-  
+
       // 결제 성공 시 예약 생성
       const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
       const { startTime, designerId } = reservationInfo;
-  
+
       const reservationResponse = await createConsulting({
         startTime,
         designer_id: designerId,
         meet: consultMethod,
         pay: 'KAKAO'
       });
-  
+
       if (!reservationResponse.ok) {
         throw new Error(`예약 요청 실패: ${reservationResponse.status}`);
       }
-  
+
       const reservationData = await reservationResponse.json();
       // localStorage에 consulting ID 저장
       localStorage.setItem("consultingId", reservationData.consultingId);
       localStorage.setItem("status", reservationData.status);
       navigate('/reservationcomplete');
-  
+
     } catch (error) {
       console.error("결제 승인 또는 예약 생성 실패:", error);
       alert(`결제 승인 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
     }
   }, [navigate, amount, selectedDate, selectedTime, consultMethod, BACKEND_URL]);
-  
-  
+
+
   // ✅ useEffect에서 pg_token 감지하여 실행
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
@@ -141,7 +139,7 @@ export default function PaymentPage() {
   const handlePayment = async () => {
     if (!paymentMethod) return;
     console.log("결제 시작:", paymentMethod, amount);
-  
+
     try {
       if (paymentMethod === 'kakao') {
         console.log("카카오페이 결제 요청", BACKEND_URL);
@@ -151,22 +149,22 @@ export default function PaymentPage() {
           body: JSON.stringify({ amount }),
           credentials: 'include', // 쿠키 포함
         });
-  
+
         if (!response.ok) {
           const errorText = await response.text();
           console.error("결제 요청 응답:", errorText);
           throw new Error(`결제 요청 실패: ${response.status}`);
         }
-  
+
         const data = await response.json();
         console.log("카카오페이 응답:", data);
         localStorage.setItem("kakao_tid", data.tid);  // 결제 고유 ID 저장
-        
+
         // 예약 정보도 저장
         localStorage.setItem("selectedDate", selectedDate || "");
         localStorage.setItem("selectedTime", selectedTime || "");
         localStorage.setItem("consultMethod", consultMethod || "");
-        
+
         // 리디렉션
         const redirectUrl = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
         console.log("리디렉션:", redirectUrl);
@@ -177,7 +175,7 @@ export default function PaymentPage() {
       alert(`결제 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
     }
   };
-      
+
 
   const handleAccountTransfer = () => {
     setPaymentMethod('account');
@@ -207,7 +205,7 @@ export default function PaymentPage() {
   const handleBankPayment = () => {
     let deeplink = "";
     const clipboardText = "138910305992207";
-  
+
     switch (selectedBank) {
       case "toss":
         deeplink = "supertoss://send?account=508116542988&amount=190000";
@@ -229,181 +227,181 @@ export default function PaymentPage() {
     navigator.clipboard.writeText(clipboardText).then(() => {
       alert("계좌번호가 복사되었습니다.");
     });
-  
+
     window.location.href = deeplink;
   };
-  
-  
+
+
   return (
     <div className="payment-container">
-    {/* 고정된 헤더 */}
-    <div className="payment-header">
-      <Header title="결제하기" />
-    </div>
-      
-    <div className="payment-wrapper" style={{ overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
-      <div className="payment-content">
-        <div className="info-section">
-          <div className={`toggle-container ${isReservationInfoOpen ? 'open' : ''}`}>
-            <div className="toggle-info" onClick={toggleReservationInfo}>
-              <span className="toggle-title">예약자 정보</span>
-              <span className={`arrow ${isReservationInfoOpen ? 'open' : ''}`}>
-                <img src="/icons/toggle-before.svg" alt="toggle" />
-              </span>
+      {/* 고정된 헤더 */}
+      <div className="payment-header">
+        <Header title="결제하기" />
+      </div>
+
+      <div className="payment-wrapper" style={{ overflowY: "auto", WebkitOverflowScrolling: "touch" }}>
+        <div className="payment-content">
+          <div className="info-section">
+            <div className={`toggle-container ${isReservationInfoOpen ? 'open' : ''}`}>
+              <div className="toggle-info" onClick={toggleReservationInfo}>
+                <span className="toggle-title">예약자 정보</span>
+                <span className={`arrow ${isReservationInfoOpen ? 'open' : ''}`}>
+                  <img src="/icons/toggle-before.svg" alt="toggle" />
+                </span>
+              </div>
+              {isReservationInfoOpen && (
+                <div className="toggle-details">
+                  <div className="info-row">
+                    <span className="info-label">성함</span>
+                    <span className="info-value">송연우</span>
+                  </div>
+                  <div className="info-row">
+                    <span className="info-label">이메일</span>
+                    <span className="info-value">supreme1mode@gmail.com</span>
+                  </div>
+                </div>
+              )}
             </div>
-            {isReservationInfoOpen && (
-              <div className="toggle-details">
-                <div className="info-row">
-                  <span className="info-label">성함</span>
-                  <span className="info-value">송연우</span>
-                </div>
-                <div className="info-row">
-                  <span className="info-label">이메일</span>
-                  <span className="info-value">supreme1mode@gmail.com</span>
-                </div>
+          </div>
+
+          <div className="payment-method-section">
+            <h2 className="section-title">결제 방식을 선택해 주세요</h2>
+            <div className="payment-buttons">
+              <button
+                className={`payment-method-button ${paymentMethod === 'account' ? 'selected' : ''}`}
+                onClick={handleAccountTransfer}
+              >
+                계좌이체
+              </button>
+              <button
+                className={`payment-method-button ${paymentMethod === 'kakao' ? 'selected' : ''}`}
+                onClick={handleKakaoPay}
+              >
+                <img src="/icons/kakaopay.svg" alt="kakaopay" className="kakao-icon" />
+                카카오페이
+              </button>
+            </div>
+
+            {isAppTransferVisible && (
+              <div className="app-transfer-options">
+                <label className="radio-option">
+                  <input
+                    type="radio"
+                    name="transferMethod"
+                    value="app"
+                    checked={transferMethod === "app"}
+                    onChange={() => handleTransferMethodChange("app")}
+                  />
+                  <span className="send-money-text">앱으로 이체하기</span>
+                </label>
+                {transferMethod === 'app' && (
+                  <div className="app-buttons">
+                    <button
+                      className={`app-button ${selectedBank === 'toss' ? 'selected' : ''}`}
+                      onClick={() => handleBankSelection('toss')}
+                    >
+                      <img src="/icons/toss.svg" alt="Toss" />
+                      토스 송금하기
+                    </button>
+                    <button
+                      className={`app-button ${selectedBank === 'kakaopay' ? 'selected' : ''}`}
+                      onClick={() => handleBankSelection('kakaopay')}
+                    >
+                      <img src="/icons/kakaopay.svg" alt="KakaoPay" />
+                      카카오페이 송금하기
+                    </button>
+                    <button
+                      className={`app-button ${selectedBank === 'won' ? 'selected' : ''}`}
+                      onClick={() => handleBankSelection('won')}
+                    >
+                      <img src="/icons/won.svg" alt="WON" />
+                      우리WON뱅킹 송금하기
+                    </button>
+                    <button
+                      className={`app-button ${selectedBank === 'kb' ? 'selected' : ''}`}
+                      onClick={() => handleBankSelection('kb')}
+                    >
+                      <img src="/icons/kb.svg" alt="KB" />
+                      KB스타뱅킹 송금하기
+                    </button>
+                  </div>
+                )}
+
+                <label className="radio-option">
+                  <input
+                    type="radio"
+                    name="transferMethod"
+                    value="direct"
+                    checked={transferMethod === "direct"}
+                    onChange={() => handleTransferMethodChange("direct")}
+                  />
+                  <span className="send-money-text">직접 이체하기</span>
+                </label>
+
+                {transferMethod === 'direct' && (
+                  <div className="deposit-info">
+                    <h3 className="deposit-title">입금 정보</h3>
+                    <div className="deposit-grid">
+                      <div className="deposit-item">
+                        <span className="deposit-label">예금주 명</span>
+                        <span className="deposit-value">송연우</span>
+                      </div>
+                      <div className="deposit-item">
+                        <span className="deposit-label">은행명</span>
+                        <span className="deposit-value">하나은행</span>
+                      </div>
+                      <div className="deposit-item">
+                        <span className="deposit-label">계좌번호</span>
+                        <div className="account-number">
+                          <span className="deposit-value">138910305992207</span>
+                        </div>
+                      </div>
+                      <div className="deposit-item">
+                        <span className="deposit-label">금액</span>
+                        <span className="deposit-value">{amount.toLocaleString()}원 ({amount === 40000 ? '4만원' : '2만원'})</span>
+                      </div>
+                      <button onClick={() => {
+                        navigator.clipboard.writeText('138910305992207');
+                        alert('계좌번호가 복사되었습니다.');
+                      }} className="deposit-copy-button">
+                        클립보드 복사하기
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
         </div>
 
-        <div className="payment-method-section">
-          <h2 className="section-title">결제 방식을 선택해 주세요</h2>
-          <div className="payment-buttons">
-            <button 
-              className={`payment-method-button ${paymentMethod === 'account' ? 'selected' : ''}`}
-              onClick={handleAccountTransfer}
-            >
-              계좌이체
-            </button>
-            <button 
-              className={`payment-method-button ${paymentMethod === 'kakao' ? 'selected' : ''}`}
-              onClick={handleKakaoPay}
-            >
-              <img src="/icons/kakaopay.svg" alt="kakaopay" className="kakao-icon" />
-              카카오페이
-            </button>
-          </div>
+        <footer className="payment-footer">
+          <button
+            className={`payment-button ${!paymentMethod ? 'disabled' : ''}`}
+            disabled={!paymentMethod}
+            onClick={() => {
+              if (!paymentMethod) return;
 
-          {isAppTransferVisible && (
-            <div className="app-transfer-options">
-              <label className="radio-option">
-                <input 
-                  type="radio" 
-                  name="transferMethod" 
-                  value="app" 
-                  checked={transferMethod === "app"}
-                  onChange={() => handleTransferMethodChange("app")}
-                />
-                <span className="send-money-text">앱으로 이체하기</span>
-              </label>
-              {transferMethod === 'app' && (
-                <div className="app-buttons">
-                  <button 
-                    className={`app-button ${selectedBank === 'toss' ? 'selected' : ''}`}
-                    onClick={() => handleBankSelection('toss')}
-                  >
-                    <img src="/icons/toss.svg" alt="Toss" />
-                    토스 송금하기
-                  </button>
-                  <button 
-                    className={`app-button ${selectedBank === 'kakaopay' ? 'selected' : ''}`}
-                    onClick={() => handleBankSelection('kakaopay')}
-                  >
-                    <img src="/icons/kakaopay.svg" alt="KakaoPay" />
-                    카카오페이 송금하기
-                  </button>
-                  <button 
-                    className={`app-button ${selectedBank === 'won' ? 'selected' : ''}`}
-                    onClick={() => handleBankSelection('won')}
-                  >
-                    <img src="/icons/won.svg" alt="WON" />
-                    우리WON뱅킹 송금하기
-                  </button>
-                  <button 
-                    className={`app-button ${selectedBank === 'kb' ? 'selected' : ''}`}
-                    onClick={() => handleBankSelection('kb')}
-                  >
-                    <img src="/icons/kb.svg" alt="KB" />
-                    KB스타뱅킹 송금하기
-                  </button>
-                </div>
-              )}
-
-              <label className="radio-option">
-                <input 
-                  type="radio" 
-                  name="transferMethod" 
-                  value="direct" 
-                  checked={transferMethod === "direct"}
-                  onChange={() => handleTransferMethodChange("direct")}
-                />
-                <span className="send-money-text">직접 이체하기</span>
-              </label>
-
-              {transferMethod === 'direct' && (
-                <div className="deposit-info">
-                  <h3 className="deposit-title">입금 정보</h3>
-                  <div className="deposit-grid">
-                    <div className="deposit-item">
-                      <span className="deposit-label">예금주 명</span>
-                      <span className="deposit-value">송연우</span>
-                    </div>
-                    <div className="deposit-item">
-                      <span className="deposit-label">은행명</span>
-                      <span className="deposit-value">하나은행</span>
-                    </div>
-                    <div className="deposit-item">
-                      <span className="deposit-label">계좌번호</span>
-                      <div className="account-number">
-                        <span className="deposit-value">138910305992207</span>
-                      </div>
-                    </div>
-                    <div className="deposit-item">
-                      <span className="deposit-label">금액</span>
-                      <span className="deposit-value">{amount.toLocaleString()}원 ({amount === 40000 ? '4만원' : '2만원'})</span>
-                    </div>
-                    <button onClick={() => {
-                      navigator.clipboard.writeText('138910305992207');
-                      alert('계좌번호가 복사되었습니다.');
-                    }} className="deposit-copy-button">
-                      클립보드 복사하기
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+              if (paymentMethod === "account") {
+                if (transferMethod === "app") {
+                  handleBankPayment();
+                } else if (transferMethod === "direct") {
+                  // 직접 이체 선택 시 예약 완료 페이지로 이동
+                  localStorage.setItem("paymentType", "direct");
+                  localStorage.setItem("selectedDate", selectedDate || "");
+                  localStorage.setItem("selectedTime", selectedTime || "");
+                  localStorage.setItem("consultMethod", consultMethod || "");
+                  localStorage.setItem("amount", amount.toString());
+                  navigate('/reservationcomplete');
+                }
+              } else if (paymentMethod === "kakao") {
+                handlePayment();
+              }
+            }}
+          >
+            {amount.toLocaleString()}원 결제하기
+          </button>
+        </footer>
       </div>
-
-      <footer className="payment-footer">
-      <button 
-        className={`payment-button ${!paymentMethod ? 'disabled' : ''}`}
-        disabled={!paymentMethod}
-        onClick={() => {
-          if (!paymentMethod) return;
-          
-          if (paymentMethod === "account") {
-            if (transferMethod === "app") {
-              handleBankPayment();
-            } else if (transferMethod === "direct") {
-              // 직접 이체 선택 시 예약 완료 페이지로 이동
-              localStorage.setItem("paymentType", "direct");
-              localStorage.setItem("selectedDate", selectedDate || "");
-              localStorage.setItem("selectedTime", selectedTime || "");
-              localStorage.setItem("consultMethod", consultMethod || "");
-              localStorage.setItem("amount", amount.toString());
-              navigate('/reservationcomplete');
-            }
-          } else if (paymentMethod === "kakao") {
-            handlePayment();
-          }
-        }}
-      >
-        {amount.toLocaleString()}원 결제하기
-      </button>
-      </footer>
-    </div>
     </div>
   );
 }
