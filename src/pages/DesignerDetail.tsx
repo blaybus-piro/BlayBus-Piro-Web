@@ -15,8 +15,8 @@ const DesignerDetail: React.FC = () => {
     const navigate = useNavigate();
     const { designer, loading, error } = useDesignerDetail(designerId);
 
-    const handleConsultingClick = (method: "ONLINE" | "OFFLINE", price: number) => {
-        navigate(`/reservation?method=${method}&designerId=${designerId}&price=${price}`);
+    const handleConsultingClick = (method: "ONLINE" | "OFFLINE", amount: number) => {
+        navigate(`/reservation?method=${method}&designerId=${designerId}&amount=${amount}`);
     };
 
     if (loading) return <p>로딩 중...</p>;

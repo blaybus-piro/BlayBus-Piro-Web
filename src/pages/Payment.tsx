@@ -16,7 +16,7 @@ export default function PaymentPage() {
   const [selectedBank, setSelectedBank] = useState<BankOption>(null);
   const location = useLocation();
   const navigate = useNavigate();
-  const { selectedDate, selectedTime, consultMethod, designerId, price } = location.state || {};
+  const { selectedDate, selectedTime, consultMethod, designerId, amount } = location.state || {};
   const [isReservationInfoOpen, setIsReservationInfoOpen] = useState(false);
   const [isAppTransferVisible, setIsAppTransferVisible] = useState(false);
   const userId = getUserIdFromToken();
@@ -75,7 +75,7 @@ export default function PaymentPage() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ tid, pg_token, price }),
+        body: JSON.stringify({ tid, pg_token, amount }),
       });
 
       if (!response.ok) {
@@ -91,7 +91,7 @@ export default function PaymentPage() {
       localStorage.setItem("paymentType", "카카오페이");
       localStorage.setItem("approved_at", new Date().toISOString());
       localStorage.setItem("item_name", consultMethod === 'OFFLINE' ? 'OFFLINE' : 'ONLINE');
-      localStorage.setItem("amount", price.toString());
+      localStorage.setItem("amount", amount.toString());
       localStorage.setItem("designerId", designerId);
 
       // 필요한 정보도 모두 저장
@@ -112,7 +112,7 @@ export default function PaymentPage() {
       console.error("결제 승인 또는 예약 생성 실패:", error);
       alert(`결제 승인 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
     }
-  }, [navigate, price, selectedDate, selectedTime, consultMethod, BACKEND_URL, designerId, createReservation]);
+  }, [navigate, amount, selectedDate, selectedTime, consultMethod, BACKEND_URL, designerId, createReservation]);
 
   // ✅ useEffect에서 pg_token 감지하여 실행
   useEffect(() => {
@@ -127,7 +127,7 @@ export default function PaymentPage() {
   // ✅ 결제 요청 함수
   const handlePayment = async () => {
     if (!paymentMethod) return;
-    console.log("결제 시작:", paymentMethod, price);
+    console.log("결제 시작:", paymentMethod, amount);
 
     try {
       if (paymentMethod === '카카오페이') {
@@ -135,7 +135,7 @@ export default function PaymentPage() {
         const response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ price }),
+          body: JSON.stringify({ amount }),
           credentials: 'include', // 쿠키 포함
         });
 
@@ -228,7 +228,7 @@ export default function PaymentPage() {
       localStorage.setItem("selectedDate", selectedDate || "");
       localStorage.setItem("selectedTime", selectedTime || "");
       localStorage.setItem("consultMethod", consultMethod || "");
-      localStorage.setItem("amount", price.toString());
+      localStorage.setItem("amount", amount.toString());
       localStorage.setItem("designerId", designerId);
       localStorage.setItem("approved_at", new Date().toISOString());
 
@@ -265,6 +265,14 @@ export default function PaymentPage() {
 
     fetchUserInfo(); // ✅ 비동기 함수 실행
   }, [userId]);
+
+  const convertToKoreanNumber = (num: number) => {
+    if (num >= 10000) {
+      const man = Math.floor(num / 10000);
+      return `${man}만원`;
+    }
+    return `${num}원`;
+  };
 
   return (
     <div className="payment-container">
@@ -392,7 +400,7 @@ export default function PaymentPage() {
                       </div>
                       <div className="deposit-item">
                         <span className="deposit-label">금액</span>
-                        <span className="deposit-value">{price.toLocaleString()}원 ({price === 40000 ? '4만원' : '2만원'})</span>
+                        <span className="deposit-value">{amount.toLocaleString()}원 ({convertToKoreanNumber(amount)})</span>
                       </div>
                       <button onClick={() => {
                         navigator.clipboard.writeText('138910305992207');
@@ -427,7 +435,7 @@ export default function PaymentPage() {
               }
             }}
           >
-            {price.toLocaleString()}원 결제하기
+            {amount.toLocaleString()}원 결제하기
           </button>
         </footer>
       </div>
