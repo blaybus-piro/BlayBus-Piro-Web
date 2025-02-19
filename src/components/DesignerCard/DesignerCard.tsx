@@ -70,7 +70,7 @@ export const DesignerCard: React.FC<DesignerCardProps> = ({
                 <span className="distance">{formatDistance(distance ?? 0)}</span>
               </div>
             </div>
-            <div className="specialty-badge-detailed">{specialty}</div>
+            <div className="specialty-badge-detailed">{displaySpecialtyText}</div>
           </div>
           <div className="designer-card-image-container">
             <div className="designer-card-image-scroll">

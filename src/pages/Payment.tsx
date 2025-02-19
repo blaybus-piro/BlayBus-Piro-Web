@@ -367,7 +367,7 @@ export default function PaymentPage() {
                     <div className="deposit-grid">
                       <div className="deposit-item">
                         <span className="deposit-label">예금주 명</span>
-                        <span className="deposit-value">{userInfo?.name}</span>
+                        <span className="deposit-value">블리츠</span>
                       </div>
                       <div className="deposit-item">
                         <span className="deposit-label">은행명</span>
