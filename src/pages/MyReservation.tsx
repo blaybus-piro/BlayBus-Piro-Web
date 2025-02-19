@@ -44,8 +44,9 @@ const MyReservation: React.FC = () => {
 
                 // 예약 상태에 따라서 filter
                 const filteredReservations = formattedReservations.filter((res: ReservationState) => {
+                    console.log("필터링 전 상태 값: ", res.status);
                     if (scheduledTab === "scheduled") return res.status === "FREE" || res.status === "SCHEDULED";
-                    return res.status === "CANCELED" || res.status === "COMPLETED";
+                    return res.status === "CANCELED" || res.status === "COMPLETE";
                 });
 
                 console.log("filter 예약 데이터: ", filteredReservations);

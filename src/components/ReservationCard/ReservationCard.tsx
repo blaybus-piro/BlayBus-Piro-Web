@@ -81,7 +81,7 @@ const ReservationCard: React.FC<ReservationCardProps> = ({ reservation }) => {
             }
 
             {
-                reservation.status === "COMPLETED" && reservation.type === "OFFLINE" && (
+                reservation.status === "COMPLETE" && reservation.type === "OFFLINE" && (
                     <div className="reservation-card-bottom1">
                         <LinkButton
                             link={reservation.meetLink ?? ""}

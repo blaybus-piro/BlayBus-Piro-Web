@@ -5,14 +5,14 @@ import Toast from "../Toast/Toast";
 
 interface LinkButtonProps {
     link: string;
-    status: "SCHEDULED" | "COMPLETED";
+    status: "SCHEDULED" | "COMPLETE";
 }
 
 const LinkButton: React.FC<LinkButtonProps> = ({ link, status }) => {
     const [isToastVisible, setIsToastVisible] = useState(false);
 
     const handleCopy = () => {
-        if (status === "COMPLETED") return;
+        if (status === "COMPLETE") return;
 
         navigator.clipboard.writeText(link)
             .then(() => {
@@ -27,7 +27,7 @@ const LinkButton: React.FC<LinkButtonProps> = ({ link, status }) => {
             <div
                 className={`link ${status}`}
                 onClick={handleCopy}
-                style={{ cursor: status === "COMPLETED" ? "not-allowed" : "pointer" }}
+                style={{ cursor: status === "COMPLETE" ? "not-allowed" : "pointer" }}
             >
                 <img src={linkIcon} alt="link" />
             </div>

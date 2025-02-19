@@ -5,7 +5,7 @@ export interface ReservationState {
     profileImage: string;
     time: string;
     type: "ONLINE" | "OFFLINE";
-    status: "FREE" | "SCHEDULED" | "CANCELED" | "COMPLETED";
+    status: "FREE" | "SCHEDULED" | "CANCELED" | "COMPLETE";
     meetLink?: string;
     paymentAmount: number;
     paymentMethod: "ACCOUNTMENT" | "KAKAOPAY";
