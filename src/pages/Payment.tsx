@@ -33,6 +33,24 @@ export default function PaymentPage() {
     ? "http://backend:8080"
     : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
 
+  const startTime = `${selectedDate}T${selectedTime}`;
+
+  const formatToFullTimestamp = (isoString: string) => {
+    const date = new Date(isoString); // ISO 문자열을 Date 객체로 변환
+
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const milliseconds = String(date.getMilliseconds()).padStart(6, '0'); // 마이크로초까지 확장
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+  }
+
+  const startTimeISO = formatToFullTimestamp(startTime);
+
   // 예약 생성 함수
   // 예약 생성 함수도 useCallback으로 감싸기
   const createReservation = useCallback(async (payType: string) => {
@@ -40,7 +58,7 @@ export default function PaymentPage() {
       const response = await apiRequest("/api/consulting/create", {
         method: "POST",
         body: JSON.stringify({
-          startTime: `${selectedDate}T${selectedTime}`,
+          startTime: startTimeISO,
           designerId: designerId,
           meet: consultMethod === 'ONLINE' ? 'ONLINE' : 'OFFLINE',
           pay: payType === '카카오페이' ? "카카오페이" : "계좌이체",
