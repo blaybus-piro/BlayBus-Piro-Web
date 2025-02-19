@@ -151,10 +151,10 @@ export default function PaymentPage() {
 
   // ✅ useEffect에서 pg_token 감지하여 실행
   useEffect(() => {
-    const queryParams = new URLSearchParams(location.search);
-    const pgToken = queryParams.get("pg_token");
+    //const queryParams = new URLSearchParams(location.search);
+    //const pgToken = queryParams.get("pg_token");
 
-    console.log("🔍 pgToken 감지:", pgToken);
+    //console.log("🔍 pgToken 감지:", pgToken);
 
     // if (pgToken) {
     //   confirmPaymentAndReserve(pgToken);
