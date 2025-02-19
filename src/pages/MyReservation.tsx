@@ -43,7 +43,7 @@ const MyReservation: React.FC = () => {
                 console.log("포맷팅된 예약 데이터: ", formattedReservations);
 
                 // 예약 상태에 따라서 filter
-                const filteredReservations = myReservations.filter((res) => {
+                const filteredReservations = formattedReservations.filter((res: ReservationState) => {
                     if (scheduledTab === "scheduled") return res.status === "FREE" || res.status === "SCHEDULED";
                     return res.status === "CANCELED" || res.status === "COMPLETED";
                 });
@@ -61,7 +61,7 @@ const MyReservation: React.FC = () => {
         };
 
         fetchReservations();
-    }, [userId]);
+    }, [userId, scheduledTab]);
 
     useEffect(() => {
         if (showToast) {
