@@ -93,7 +93,7 @@
 }
 
 .tag.FREE,
-.tag.COMPLETED {
+.tag.COMPLETE {
     background: var(--main-300);
     color: white;
 }

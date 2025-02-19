@@ -12,11 +12,11 @@
     align-items: center;
 }
 
-.link.completed {
+.link.COMPLETE {
     border: none;
     background: var(--main-100);
 }
 
-.link.completed img {
+.link.COMPLETE img {
     filter: brightness(0) saturate(100%) invert(75%) sepia(5%) saturate(50%) hue-rotate(5deg);
 }
