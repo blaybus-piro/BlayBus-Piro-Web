@@ -94,6 +94,7 @@ const MyReservationDetail: React.FC = () => {
             setIsModalOpen(false);
 
             navigate(`/myreservation`, { state: { showToast: true } });
+            console.log("홈 페이지로 이동");
         } catch (error) {
             console.error("예약 취소 실패", error);
         }

@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import '../styles/Payment.styles.css';
 import { createConsulting } from '../api/consulting';
+import { getUserIdFromToken } from '../utils/auth';
+import { apiRequest } from "../utils/api";
 
 type PaymentMethod = 'account' | 'kakao' | null;
 type TransferMethod = 'app' | 'direct' | null;
@@ -18,6 +20,8 @@ export default function PaymentPage() {
   const amount = consultMethod === 'offline' ? 40000 : 20000;
   const [isReservationInfoOpen, setIsReservationInfoOpen] = useState(false);
   const [isAppTransferVisible, setIsAppTransferVisible] = useState(false);
+  const userId = getUserIdFromToken();
+  const [userInfo, setUserInfo] = useState<{ name: string; email: string } | null>(null);
 
   const toggleReservationInfo = () => {
     setIsReservationInfoOpen((prev) => !prev);
@@ -231,6 +235,25 @@ export default function PaymentPage() {
     window.location.href = deeplink;
   };
 
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (!userId) return; // 🚨 userId가 없으면 실행 안 함
+
+      try {
+        const userData = await apiRequest(`/api/users/${userId}`);
+        console.log("✅ 유저 정보 가져오기 성공:", userData);
+
+        setUserInfo({
+          name: userData.name,
+          email: userData.mail,
+        });
+      } catch (error) {
+        console.error("❌ 유저 정보 가져오기 실패:", error);
+      }
+    };
+
+    fetchUserInfo(); // ✅ 비동기 함수 실행
+  }, [userId]);
 
   return (
     <div className="payment-container">
@@ -253,11 +276,11 @@ export default function PaymentPage() {
                 <div className="toggle-details">
                   <div className="info-row">
                     <span className="info-label">성함</span>
-                    <span className="info-value">송연우</span>
+                    <span className="info-value">{userInfo?.name}</span>
                   </div>
                   <div className="info-row">
                     <span className="info-label">이메일</span>
-                    <span className="info-value">supreme1mode@gmail.com</span>
+                    <span className="info-value">{userInfo?.email}</span>
                   </div>
                 </div>
               )}
@@ -344,7 +367,7 @@ export default function PaymentPage() {
                     <div className="deposit-grid">
                       <div className="deposit-item">
                         <span className="deposit-label">예금주 명</span>
-                        <span className="deposit-value">송연우</span>
+                        <span className="deposit-value">{userInfo?.name}</span>
                       </div>
                       <div className="deposit-item">
                         <span className="deposit-label">은행명</span>
