@@ -55,6 +55,8 @@ export default function PaymentPage() {
   // 예약 생성 함수도 useCallback으로 감싸기
   const createReservation = useCallback(async (payType: string) => {
     try {
+      console.log("6");
+      console.log(payType);
       const response = await apiRequest("/api/consulting/create", {
         method: "POST",
         body: JSON.stringify({
@@ -88,6 +90,7 @@ export default function PaymentPage() {
       alert("결제 정보가 없습니다.");
       return;
     }
+    console.log("1");
 
     try {
       const response = await fetch(`${BACKEND_URL}/api/pay/approve`, {
@@ -97,16 +100,16 @@ export default function PaymentPage() {
         },
         body: JSON.stringify({ tid, pg_token, amount }),
       });
-
+      console.log("2");
       if (!response.ok) {
         throw new Error(`결제 승인 실패: ${response.status}`);
       }
-
+      console.log("3");
       const paymentData = await response.json();
       if (!paymentData.approved) {
         throw new Error("결제가 승인되지 않았습니다.");
       }
-
+      console.log("4");
       // ✅ 결제 정보를 localStorage에 저장
       localStorage.setItem("paymentType", "카카오페이");
       localStorage.setItem("approved_at", new Date().toISOString());
@@ -118,7 +121,7 @@ export default function PaymentPage() {
       localStorage.setItem("selectedDate", selectedDate || "");
       localStorage.setItem("selectedTime", selectedTime || "");
       localStorage.setItem("consultMethod", consultMethod || "");
-
+      console.log("5");
       // 결제 성공 시 예약 생성 - 여기에서 API 호출
       const reservationSuccess = await createReservation('카카오페이');
 
