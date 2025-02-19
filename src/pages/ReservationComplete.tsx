@@ -1,6 +1,5 @@
 import Header from '../components/Header/Header';
 import Button from '../components/Button/Button';
-// import { useNavigate, useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useState } from "react";
 import '../styles/ReservationComplete.styles.css';
@@ -8,8 +7,8 @@ import { apiRequest } from '../utils/api';
 
 export default function ReservationComplete() {
   const navigate = useNavigate();
-  // const location = useLocation();
   const [reservationCreated, setReservationCreated] = useState(false);
+  const [missingData, setMissingData] = useState(false);
 
   // localStorage에서 데이터 불러오기
   const selectedDate = localStorage.getItem("selectedDate");
@@ -22,28 +21,29 @@ export default function ReservationComplete() {
   const designerId = localStorage.getItem("designerId");
 
   // 필수 데이터 확인
-  if (!selectedDate || !selectedTime || !consultMethod) {
-    return (
-      <div className="error-container">
-        <div className="error-message">예약 정보를 찾을 수 없습니다.</div>
-        <Button variant="primary" size="large" onClick={() => navigate('/designerlist')}>
-          홈으로 가기
-        </Button>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (!selectedDate || !selectedTime || !consultMethod) {
+      setMissingData(true);
+    } else {
+      setMissingData(false);
+    }
+  }, [selectedDate, selectedTime, consultMethod]);
 
   // 날짜 형식 변환
   const days = ['일', '월', '화', '수', '목', '금', '토'];
-  const dateObj = new Date(selectedDate);
-  const formattedDate = `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일 (${days[dateObj.getDay()]}) ${selectedTime}`;
+  const dateObj = selectedDate ? new Date(selectedDate) : new Date();
+  const formattedDate = selectedDate && selectedTime ? 
+    `${dateObj.getFullYear()}년 ${dateObj.getMonth() + 1}월 ${dateObj.getDate()}일 (${days[dateObj.getDay()]}) ${selectedTime}` : '';
 
   // 결제 승인 시간 변환
   const formattedApprovedDate = approved_at ? new Date(approved_at).toLocaleString() : '';
 
+  // 예약 생성 Effect
   useEffect(() => {
     console.log("useEffect 실행");
-    if (!selectedDate || !selectedTime || !consultMethod || !designerId || reservationCreated) return;
+    if (missingData || !designerId || reservationCreated) {
+      return;
+    }
 
     const createReservation = async () => {
       try {
@@ -53,7 +53,8 @@ export default function ReservationComplete() {
             startTime: `${selectedDate}T${selectedTime}`,
             designerId: designerId,
             meet: consultMethod,
-            pay: paymentType === 'kakao' ? "카카오페이" : "계좌이체"
+            pay: paymentType === 'kakao' ? "카카오페이" : "계좌이체",
+            address_id: 1
           })
         });
 
@@ -65,7 +66,7 @@ export default function ReservationComplete() {
     };
 
     createReservation();
-  }, [selectedDate, selectedTime, consultMethod, designerId, reservationCreated]);
+  }, [selectedDate, selectedTime, consultMethod, designerId, reservationCreated, paymentType, missingData]);
 
   // 메시지 결정
   const getMessage = () => {
@@ -89,6 +90,19 @@ export default function ReservationComplete() {
 
   const messages = getMessage();
 
+  // 필수 데이터가 없을 경우 에러 화면 표시
+  if (missingData) {
+    return (
+      <div className="error-container">
+        <div className="error-message">예약 정보를 찾을 수 없습니다.</div>
+        <Button variant="primary" size="large" onClick={() => navigate('/designerlist')}>
+          홈으로 가기
+        </Button>
+      </div>
+    );
+  }
+
+  // 정상 화면 렌더링
   return (
     <div className="reservation-complete-container">
       <Header title={consultMethod === 'OFFLINE' ? '대면 컨설팅 예약하기' : '비대면 컨설팅 예약하기'} />
