@@ -57,7 +57,7 @@ const DesignerDetail: React.FC = () => {
     }, [designer]);
 
     const handleConsultingClick = (method: "ONLINE" | "OFFLINE") => {
-        navigate(`/reservation?method=${method}`);
+        navigate(`/reservation?method=${method}&designerId=${designerId}`);
     };
 
     if (designer === undefined) return <p>로딩 중...</p>;
