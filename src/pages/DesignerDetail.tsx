@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header/Header";
 import Portfolio from "../components/Portfolio/Portfolio";
@@ -7,61 +7,21 @@ import question from "../assets/question.svg";
 import Button from "../components/Button/Button";
 import ToolTip from "../components/ToolTip/ToolTip";
 import "../styles/DesignerDetail.styles.css";
-import { apiRequest } from "../utils/api";
+import { useDesignerDetail } from "../hooks/useDesignerDetail";
 
-interface Designer {
-    id: string;
-    name: string;
-    address: string;
-    specialty: "CUL" | "PERM" | "DYE" | "BLEACH";
-    profileImage: string;
-    portfolioImages: string[];
-    description: string;
-    type: "ONLINE" | "OFFLINE" | "BOTH";
-    remotePrice: number;
-    inPersonPrice: number;
-}
 
 const DesignerDetail: React.FC = () => {
     const { designerId } = useParams<{ designerId: string }>();
     const navigate = useNavigate();
-    const [designer, setDesigner] = useState<Designer | null>(null);
-
-    useEffect(() => {
-        if (!designerId) return;
-
-        apiRequest(`/api/designers/${designerId}`)
-            .then((data) => {
-                const formattedDesigner = {
-                    id: data.id,
-                    name: data.name,
-                    profileImage: data.profile,
-                    address: data.address,
-                    specialty: data.expertField,
-                    description: data.introduce,
-                    portfolioImages: typeof data.portfolio === "string" ? data.portfolio.split(",") : [],
-                    type: data.type,
-                    inPersonPrice: data.offlinePrice,
-                    remotePrice: data.onlinePrice
-                };
-
-                setDesigner(formattedDesigner);
-            })
-            .catch((error) => console.error(error));
-    }, [designerId]);
-
-    useEffect(() => {
-        if (designer) {
-            console.log("디자이너 데이터 업데이트됨: ", designer);
-        }
-    }, [designer]);
+    const { designer, loading, error } = useDesignerDetail(designerId);
 
     const handleConsultingClick = (method: "ONLINE" | "OFFLINE") => {
         navigate(`/reservation?method=${method}&designerId=${designerId}`);
     };
 
-    if (designer === undefined) return <p>로딩 중...</p>;
-    if (designer === null) return <p>디자이너 정보를 불러올 수 없습니다.</p>;
+    if (loading) return <p>로딩 중...</p>;
+    if (error) return <p>{error}</p>
+    if (!designer) return <p>디자이너 정보를 불러올 수 없습니다.</p>;
 
     const isRemoteDisabled = designer.type === "OFFLINE";
     const isInpersonDisabled = designer.type === "ONLINE";
