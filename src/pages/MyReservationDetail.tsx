@@ -139,7 +139,7 @@ const MyReservationDetail: React.FC = () => {
                         confirmVariant="negative"
                     />
                 )}
-                {myReservationDetail.type === "OFFLINE" && (
+                {myReservationDetail.type === "OFFLINE" && myReservationDetail.status === "SCHEDULED" && (
                     useDynamicMeetLink ? (
                         // 동적으로 미팅 링크를 생성할 수 있는 버튼
                         <EnhancedMeetLinkButton
