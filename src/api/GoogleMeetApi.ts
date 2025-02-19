@@ -98,6 +98,7 @@ export const createMeetingFromReservation = async (
     }
 
     const startTimeISO = formatToFullTimestamp(startTimeISOSS);
+    console.log(startTimeISO);
 
     // 미팅 제목 생성
     const title = `${designerName}님과 상담 예약 - ${startTime.getMonth() + 1}월 ${startTime.getDate()}일 ${startTime.getHours()}시 ${startTime.getMinutes()}분`;
