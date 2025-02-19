@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Header from "../components/Header/Header";
 import ReservationCard from "../components/ReservationCard/ReservationCard";
 import MeetLinkButton from "../components/MeetLinkButton";
+import EnhancedMeetLinkButton from "../components/EnhancedMeetLinkButton";
 import Modal from "../components/Modal/Modal";
 import { cancelReservation } from "../api/cancelReservatin";
 import { apiRequest } from "../utils/api";
@@ -16,6 +17,7 @@ const MyReservationDetail: React.FC = () => {
     const isMountedRef = useRef(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const navigate = useNavigate();
+    const [useDynamicMeetLink, setUseDynamicMeetLink] = useState(false);
 
     useEffect(() => {
         const fetchReservationDetail = async () => {
@@ -48,8 +50,10 @@ const MyReservationDetail: React.FC = () => {
 
                 if (isMountedRef.current) {
                     setMyReservationDetail(formattedData);
-
-                    console.log("셋후: ", myReservationDetail);
+                    // 기존에 미팅 링크가 없고 OFFLINE 타입이면 동적 링크 생성 활성화
+                    if (formattedData.type === "OFFLINE" && !formattedData.meetLink) {
+                        setUseDynamicMeetLink(true);
+                    }
                 }
             } catch (error) {
                 console.error("예약 상세 조회를 실패했습니다.", error);
@@ -122,10 +126,21 @@ const MyReservationDetail: React.FC = () => {
                     />
                 )}
                 {myReservationDetail.type === "OFFLINE" && (
-                    <MeetLinkButton
-                        children="구글 미트 링크"
-                        meetLink={myReservationDetail.meetLink}
-                    />
+                    useDynamicMeetLink ? (
+                        // 동적으로 미팅 링크를 생성할 수 있는 버튼
+                        <EnhancedMeetLinkButton
+                            children="구글 미트 링크"
+                            meetLink={myReservationDetail.meetLink}
+                            reservationTime={myReservationDetail.time}
+                            designerName={myReservationDetail.designerName}
+                        />
+                    ) : (
+                        // 기존 미팅 링크가 있는 경우 일반 버튼 사용
+                        <MeetLinkButton
+                            children="구글 미트 링크"
+                            meetLink={myReservationDetail.meetLink}
+                        />
+                    )
                 )}
             </footer>
         </div>

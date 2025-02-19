@@ -232,8 +232,8 @@ export default function DesignerList() {
             <button onClick={handleRetry} className="retry-button">
               다시 시도하기
             </button>
+            <img src="/icons/reservation-logo.svg" alt="logo" className="designerlist-logo" />
           </div>
-          <img src="/icons/reservation-logo.svg" alt="logo" className="designerlist-logo" />
         </div>
       )}
 

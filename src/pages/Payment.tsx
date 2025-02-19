@@ -29,58 +29,73 @@ export default function PaymentPage() {
       ? "http://backend:8080"
       : import.meta.env.VITE_BACKEND_URL || "https://blarybus-haertz.netlify.app";
 
-  const handlePayment = async () => {
-    if (!paymentMethod) return;
-  
-    const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
-    const { startTime, designerId } = reservationInfo;
-  
-    try {
-      if (paymentMethod === 'kakao') {
-        const response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ amount }),
-        });
-  
-        const data = await response.json();
-        
-        // 카카오페이 결제 전에 컨설팅 예약 생성
-        await createConsulting({
-          startTime,
-          designer_id: designerId,
-          meet: consultMethod,
-          pay: 'KAKAO'
-        });
-  
-        const redirectUrl = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
-        window.location.href = redirectUrl;
-      } else {
-        // 계좌이체 선택 시 컨설팅 예약 생성
-        await createConsulting({
-          startTime,
-          designer_id: designerId,
-          meet: consultMethod,
-          pay: transferMethod === 'direct' ? 'ACCOUNT' : 'APP'
-        });
-  
-        navigate('/reservationcomplete', {
-          state: {
-            selectedDate,
-            selectedTime,
-            consultMethod,
-            paymentMethod,
-            transferMethod,
-          },
-        });
+      const handlePayment = async () => {
+  if (!paymentMethod) return;
+
+  const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
+  const { startTime, designerId } = reservationInfo;
+
+  try {
+    let response;
+    if (paymentMethod === 'kakao') {
+      response = await fetch(`${BACKEND_URL}/api/pay/ready`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`결제 요청 실패: ${response.status}`);
       }
-    } catch (error) {
-      console.error('결제 또는 예약 생성 실패:', error);
-      alert('결제 처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+
+      const data = await response.json();
+      window.location.href = window.innerWidth > 768 ? data.next_redirect_pc_url : data.next_redirect_mobile_url;
     }
-  };
+
+    // 컨설팅 예약 생성
+    response = await createConsulting({
+      startTime,
+      designer_id: designerId,
+      meet: consultMethod,
+      pay: paymentMethod === 'kakao' ? 'KAKAO' : transferMethod === 'direct' ? 'ACCOUNT' : 'APP'
+    });
+
+    if (!response.ok) {
+      throw new Error(`예약 요청 실패: ${response.status}`);
+    }
+
+    const responseData = await response.json();
+    console.log("예약 응답 데이터:", responseData);
+
+    if (!responseData.consultingId || !responseData.status) {
+      throw new Error("API 응답 데이터가 올바르지 않습니다.");
+    }
+
+    // 응답 데이터 저장
+    localStorage.setItem("consultingId", responseData.consultingId);
+    localStorage.setItem("reservationStatus", responseData.status);
+
+    navigate('/reservationcomplete', {
+      state: {
+        selectedDate,
+        selectedTime,
+        consultMethod,
+        paymentMethod,
+        transferMethod,
+        consultingId: responseData.consultingId,
+        status: responseData.status
+      },
+    });
+
+  } catch (error) {
+    console.error('결제 또는 예약 생성 실패:', error);
+    alert(`결제 처리 중 오류가 발생했습니다: ${error.message}`);
+  }
+};
+
+      
 
   const handleAccountTransfer = () => {
     setPaymentMethod('account');
