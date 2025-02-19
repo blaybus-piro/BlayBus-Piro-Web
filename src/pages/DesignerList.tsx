@@ -101,13 +101,26 @@ export default function DesignerList() {
   const navigate = useNavigate();
   const userId = getUserIdFromToken();
 
+  const updateCompletedReservations = async (completedReservations: ReservationState[]) => {
+    if (completedReservations.length === 0) return;
+
+    try {
+      const updateRequests = completedReservations.map(reservation =>
+        apiRequest(`/api/consulting/${reservation.id}/complete`, { method: "PATCH" })
+      );
+
+      await Promise.all(updateRequests);  // 한 번에 여러 개의 요청을 처리
+    } catch (error) {
+      console.error("예약 상태 업데이트 실패: ", error);
+    }
+  }
+
   useEffect(() => {
     if (!userId) return;
 
     const fetchReservations = async () => {
       try {
         const reservations = await apiRequest(`/api/consulting/user/${userId}`);
-
         const now = new Date();
 
         // 예약 목록 필터링해 업데이트할 예약 찾기
@@ -116,11 +129,7 @@ export default function DesignerList() {
           return reservationTime < now && reservation.status == "SCHEDULED";
         })
 
-        // 지난 예약 상태를 COMPLETED로 업데이트
-        for (const reservation of completedReservations) {
-          await apiRequest(`/api/consulting/${reservation.id}/complete`, { method: "PATCH" });
-          reservation.status = "COMPLETE";
-        }
+        await updateCompletedReservations(completedReservations);
 
         // 임박한 예약이 있는지 확인
         const hasUpComing = reservations.some((reservation: ReservationState) => {
@@ -131,7 +140,7 @@ export default function DesignerList() {
 
         setHasUpComingReservation(hasUpComing);
 
-        // ✅ 툴팁을 3초 동안 표시
+        // 툴팁을 3초 동안 표시
         if (hasUpComing) {
           setShowTooltip(true);
           setTimeout(() => setShowTooltip(false), 3000);
@@ -143,23 +152,29 @@ export default function DesignerList() {
     fetchReservations();
   }, [userId]);
 
-  // 현재 위치 구하기
+  const getUserLocation = (): Promise<{ lat: number; lng: number }> => {
+    return new Promise((resolve, reject) => {
+      navigator.geolocation.getCurrentPosition(
+        (position) => resolve({ lat: position.coords.latitude, lng: position.coords.longitude }),
+        (error) => reject(error)
+      );
+    });
+  };
+
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserLocation({
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        });
-      },
-      (error) => {
-        console.error('위치 정보를 가져올 수 없습니다.', error);
+    const fetchLocation = async () => {
+      try {
+        const location = await getUserLocation();
+        setUserLocation(location);
+      } catch (error) {
+        console.log("위치 정보를 가져올 수 없습니다: ", error);
       }
-    );
+    };
+
+    fetchLocation();
   }, []);
 
   // 거리 순으로 디자이너 리스트 가져오기
-  // fetchDesigners 함수 부분을 다음과 같이 수정하세요
   useEffect(() => {
     if (!userLocation) return;
 
