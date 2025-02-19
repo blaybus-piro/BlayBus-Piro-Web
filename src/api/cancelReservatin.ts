@@ -1,7 +1,7 @@
 import { apiRequest } from "../utils/api";
 
 export const cancelReservation = async (reservationId: string) => {
-    const response = await apiRequest(`/api/consulting/${reservationId}/cancel`, {
+    const response = await apiRequest(`/api/consulting/${reservationId}/canceled`, {
         method: "PATCH",
     });
 
