@@ -42,6 +42,7 @@ export default function ReservationComplete() {
   const formattedApprovedDate = approved_at ? new Date(approved_at).toLocaleString() : '';
 
   useEffect(() => {
+    console.log("useEffect 실행");
     if (!selectedDate || !selectedTime || !consultMethod || !designerId || reservationCreated) return;
 
     const createReservation = async () => {
@@ -50,7 +51,7 @@ export default function ReservationComplete() {
           method: "POST",
           body: JSON.stringify({
             startTime: `${selectedDate}T${selectedTime}`,
-            designer_id: designerId,
+            designerId: designerId,
             meet: consultMethod,
             pay: paymentType === 'kakao' ? "카카오페이" : "계좌이체"
           })
