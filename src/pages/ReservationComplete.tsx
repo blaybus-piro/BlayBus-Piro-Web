@@ -39,15 +39,15 @@ export default function ReservationComplete() {
 
   // 메시지 결정
   const getMessage = () => {
-    if (paymentType === 'direct') {
-      return {
-        main: '예약이 완료되었어요',
-        sub: '이체 확인이 될 때까지 기다려주세요!'
-      };
-    } else if (amount && approved_at) {
+    if (paymentType === 'kakao') {
       return {
         main: '예약이 완료되었어요',
         sub: '예약 정보를 한 번 더 확인해 주세요!'
+      };
+    } else if (paymentType === 'direct') {
+      return {
+        main: '예약이 완료되었어요',
+        sub: '이체 확인이 될 때까지 기다려주세요!'
       };
     } else {
       return {
@@ -55,7 +55,7 @@ export default function ReservationComplete() {
         sub: '예약 정보를 한 번 더 확인해 주세요!'
       };
     }
-  };
+  };  
 
   const messages = getMessage();
 

@@ -88,6 +88,9 @@ export default function PaymentPage() {
         throw new Error("결제가 승인되지 않았습니다.");
       }
   
+      // ✅ 결제가 승인되었으므로 paymentType을 kakao로 저장
+      localStorage.setItem("paymentType", "kakao");
+  
       // 결제 성공 시 예약 생성
       const reservationInfo = JSON.parse(localStorage.getItem("reservationInfo") || "{}");
       const { startTime, designerId } = reservationInfo;
@@ -120,6 +123,7 @@ export default function PaymentPage() {
       alert(`결제 승인 처리 중 오류가 발생했습니다: ${(error as Error).message}`);
     }
   }, [navigate, amount, selectedDate, selectedTime, consultMethod, BACKEND_URL]);
+  
   
   // ✅ useEffect에서 pg_token 감지하여 실행
   useEffect(() => {
