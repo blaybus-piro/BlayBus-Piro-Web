@@ -32,7 +32,7 @@ export const useDesignerDetail = (designerId?: string) => {
                     address: data.address,
                     specialty: data.expertField,
                     description: data.introduce,
-                    portfolioImages: data.portfolio,
+                    portfolioImages: typeof data.portfolio === "string" ? data.portfolio.split(",") : [],
                     type: data.type,
                     inPersonPrice: data.offlinePrice,
                     remotePrice: data.onlinePrice
