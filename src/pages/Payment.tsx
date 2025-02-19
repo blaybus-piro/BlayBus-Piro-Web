@@ -154,6 +154,8 @@ export default function PaymentPage() {
     const queryParams = new URLSearchParams(location.search);
     const pgToken = queryParams.get("pg_token");
 
+    console.log("🔍 pgToken 감지:", pgToken);
+
     if (pgToken) {
       confirmPaymentAndReserve(pgToken);
     }
