@@ -118,6 +118,7 @@ export default function DesignerList() {
           <div className="empty-state">
             <p className="empty-state-title">검색 결과가 없어요!</p>
             <p className="empty-state-subtitle">다시 한 번 찾아볼까요?</p>
+            <p className="empty-state-subtitle">위치 정보 접근을 허용해주세요.</p>
             <button onClick={handleRetry} className="retry-button">
               다시 시도하기
             </button>
