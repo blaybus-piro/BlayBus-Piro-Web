@@ -42,6 +42,7 @@ export const useConsultings = () => {
         const fetchReservations = async () => {
             try {
                 const reservations = await apiRequest(`/api/consulting/user/${userId}`);
+                console.log("예약 데이터: ", reservations);
                 const now = new Date();
 
                 // 예약 목록 필터링해 업데이트할 예약 찾기
