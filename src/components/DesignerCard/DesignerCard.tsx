@@ -46,7 +46,7 @@ export const DesignerCard: React.FC<DesignerCardProps> = ({
           </div>
           <div className="designer-card-info">
             <div className="designer-card-profile">
-              <img src="/icons/profile.svg" alt="profile" className="profile-card-image" />
+              <img src={image} alt={name} className="profile-card-image" />
               <span className="designer-card-name">{name}</span>
             </div>
             <div className="price-and-distance">
@@ -61,7 +61,7 @@ export const DesignerCard: React.FC<DesignerCardProps> = ({
           <div className="detailed-profile-content">
             <div className="designer-card-info">
               <div className="profile-section">
-                <img src="/icons/profile.svg" alt="profile" className="profile-card-image" />
+                <img src={image} alt={name} className="profile-card-image" />
                 <div className="designer-card-name">{name}</div>
               </div>
               <div className="price-and-distance">
