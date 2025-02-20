@@ -48,7 +48,7 @@ export const useConsultings = () => {
 
                 // 임박한 예약이 있는지 확인
                 const hasUpComing = reservations.some((reservation: ReservationState) => {
-                    return isWithin24Hours(reservation.time);
+                    reservation.status === "SCHEDULED" && isWithin24Hours(reservation.time)
                 });
 
                 setHasUpComingReservation(hasUpComing);
