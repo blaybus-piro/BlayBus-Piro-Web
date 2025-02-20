@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUserLocation } from '../hooks/useUserLocation';
 import { useDesignerList } from '../hooks/useDesignerList';
-import { useConsultings } from '../hooks/useConsultings';
 import { DesignerCard } from '../components/DesignerCard/DesignerCard';
 import { ConsultingTypeButton } from '../components/ConsultingTypeButton/ConsultingTypeButton';
 import { SortingButton } from '../components/SortingButton/SortingButton';
@@ -85,7 +84,6 @@ export default function DesignerList() {
   const [sortBy, setSortBy] = useState('distance');
   const [viewMode, setViewMode] = useState<'simple' | 'detailed'>('simple');
 
-  const { hasUpComingReservation, showTooltip } = useConsultings();
   const userLocation = useUserLocation();
   const { designers } = useDesignerList(userLocation, sortBy, consultingType);
 
@@ -99,13 +97,7 @@ export default function DesignerList() {
         <div className="header-content">
           <img src="/icons/header-logo.svg" alt="header-logo" />
           <button className="calendar-button" onClick={() => navigate(`/myreservation`)}>
-            {hasUpComingReservation && <div className="red-dot" />}
             <img src="/icons/home-calendar.svg" alt="home-calendar" />
-            {showTooltip && hasUpComingReservation && (
-              <div className="upComing-tooltip">
-                임박한 예약이 있어요!
-              </div>
-            )}
             <span className="sr-only">내 예약</span>
           </button>
         </div>

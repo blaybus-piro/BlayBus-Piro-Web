@@ -29,13 +29,13 @@ export default function ReservationPage() {
         const response = await apiRequest(`/api/time/${designerId}`);
 
         if (Array.isArray(response)) {
-          const formattedBookedTimes: Record<string, string[]> = response.reduce((acc, item) => {
-            if (!item.startTime) {
-              console.log("startTime이 없습니다!");
+          const formattedBookedTimes: Record<string, string[]> = response.reduce((acc, startTimeStr) => {
+            if (typeof startTimeStr !== "string") {
+              console.error("잘못된 데이터 형식: ", startTimeStr);
               return acc;
             }
 
-            const [date, time] = item.startTime.split("T");
+            const [date, time] = startTimeStr.split("T");
             const formattedTime = time.slice(0, 5);
 
             if (!acc[date]) {
@@ -45,6 +45,7 @@ export default function ReservationPage() {
             return acc;
           }, {} as Record<string, string[]>);
 
+          console.log("예약된 시간 목록: ", formattedBookedTimes);
           setBookedTimesByDate(formattedBookedTimes);
         } else {
           console.error("API 응답이 배열이 아닙니다.", response);
