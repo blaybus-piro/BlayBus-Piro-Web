@@ -10,11 +10,6 @@ export const cancelReservation = async (reservationId: string) => {
             throw new Error(`서버 오류: ${response.status}`);
         }
 
-        if (response.status === 200) {
-            console.log("예약 취소 성공");
-            return;
-        }
-
         const text = await response.text();
         const data = text ? JSON.parse(text) : {};
 
