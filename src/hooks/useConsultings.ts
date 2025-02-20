@@ -26,6 +26,9 @@ export const useConsultings = () => {
         const now = new Date();
         const reservationTime = new Date(reservationTimeStr);
 
+        console.log(reservationTime.getTime());
+        console.log(now.getTime());
+
         const diffMinutes = (reservationTime.getTime() - now.getTime()) / (1000 * 60);
         return diffMinutes > 0 && diffMinutes <= 1440;
     }
