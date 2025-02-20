@@ -10,6 +10,7 @@ import DesignerList from "./pages/DesignerList";
 import MyReservation from "./pages/MyReservation";
 import MyReservationDetail from "./pages/MyReservationDetail";
 import Payment from "./pages/Payment";
+import ReservationComplete2 from './pages/ReservationComplete2';
 // import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
         <Route path="/reservation" element={<Reservation />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/reservationcomplete" element={<ReservationComplete />} />
+        <Route path="/reservationcomplete2" element={<ReservationComplete2 />} />
         <Route path="/designerdetail/:designerId" element={<DesignerDetail />} />
         <Route path="/myreservation" element={<MyReservation />} />
         <Route path="/myreservationdetail/:myreservationId" element={<MyReservationDetail />} />
@@ -31,6 +33,7 @@ function App() {
           <Route path="/reservation" element={<Reservation />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/reservationcomplete" element={<ReservationComplete />} />
+          <Route path="/reservationcomplete2" element={<ReservationComplete2 />} />
           <Route path="/designerdetail/:designerId" element={<DesignerDetail />} />
           <Route path="/myreservation/:userId" element={<MyReservation />} />
           <Route path="/myreservationdetail/:myreservationId" element={<MyReservationDetail />} />
