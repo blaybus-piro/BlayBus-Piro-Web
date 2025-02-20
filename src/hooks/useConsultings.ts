@@ -26,8 +26,11 @@ export const useConsultings = () => {
         const now = new Date();
         const reservationTime = new Date(reservationTimeStr);
 
-        console.log(reservationTime.getTime());
-        console.log(now.getTime());
+        console.log("예약 시간: ", reservationTimeStr);
+        console.log("변환된 예약 시간: ", reservationTime);
+        console.log("예약 밀리초: ", reservationTime.getTime());
+        console.log("현재 시간: ", now);
+        console.log("현재 밀리초:", now.getTime());
 
         const diffMinutes = (reservationTime.getTime() - now.getTime()) / (1000 * 60);
         return diffMinutes > 0 && diffMinutes <= 1440;
