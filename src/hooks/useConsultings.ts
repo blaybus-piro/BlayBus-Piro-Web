@@ -22,6 +22,14 @@ export const useConsultings = () => {
         }
     }
 
+    const isWithin24Hours = (reservationTimeStr: string) => {
+        const now = new Date();
+        const reservationTime = new Date(reservationTimeStr);
+
+        const diffMinutes = (reservationTime.getTime() - now.getTime()) / (1000 * 60);
+        return diffMinutes > 0 && diffMinutes <= 1440;
+    }
+
     useEffect(() => {
         if (!userId) return;
 
@@ -40,9 +48,7 @@ export const useConsultings = () => {
 
                 // 임박한 예약이 있는지 확인
                 const hasUpComing = reservations.some((reservation: ReservationState) => {
-                    const reservationTime = new Date(reservation.time);
-                    const diffHours = (reservationTime.getTime() - now.getTime()) / (1000 * 60 * 60);
-                    return diffHours > 0 && diffHours <= 24;
+                    return isWithin24Hours(reservation.time);
                 });
 
                 setHasUpComingReservation(hasUpComing);
