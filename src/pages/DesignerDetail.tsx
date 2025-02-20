@@ -29,7 +29,7 @@ const DesignerDetail: React.FC = () => {
     return (
         <div className="designerDetail-container">
             <Header title={designer.name} />
-            <Portfolio images={designer.portfolioImages} />
+            <Portfolio images={[designer.profileImage]} />
             <DesignerInfo
                 name={designer.name}
                 address={designer.address}
