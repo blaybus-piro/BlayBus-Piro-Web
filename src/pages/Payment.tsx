@@ -268,7 +268,7 @@ const confirmPaymentAndReserve = useCallback(async (pg_token?: string) => {
 
     switch (selectedBank) {
       case "toss":
-        deeplink = "supertoss://send?account=508116542988&amount=190000";
+        deeplink = "supertoss://send?";
         break;
       case "kakaopay":
         deeplink = "kakaopay://";
