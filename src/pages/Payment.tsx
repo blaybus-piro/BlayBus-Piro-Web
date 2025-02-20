@@ -166,13 +166,13 @@ const confirmPaymentAndReserve = useCallback(async (pg_token?: string) => {
   // ✅ useEffect에서 pg_token 감지하여 실행
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const pgToken = queryParams.get("pg_token");
+    const pgToken = queryParams.get("pg_token") ?? undefined;  // null을 undefined로 변환
   
     console.log("🔍 pgToken 감지:", pgToken);
   
-    // 백엔드에서 pg_token이 필요없다고 했으므로, 존재 여부와 관계없이 호출
     confirmPaymentAndReserve(pgToken);
   }, [location.search, confirmPaymentAndReserve]);
+  
 
   // ✅ 결제 요청 함수
   const handlePayment = async () => {
