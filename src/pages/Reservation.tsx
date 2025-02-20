@@ -45,6 +45,7 @@ export default function ReservationPage() {
             return acc;
           }, {} as Record<string, string[]>);
 
+          console.log(formattedBookedTimes);
           setBookedTimesByDate(formattedBookedTimes);
         } else {
           console.error("API 응답이 배열이 아닙니다.", response);
