@@ -166,11 +166,23 @@ const confirmPaymentAndReserve = useCallback(async (pg_token?: string) => {
   // ✅ useEffect에서 pg_token 감지하여 실행
   useEffect(() => {
     const queryParams = new URLSearchParams(location.search);
-    const pgToken = queryParams.get("pg_token") ?? undefined;  // null을 undefined로 변환
-  
+    const pgToken = queryParams.get("pg_token");
+    
     console.log("🔍 pgToken 감지:", pgToken);
-  
-    confirmPaymentAndReserve(pgToken);
+    console.log("localStorage 확인:", {
+      tid: localStorage.getItem("kakao_tid"),
+      selectedDate: localStorage.getItem("selectedDate"),
+      selectedTime: localStorage.getItem("selectedTime"),
+      consultMethod: localStorage.getItem("consultMethod"),
+      designerId: localStorage.getItem("designerId"),
+      amount: localStorage.getItem("amount")
+    });
+    
+    // tid가 있을 경우에만 결제 승인 진행
+    const tid = localStorage.getItem("kakao_tid");
+    if (tid && pgToken) {
+      confirmPaymentAndReserve(pgToken);
+    }
   }, [location.search, confirmPaymentAndReserve]);
   
 

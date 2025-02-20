@@ -1,12 +1,30 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { apiRequest } from '../utils/api';
 
 export default function ReservationComplete2() {
   const navigate = useNavigate();
-  const location = useLocation();
   const [status, setStatus] = useState('처리 중...');
+  // location은 사용하지 않으므로 제거
+  
+  // 날짜 변환 함수를 먼저 선언
+  const formatToFullTimestamp = (isoString: string) => {
+    if (!isoString) return '';
+    
+    const date = new Date(isoString);
+    
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
+    const milliseconds = String(date.getMilliseconds()).padStart(6, '1');
 
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+  };
+
+  // 그 다음 useEffect 선언
   useEffect(() => {
     // 저장된 데이터 가져오기
     const createReservation = async () => {
@@ -16,31 +34,45 @@ export default function ReservationComplete2() {
         const selectedTime = localStorage.getItem("selectedTime");
         const consultMethod = localStorage.getItem("consultMethod");
         const designerId = localStorage.getItem("designerId");
-        // amount는 현재 사용하지 않으므로 불필요한 변수 선언 제거
-
+        const startTimeISO = localStorage.getItem("startTimeISO");
+  
+        console.log("예약 생성에 필요한 데이터 확인:", {
+          selectedDate,
+          selectedTime,
+          consultMethod,
+          designerId,
+          startTimeISO
+        });
+  
         if (!selectedDate || !selectedTime || !consultMethod || !designerId) {
           setStatus('예약 정보를 찾을 수 없습니다.');
           setTimeout(() => navigate('/designerlist'), 2000);
           return;
         }
-
-        // 카카오페이 결제 완료된 상태로 가정하고 예약 생성
-        const startTimeISO = formatToFullTimestamp(`${selectedDate}T${selectedTime}`);
+  
+        // startTimeISO가 있으면 그대로 사용하고, 없으면 생성
+        const finalStartTimeISO = startTimeISO || formatToFullTimestamp(`${selectedDate}T${selectedTime}`);
+        
+        // 로컬 스토리지에서 토큰 가져오기
+        const token = localStorage.getItem("token");
         
         setStatus('예약 생성 중...');
         const response = await apiRequest("/api/consulting/create", {
           method: "POST",
+          headers: {
+            'Authorization': token ? `Bearer ${token}` : '',  // 인증 헤더 추가
+          },
           body: JSON.stringify({
-            startTime: startTimeISO,
+            startTime: finalStartTimeISO,
             designerId: designerId,
             meet: consultMethod === 'ONLINE' ? 'ONLINE' : 'OFFLINE',
             pay: "카카오페이",
             address_id: 1
           })
         });
-
+  
         console.log("예약 생성 성공:", response);
-
+  
         if (response && response.consultingId) {
           localStorage.setItem("consultingId", response.consultingId);
           localStorage.setItem("status", response.status || "PENDING");
@@ -60,24 +92,9 @@ export default function ReservationComplete2() {
         setTimeout(() => navigate('/designerlist'), 2000);
       }
     };
-
+  
     createReservation();
-  }, [navigate, location]);
-
-  // 날짜 변환 함수 (Payment.tsx에서 가져옴)
-  const formatToFullTimestamp = (isoString: string) => {
-    const date = new Date(isoString);
-    
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    const seconds = String(date.getSeconds()).padStart(2, '0');
-    const milliseconds = String(date.getMilliseconds()).padStart(6, '1');
-
-    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
-  }
+  }, [navigate]); // formatToFullTimestamp는 컴포넌트 내에 선언되어 의존성에서 제외
 
   return (
     <div style={{
